@@ -31,7 +31,7 @@ setuptools.setup(
     ],
     keywords="UMI metabarcoding",
     packages=setuptools.find_packages(),
-    python_requires=">=3.7.4",
+    python_requires=">=3.7",
     install_requires=[
         "pandas>=0.25.1"
     ],
