@@ -5,6 +5,6 @@
 
 # Prequisites:
 # - conda install -c bioconda vsearch=2.14.1
-# - conda install -c anaconda pandas=0.25.2
+# - conda install -c anaconda pandas=0.25.1
 
 name = "caltha"

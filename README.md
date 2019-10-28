@@ -2,7 +2,7 @@
 A python package to process UMI tagged mixed amplicon metabarcoding data.
 
 ## Installation
-The current version of __Caltha__ requires Python 3.7.4+.
+The current version of __Caltha__ requires Python 3.7+.
 
 To install __Caltha__, simply run the pip install command:
 ```
