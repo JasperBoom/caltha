@@ -2,7 +2,7 @@
 A python package to process UMI tagged mixed amplicon metabarcoding data.
 
 ## Installation
-The current version of __Caltha__ requires Python 3.7+.
+The current version of __Caltha__ requires Python 3.7.4+.
 
 To install __Caltha__, simply run the pip install command:
 ```
@@ -66,11 +66,9 @@ This python package requires one non-pip dependency which can be easily
 installed with conda (vsearch).
 ```
 
+Further documentation can be found [here](https://jasperboom.github.io/caltha/).
+
 ## Source(s)
-* __Giardine B, Riemer C, Hardison RC, Burhans R, Elnitski L, Shah P__,  
-  Galaxy: A platform for interactive large-scale genome analysis.  
-  Genome Research. 2005; 15(10) 1451-1455 __doi: 10.1101/gr.4086505__  
-  [GALAXY](https://www.galaxyproject.org/)
 * __Rognes T, Flouri T, Nichols B, Quince C, Mahe F__,  
   VSEARCH: a versatile open source tool for metagenomics.  
   Peerj. 2016. __doi: 10.7717/peerj.2584__  

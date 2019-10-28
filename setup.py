@@ -37,7 +37,8 @@ setuptools.setup(
     ],
     project_urls={
         "Source": "https://github.com/JasperBoom/caltha",
-        "Tracker": "https://github.com/JasperBoom/caltha/issues"
+        "Tracker": "https://github.com/JasperBoom/caltha/issues",
+        "Documentation": "https://jasperboom.github.io/caltha/"
     },
     scripts=["src/caltha"]
 )
