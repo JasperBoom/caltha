@@ -2,6 +2,7 @@
 
 ## Version 0.1
 ---------------------------
++ Implemented a UMI length check.
 + Created Conda package for Caltha.
 + Created PyPI package for Caltha.
 + Added documentation page to repository (still needs to be filled).

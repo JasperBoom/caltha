@@ -344,11 +344,27 @@ def processInputFile(flInput, strSearch, strApproach, intUmiLength, strForward,
                 try:
                     if strUmi != None:
                         if strSearch == "umi5" or strSearch == "umi3":
-                            strCode = strUmi
+                            intLengthPotentialUmi = len(strUmi)
+                            if int(intLengthPotentialUmi) == int(intUmiLength):
+                                strCode = strUmi
+                            else:
+                                strCode = None
                         elif strSearcj == "umidouble":
-                            strCode = strUmi[0] + strUmi[1]
+                            strCombined = strUmi[0] + strUmi[1]
+                            intLengthPotentialUmi = len(strCombined)
+                            intDoubleUmi = intUmiLengt * 2
+                            if int(intLengthPotentialUmi) == int(intDoubleUmi):
+                                strCode = strCombined
+                            else:
+                                strCode = None
                         else:
                             pass
+                    else:
+                        pass
+                except UnboundLocalError:
+                    pass
+                try:
+                    if strCode != None:
                         if strCode not in dicUniqueUmi:
                             dicUniqueUmi[strCode] = intUniqueUmi
                             intUniqueUmi += 1
