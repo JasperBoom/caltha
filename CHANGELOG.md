@@ -2,10 +2,11 @@
 
 ## Version 0.1
 ---------------------------
++ Created Conda package for Caltha.
 + Created PyPI package for Caltha.
 + Added documentation page to repository (still needs to be filled).
 + Zip archives are now created by Caltha (used to be created by a BASH script).
 + Temporary working directories are now managed by Caltha (used to be managed by a BASH script).
-+ Wrongly assigned read bug was fixed.
-+ Renamed galaxy-tools-umi-isolation tool to Caltha.
++ Wrongly assigned reads bug was fixed.
++ Renamed galaxy-tools-umi-isolation python tool to Caltha.
 + Isolated galaxy-tools-umi-isolation python script to dedicated repository.

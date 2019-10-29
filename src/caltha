@@ -5,7 +5,6 @@
 
 # Prequisites:
 # - conda install -c bioconda vsearch=2.14.1
-# - conda install -c anaconda pandas=0.25.1
 
 # Imports
 import argparse
@@ -403,12 +402,12 @@ def setWorkDirs(strDir):
 def parseArgvs():
     strDescription = "A python package to process UMI tagged mixed amplicon\
                       metabarcoding data."
-    strEpilog = "This python package requires one non-pip dependency which can\
-                 be easily installed with conda (vsearch)."
+    strEpilog = "This python package requires one extra dependency which can\
+                 be easily installed with conda (conda install -c bioconda vsearch)."
     parser = argparse.ArgumentParser(description = strDescription,
                                      epilog = strEpilog)
     parser.add_argument("-v", "-version", action = "version",
-                        version = "%(prog)s [0.1.1]")
+                        version = "%(prog)s [0.1.2]")
     parser.add_argument("-i", "-input", action = "store", dest = "fisInput",
                         help = "The location of the input fasta/fastq file.")
     parser.add_argument("-t", "-tabular", action = "store", dest = "fosTabular",

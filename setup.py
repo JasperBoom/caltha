@@ -5,7 +5,6 @@
 
 # Prequisites:
 # - conda install -c bioconda vsearch=2.14.1
-# - conda install -c anaconda pandas=0.25.1
 
 # Imports
 import setuptools
@@ -15,7 +14,7 @@ with open("README.md", "r") as oisReadme:
 
 setuptools.setup(
     name="caltha",
-    version="0.1.1",
+    version="0.1.2",
     description="A python package to process UMI tagged mixed amplicon metabarcoding data.",
     long_description=strDescription,
     long_description_content_type="text/markdown",
@@ -23,13 +22,16 @@ setuptools.setup(
     author="Jasper Boom",
     author_email="jboom@infernum.nl",
     classifiers=[
-        "Development Status :: 5 - Production/Stable",
+        "Development Status :: 4 - Beta",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
-        "Operating System :: OS Independent",
+        "Natural Language :: English",
+        "Operating System :: Unix",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Topic :: Scientific/Engineering :: Bio-Informatics"
     ],
-    keywords="UMI metabarcoding",
+    keywords="UMI Metabarcoding",
     packages=setuptools.find_packages(),
     python_requires=">=3.7",
     install_requires=[

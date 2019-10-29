@@ -1,16 +1,25 @@
 # Caltha
 A python package to process UMI tagged mixed amplicon metabarcoding data.
 
+[![Anaconda Cloud](https://anaconda.org/jboom/caltha/badges/version.svg)
+[![Last Update](https://anaconda.org/jboom/caltha/badges/latest_release_date.svg)
+[![Platforms](https://anaconda.org/jboom/caltha/badges/platforms.svg)
+[![Downloads](https://anaconda.org/jboom/caltha/badges/downloads.svg)
+
 ## Installation
 The current version of __Caltha__ requires Python 3.7+.
 
-To install __Caltha__, simply run the pip install command:
+To install __Caltha__, simply run the pip install command or the conda install command:
 ```
 pip install caltha
 ```
+```
+conda install -c jboom caltha
+```
 
 NOTE: __Caltha__ does require one more dependency which can not be installed
-with pip. This dependency is [VSEARCH](https://github.com/torognes/vsearch) (2.14.1+).
+with pip or conda. This dependency is [VSEARCH](https://github.com/torognes/vsearch) (2.14.1+).
+
 Conda can be used to easily install this dependency:
 ```
 conda install -c bioconda vsearch
@@ -62,11 +71,15 @@ optional arguments:
                         The location where the temporary working directory
                         will be created.
 
-This python package requires one non-pip dependency which can be easily
-installed with conda (vsearch).
+This python package requires one extra dependency which can be easily
+installed with conda (conda install -c bioconda vsearch).
 ```
 
 Further documentation can be found [here](https://jasperboom.github.io/caltha/).
+
+## Package links
+* [PyPI](https://pypi.org/project/caltha/)
+* [Conda](https://anaconda.org/jboom/caltha)
 
 ## Source(s)
 * __Rognes T, Flouri T, Nichols B, Quince C, Mahe F__,  
