@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 0.1
+## Version 0.2
 ---------------------------
 + Implemented a UMI length check.
 + Created Conda package for Caltha.

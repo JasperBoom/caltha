@@ -323,8 +323,8 @@ def getUmi(strSearch, strApproach, intUmiLength, strForward, strReverse,
 # This function opens the input file and loops through it. It stores the read
 # header and read nucleotides. For every read the getUmi function is called,
 # this outputs one or two UMI codes. In the case of a double UMI search [umidouble],
-# the two UMIs are combined. The getFastaFile function is called for every read
-# that contains a UMI.
+# the two UMIs are combined. The length of the UMI is checked before continuing.
+# The getFastaFile function is called for every read that contains a UMI.
 def processInputFile(flInput, strSearch, strApproach, intUmiLength, strForward,
                      strReverse, strDir, strOperand):
     dicUniqueUmi = {}
@@ -423,7 +423,7 @@ def parseArgvs():
     parser = argparse.ArgumentParser(description = strDescription,
                                      epilog = strEpilog)
     parser.add_argument("-v", "-version", action = "version",
-                        version = "%(prog)s [0.1.3]")
+                        version = "%(prog)s [0.2]")
     parser.add_argument("-i", "-input", action = "store", dest = "fisInput",
                         help = "The location of the input fasta/fastq file.")
     parser.add_argument("-t", "-tabular", action = "store", dest = "fosTabular",
