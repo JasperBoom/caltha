@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 0.3
+---------------------------
++ Added 5-end UMI test file.
++ Created a Zenodo DOI code for Caltha.
+
 ## Version 0.2
 ---------------------------
 + Implemented a UMI length check.

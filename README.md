@@ -17,8 +17,9 @@ conda install -c jboom caltha
 ```
 
 NOTE: __Caltha__ does require one more dependency which can not be installed
-with pip or conda. This dependency is [VSEARCH](https://github.com/torognes/vsearch)
-(2.14.1+). Conda can be used to easily install this dependency:
+with the __Caltha__ pip or conda package. This dependency is
+[VSEARCH](https://github.com/torognes/vsearch) (2.14.1+).  
+Executing the following conda install command should install the dependency.
 ```
 conda install -c bioconda vsearch
 ```

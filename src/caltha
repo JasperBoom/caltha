@@ -423,7 +423,7 @@ def parseArgvs():
     parser = argparse.ArgumentParser(description = strDescription,
                                      epilog = strEpilog)
     parser.add_argument("-v", "-version", action = "version",
-                        version = "%(prog)s [0.2]")
+                        version = "%(prog)s [0.3]")
     parser.add_argument("-i", "-input", action = "store", dest = "fisInput",
                         help = "The location of the input fasta/fastq file.")
     parser.add_argument("-t", "-tabular", action = "store", dest = "fosTabular",
