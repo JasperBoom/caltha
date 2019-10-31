@@ -1,17 +1,14 @@
 # Changelog
 
 ## Version 0.4
----------------------------
 + Added .travis.yml configuration file.
 + Added test script for umi5 primer settings.
 
 ## Version 0.3
----------------------------
 + Added umi5 primer test fasta file.
 + Created a Zenodo DOI code for Caltha.
 
 ## Version 0.2
----------------------------
 + Implemented a UMI length check.
 + Created Conda package for Caltha.
 + Created PyPI package for Caltha.
