@@ -2,7 +2,7 @@
 
 ## Version 0.4
 ---------------------------
-+ New changes at the top.
++ Added test script for umi5 primer settings.
 
 ## Version 0.3
 ---------------------------

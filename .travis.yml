@@ -17,3 +17,6 @@ before install:
 install:
   - conda install vsearch
   - conda install caltha
+
+script:
+  - python3 -m pytest tests/
