@@ -13,7 +13,7 @@ with open("README.md", "r") as oisReadme:
 
 setuptools.setup(
     name="caltha",
-    version="0.3",
+    version="0.4",
     description="A python package to process UMI tagged mixed amplicon metabarcoding data.",
     long_description=strDescription,
     long_description_content_type="text/markdown",
@@ -26,8 +26,6 @@ setuptools.setup(
         "Natural Language :: English",
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
         "Topic :: Scientific/Engineering :: Bio-Informatics"
     ],
     keywords="UMI Metabarcoding",

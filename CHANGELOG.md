@@ -7,7 +7,7 @@
 
 ## Version 0.3
 ---------------------------
-+ Added 5-end UMI test file.
++ Added umi5 primer test fasta file.
 + Created a Zenodo DOI code for Caltha.
 
 ## Version 0.2
