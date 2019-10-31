@@ -8,12 +8,15 @@ install:
   - sudo apt-get update
   - wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
   - bash miniconda.sh -b -f -p $HOME/miniconda
+  - source "$HOME/miniconda/etc/profile.d/conda.sh"
+  - hash -r
   - conda config --set always_yes yes
+  - conda update conda
+  - conda info -a
   - conda config --add channels defaults
   - conda config --add channels bioconda
   - conda config --add channels jboom
-  - conda install vsearch
-  - conda install caltha
+  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION vsearch caltha
 
 script:
   - python3 -m pytest tests/
