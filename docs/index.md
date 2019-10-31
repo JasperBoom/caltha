@@ -1,4 +1,6 @@
-A python package to process UMI tagged mixed amplicon metabarcoding data.
+## Package links
+* [PyPI](https://pypi.org/project/caltha/)
+* [Conda](https://anaconda.org/jboom/caltha)
 
 ## Source(s)
 * __Rognes T, Flouri T, Nichols B, Quince C, Mahe F__,  

@@ -7,11 +7,11 @@ package:
 
 source:
   url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
-  sha256: "88f83a1377635a85173904405fade5c06ab9f67e022be2397bc199be82f77362"
+  sha256: "43816e7545f679534b5c5c861868c170809e835b1f08801784bca1e01e86954b"
 
 build:
   number: 0
-  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv "
+  script: "{{ PYTHON }} -m pip install . -vv"
 
 requirements:
   host:
@@ -24,13 +24,13 @@ requirements:
 
 about:
   home: "https://github.com/JasperBoom/caltha"
-  license: "GNU General Public v3 or later (GPLv3+)"
-  license_family: "GPL3"
-  license_file: "LICENSE"
+  license: "GNU Affero General Public v3"
+  license_family: "AGPL"
+  license_file: "../LICENSE.md"
   summary: "A python package to process UMI tagged mixed amplicon metabarcoding data."
   description: "NOTE: Caltha does require one more dependency which can not be installed
 with this conda package. This dependency is VSEARCH, which can be installed using: conda install -c bioconda vsearch"
-  dev_url: "https://github.com/JasperBoom/caltha"
+  dev_url: "https://github.com/JasperBoom/caltha/tree/master/src"
   doc_url: "https://jasperboom.github.io/caltha"
   doc_source_url: "https://github.com/JasperBoom/caltha/blob/master/docs/index.md"
 

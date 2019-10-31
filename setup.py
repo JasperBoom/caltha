@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# Copyright ©2001-2019 Python Software Foundation
 
 # Author: Jasper Boom
 
@@ -23,7 +22,7 @@ setuptools.setup(
     author_email="jboom@infernum.nl",
     classifiers=[
         "Development Status :: 4 - Beta",
-        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+        "License :: OSI Approved :: GNU Affero General Public License v3",
         "Natural Language :: English",
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python :: 3.7",
@@ -38,7 +37,7 @@ setuptools.setup(
         "pandas>=0.25.1"
     ],
     project_urls={
-        "Source": "https://github.com/JasperBoom/caltha",
+        "Source": "https://github.com/JasperBoom/caltha/tree/master/src",
         "Tracker": "https://github.com/JasperBoom/caltha/issues",
         "Documentation": "https://jasperboom.github.io/caltha/"
     },
