@@ -17,6 +17,7 @@ install:
   - conda config --add channels bioconda
   - conda config --add channels jboom
   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION vsearch caltha
+  - conda activate test-environment
 
 script:
   - python3 -m pytest tests/
