@@ -2,6 +2,7 @@
 
 ## Version 0.4
 ---------------------------
++ Added .travis.yml configuration file.
 + Added test script for umi5 primer settings.
 
 ## Version 0.3

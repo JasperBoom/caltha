@@ -15,7 +15,7 @@ from contextlib import closing
 
 class TestSingleEnd(object):
     def test_umi5_primer(self):
-        flInput = "data/umi5_primer.fasta"
+        flInput = "tests/data/umi5_primer.fasta"
         lstOutput = ["tabular.tbl", "zip.zip", "blast.fasta"]
         try:
             sp.check_output(

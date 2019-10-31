@@ -2,7 +2,6 @@ language: python
 
 python:
   - "3.7"
-  - "3.8"
 
 install:
   - sudo apt-get update
@@ -17,7 +16,7 @@ install:
   - conda config --add channels anaconda
   - conda config --add channels bioconda
   - conda config --add channels jboom
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION vsearch caltha pytest
+  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION vsearch caltha pytest setuptools
   - conda activate test-environment
 
 script:
