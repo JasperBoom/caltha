@@ -5,6 +5,7 @@ A python package to process UMI tagged mixed amplicon metabarcoding data.
 ![Last Update](https://anaconda.org/jboom/caltha/badges/latest_release_date.svg)
 ![Platforms](https://anaconda.org/jboom/caltha/badges/platforms.svg)
 ![Downloads](https://anaconda.org/jboom/caltha/badges/downloads.svg)
+[![DOI](https://zenodo.org/badge/216898964.svg)](https://zenodo.org/badge/latestdoi/216898964)
 
 ## Installation
 The current version of __Caltha__ requires Python 3.7+.
@@ -95,4 +96,5 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
 
 ## Citation
 * __Boom J__, Caltha. 2019.  
+  [![DOI](https://zenodo.org/badge/216898964.svg)](https://zenodo.org/badge/latestdoi/216898964)
   GitHub repository: https://github.com/JasperBoom/caltha

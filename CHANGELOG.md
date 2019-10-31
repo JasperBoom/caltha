@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.4
+---------------------------
++ New changes at the top.
+
 ## Version 0.3
 ---------------------------
 + Added 5-end UMI test file.
