@@ -17,4 +17,5 @@
 
 ## Citation
 * __Boom J__, Caltha. 2019.  
+  [![DOI](https://zenodo.org/badge/216898964.svg)](https://zenodo.org/badge/latestdoi/216898964)  
   GitHub repository: https://github.com/JasperBoom/caltha

@@ -2,10 +2,10 @@
 
 ## Version 0.4
 + Added .travis.yml configuration file.
-+ Added test script for umi5 primer settings.
++ Added python script for umi5 primer settings test.
 
 ## Version 0.3
-+ Added umi5 primer test fasta file.
++ Added fasta file for umi5 primer settings test.
 + Created a Zenodo DOI code for Caltha.
 
 ## Version 0.2
