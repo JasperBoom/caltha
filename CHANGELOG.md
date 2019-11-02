@@ -1,11 +1,14 @@
 # Changelog
 
 ## Version 0.4
++ Updated python script for umi5 primer single test to work with parallel processing.
++ Added zip file for umi5 primer multiple test.
++ Added parallel processing [issue #2](https://github.com/JasperBoom/caltha/issues/2).
 + Added .travis.yml configuration file.
-+ Added python script for umi5 primer settings test.
++ Added python script for umi5 primer single test.
 
 ## Version 0.3
-+ Added fasta file for umi5 primer settings test.
++ Added fasta file for umi5 primer single test.
 + Created a Zenodo DOI code for Caltha.
 
 ## Version 0.2
