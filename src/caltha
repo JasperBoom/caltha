@@ -381,7 +381,7 @@ def processInputFile(flInput, strSearch, strApproach, intUmiLength, strForward,
                 except UnboundLocalError:
                     pass
             strUmi = None
-            strCode = None   
+            strCode = None
 
 # The runCaltha function.
 # This function controls and calls the main functionality of Caltha.
@@ -446,7 +446,7 @@ def setFormat(strFormat):
     elif strFormat == "fastq" or strFormat == "zipfastq":
         return "@"
     else:
-        print("File format name not recognized.") 
+        pass 
 
 # The argvs function.
 def parseArgvs():

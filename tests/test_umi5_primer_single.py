@@ -16,7 +16,7 @@ class TestSingleEnd(object):
                      "umi5_primer_single_blast.zip"]
         try:
             sp.check_output(
-                ["/home/jboom/Temp/caltha/src/caltha", "-i", flInput,
+                ["caltha", "-i", flInput,
                  "-t", lstOutput[0],
                  "-z", lstOutput[1],
                  "-b", lstOutput[2],
