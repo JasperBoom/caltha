@@ -31,12 +31,12 @@ class TestSingleEnd(object):
                  "-d", "."])
         except:
             pytest.fail("umi5 primer search failed")
-        with open(lstOutput[0]) as oisInput:
+        with open(lstOutput[2]) as oisInput:
             for intCountBlast, strLine in enumerate(oisInput, 1):
                 pass
         with closing(zipfile.ZipFile(lstOutput[1])) as oisInput:
             intCountZip = len(oisInput.infolist())
-        with open(lstOutput[2]) as oisInput:
+        with open(lstOutput[0]) as oisInput:
             flTabular = pd.read_table(oisInput, sep="\t")
             intCountTabular = flTabular.shape[0]
         for intFile in range(len(lstOutput)):
