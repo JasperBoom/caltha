@@ -88,13 +88,19 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
 * [Conda](https://anaconda.org/jboom/caltha)
 
 ## Source(s)
-* __Rognes T, Flouri T, Nichols B, Quince C, Mahe F__,  
-  VSEARCH: a versatile open source tool for metagenomics.  
-  Peerj. 2016. __doi: 10.7717/peerj.2584__  
+* __Giardine B, Riemer C, Hardison RC, Burhans R, Elnitski L, Shah P__,  
+  Galaxy: A platform for interactive large-scale genome analysis.  
+  Genome Research. 2005; 15(10) 1451-1455 __doi: 10.1101/gr.4086505__  
+  [GALAXY](https://www.galaxyproject.org/)
+* __Python Software Foundation__,  
+  Python 3.7+, 2019.  
+  [Python](https://www.python.org/)
+* __Rognes T, Flouri T, Nichols B, Quince C, Mahe F__,
+  VSEARCH: A versatile open source tool for metagenomics.  
+  PeerJ. 2016; __doi: 10.7717/peerj.2584__  
   [VSEARCH](https://github.com/torognes/vsearch)
-* __McKinney W__,  
-  Data Structures for Statistical Computing in Python.  
-  Proceedings of the 9th Python in Science Conference. 2010.  
+* __Augspurger T, Ayd W, Bartak C, Battiston P, Cloud P, Garcia M__,  
+  Python Data Analysis Library.  
   [Pandas](https://pandas.pydata.org/)
 
 ## Author(s)
