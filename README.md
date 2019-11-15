@@ -93,11 +93,11 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
   Genome Research. 2005; 15(10) 1451-1455 __doi: 10.1101/gr.4086505__  
   [GALAXY](https://www.galaxyproject.org/)
 * __Python Software Foundation__,  
-  Python 3.7+, 2019.  
+  Python 3.7+. 2019.  
   [Python](https://www.python.org/)
 * __Rognes T, Flouri T, Nichols B, Quince C, Mahe F__,
   VSEARCH: A versatile open source tool for metagenomics.  
-  PeerJ. 2016; __doi: 10.7717/peerj.2584__  
+  PeerJ. 2016. __doi: 10.7717/peerj.2584__  
   [VSEARCH](https://github.com/torognes/vsearch)
 * __Augspurger T, Ayd W, Bartak C, Battiston P, Cloud P, Garcia M__,  
   Python Data Analysis Library.  
