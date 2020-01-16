@@ -83,8 +83,8 @@ def setOutputFiles(strDir, strOutputFileName):
 
 
 # The setClusterSize function.
-# This function controls the VSEARCH clustering. Every fasta file created by
-# setSortBySize is clustered using VSEARCH. The expected result is a single
+# This function controls the Vsearch clustering. Every fasta file created by
+# setSortBySize is clustered using Vsearch. The expected result is a single
 # centroid sequence. This is checked in the setOutputFiles function.
 def setClusterSize(strDir, strIdentity):
     for strFileName in os.listdir(strDir + "/clustering"):
@@ -116,7 +116,7 @@ def setClusterSize(strDir, strIdentity):
 
 
 # The setSortBySize function.
-# This function controls the VSEARCH sorting. Every fasta file created by
+# This function controls the Vsearch sorting. Every fasta file created by
 # setDereplication is sorted based on abundance. Any reads with a abundance
 # lower than strAbundance will be discarded.
 def setSortBySize(strDir, strAbundance):
@@ -145,7 +145,7 @@ def setSortBySize(strDir, strAbundance):
 
 
 # The setDereplication function.
-# This function controls the VSEARCH dereplication. Every fasta file created by
+# This function controls the Vsearch dereplication. Every fasta file created by
 # getFastaFile is dereplicated. This step is necessary for the sorting step to
 # work.
 def setDereplication(strDir):

@@ -4,7 +4,7 @@ A python package to process UMI tagged mixed amplicon metabarcoding data.
 ![Anaconda Cloud](https://anaconda.org/jboom/caltha/badges/version.svg)
 ![Last Update](https://anaconda.org/jboom/caltha/badges/latest_release_date.svg)
 ![Downloads](https://anaconda.org/jboom/caltha/badges/downloads.svg)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![DOI](https://zenodo.org/badge/216898964.svg)](https://zenodo.org/badge/latestdoi/216898964)
 
 ## Installation
@@ -19,7 +19,7 @@ conda install -c jboom caltha
 
 NOTE: __Caltha__ does require one more dependency which can not be installed
 with the __Caltha__ pip or conda package. This dependency is
-[VSEARCH](https://github.com/torognes/vsearch) (2.14.1+).  
+[Vsearch](https://github.com/torognes/vsearch) (2.14.1+).  
 Executing the following conda install command should install the dependency.
 ```
 conda install -c bioconda vsearch
@@ -91,14 +91,14 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
 * __Giardine B, Riemer C, Hardison RC, Burhans R, Elnitski L, Shah P__,  
   Galaxy: A platform for interactive large-scale genome analysis.  
   Genome Research. 2005; 15(10) 1451-1455. __doi: 10.1101/gr.4086505__  
-  [GALAXY](https://www.galaxyproject.org/)
+  [Galaxy](https://www.galaxyproject.org/)
 * __Python Software Foundation__,  
   Python 3.7+. 2019.  
   [Python](https://www.python.org/)
 * __Rognes T, Flouri T, Nichols B, Quince C, Mahe F__,  
   VSEARCH: A versatile open source tool for metagenomics.  
   PeerJ. 2016. __doi: 10.7717/peerj.2584__  
-  [VSEARCH](https://github.com/torognes/vsearch)
+  [Vsearch](https://github.com/torognes/vsearch)
 * __Augspurger T, Ayd W, Bartak C, Battiston P, Cloud P, Garcia M__,  
   Python Data Analysis Library.  
   [Pandas](https://pandas.pydata.org/)
