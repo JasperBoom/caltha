@@ -3,8 +3,8 @@ A python package to process UMI tagged mixed amplicon metabarcoding data.
 
 ![Anaconda Cloud](https://anaconda.org/jboom/caltha/badges/version.svg)
 ![Last Update](https://anaconda.org/jboom/caltha/badges/latest_release_date.svg)
-![Platforms](https://anaconda.org/jboom/caltha/badges/platforms.svg)
 ![Downloads](https://anaconda.org/jboom/caltha/badges/downloads.svg)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![DOI](https://zenodo.org/badge/216898964.svg)](https://zenodo.org/badge/latestdoi/216898964)
 
 ## Installation
@@ -102,11 +102,14 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
 * __Augspurger T, Ayd W, Bartak C, Battiston P, Cloud P, Garcia M__,  
   Python Data Analysis Library.  
   [Pandas](https://pandas.pydata.org/)
+* __Langa L, Willing C, Meyer C, Zijlstra J, Naylor M, Dollenstein Z__,
+  The uncompromising Python code formatter.
+  [Black](https://black.readthedocs.io/en/stable/)
 
 ## Author(s)
 * [Jasper Boom](https://github.com/JasperBoom)
 
 ## Citation
-* __Boom J__, Caltha. 2019.  
+* __Boom J__, Caltha. 2019-2020.  
   [![DOI](https://zenodo.org/badge/216898964.svg)](https://zenodo.org/badge/latestdoi/216898964)  
   GitHub repository: https://github.com/JasperBoom/caltha

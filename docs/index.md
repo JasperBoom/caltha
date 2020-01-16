@@ -66,18 +66,21 @@ installed with conda (conda install -c bioconda vsearch).
 * __Python Software Foundation__,  
   Python 3.7+. 2019.  
   [Python](https://www.python.org/)
-* __Rognes T, Flouri T, Nichols B, Quince C, Mahe F__,
+* __Rognes T, Flouri T, Nichols B, Quince C, Mahe F__,  
   VSEARCH: A versatile open source tool for metagenomics.  
   PeerJ. 2016. __doi: 10.7717/peerj.2584__  
   [VSEARCH](https://github.com/torognes/vsearch)
 * __Augspurger T, Ayd W, Bartak C, Battiston P, Cloud P, Garcia M__,  
   Python Data Analysis Library.  
   [Pandas](https://pandas.pydata.org/)
+* __Langa L, Willing C, Meyer C, Zijlstra J, Naylor M, Dollenstein Z__,
+  The uncompromising Python code formatter.
+  [Black](https://black.readthedocs.io/en/stable/)
 
 ## Author(s)
 * [Jasper Boom](https://github.com/JasperBoom)
 
 ## Citation
-* __Boom J__, Caltha. 2019.  
+* __Boom J__, Caltha. 2019-2020.  
   [![DOI](https://zenodo.org/badge/216898964.svg)](https://zenodo.org/badge/latestdoi/216898964)  
   GitHub repository: https://github.com/JasperBoom/caltha

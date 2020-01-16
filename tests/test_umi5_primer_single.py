@@ -9,26 +9,47 @@ import pandas as pd
 import subprocess as sp
 from contextlib import closing
 
+
 class TestSingleEnd(object):
     def test_umi5_primer(self):
         flInput = "tests/data/umi5_primer_single.fasta"
-        lstOutput = ["umi5_primer_single_tabular.zip", "umi5_primer_single_zip.zip",
-                     "umi5_primer_single_blast.zip"]
+        lstOutput = [
+            "umi5_primer_single_tabular.zip",
+            "umi5_primer_single_zip.zip",
+            "umi5_primer_single_blast.zip",
+        ]
         try:
             sp.check_output(
-                ["caltha", "-i", flInput,
-                 "-t", lstOutput[0],
-                 "-z", lstOutput[1],
-                 "-b", lstOutput[2],
-                 "-f", "fasta",
-                 "-s", "umi5",
-                 "-a", "primer",
-                 "-u", "20",
-                 "-y", "0.97",
-                 "-c", "2",
-                 "-w", "GGRKCHGGDACWGGDTGAAC",
-                 "-r", "GATCAWACAAATAAAGGTAWTCGATC",
-                 "-d", "."])
+                [
+                    "caltha",
+                    "-i",
+                    flInput,
+                    "-t",
+                    lstOutput[0],
+                    "-z",
+                    lstOutput[1],
+                    "-b",
+                    lstOutput[2],
+                    "-f",
+                    "fasta",
+                    "-s",
+                    "umi5",
+                    "-a",
+                    "primer",
+                    "-u",
+                    "20",
+                    "-y",
+                    "0.97",
+                    "-c",
+                    "2",
+                    "-w",
+                    "GGRKCHGGDACWGGDTGAAC",
+                    "-r",
+                    "GATCAWACAAATAAAGGTAWTCGATC",
+                    "-d",
+                    ".",
+                ]
+            )
         except:
             pytest.fail("umi5 primer search failed")
         lstFiles = []
@@ -50,5 +71,7 @@ class TestSingleEnd(object):
                 os.remove(lstFiles[intFile][intSecondFile])
         assert intCountBlast == 256, "The BLAST file should contain 256 lines."
         assert intCountZip == 658, "The zip file should contain 658 files."
-        assert intCountTabular == 128, "The tabular file should contain 128 " +\
-                                       "rows, excluding the header."
+        assert intCountTabular == 128, (
+            "The tabular file should contain 128 "
+            + "rows, excluding the header."
+        )

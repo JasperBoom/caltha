@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.5
++ Add code style Black.
+
 ## Version 0.4
 + Updated python script for umi5 primer single test to work with parallel processing.
 + Added zip file for umi5 primer multiple test.
