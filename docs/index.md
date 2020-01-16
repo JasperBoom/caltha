@@ -73,8 +73,8 @@ installed with conda (conda install -c bioconda vsearch).
 * __Augspurger T, Ayd W, Bartak C, Battiston P, Cloud P, Garcia M__,  
   Python Data Analysis Library.  
   [Pandas](https://pandas.pydata.org/)
-* __Langa L, Willing C, Meyer C, Zijlstra J, Naylor M, Dollenstein Z__,
-  The uncompromising Python code formatter.
+* __Langa L, Willing C, Meyer C, Zijlstra J, Naylor M, Dollenstein Z__,  
+  The uncompromising Python code formatter.  
   [Black](https://black.readthedocs.io/en/stable/)
 
 ## Author(s)
