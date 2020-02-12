@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# Author: Jasper Boom
 
 # Copyright (C) 2018 Jasper Boom
 
