@@ -110,6 +110,6 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
 * [Jasper Boom](https://github.com/JasperBoom)
 
 ## Citation
-* __Boom J__, Caltha. 2019-2020.  
+* __Boom J__, Caltha. 
   [![DOI](https://zenodo.org/badge/216898964.svg)](https://zenodo.org/badge/latestdoi/216898964)  
   GitHub repository: https://github.com/JasperBoom/caltha
