@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # Author: Jasper Boom
 
-# Caltha: A python package to process UMI tagged mixed amplicon metabarcoding data.
 # Copyright (C) 2018 Jasper Boom
 
 # This program is free software: you can redistribute it and/or modify
