@@ -16,6 +16,7 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 ## Version 0.5
++ Setup pre-commit with Black and Flake8.
 + Add code style Black.
 
 ## Version 0.4
