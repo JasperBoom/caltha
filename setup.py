@@ -43,7 +43,7 @@ setuptools.setup(
     keywords="UMI Metabarcoding",
     packages=setuptools.find_packages(),
     python_requires=">=3.7",
-    install_requires=["pandas>=0.25.1"],
+    install_requires=["pandas>=1.0.1"],
     project_urls={
         "Source": "https://github.com/JasperBoom/caltha/tree/master/src",
         "Tracker": "https://github.com/JasperBoom/caltha/issues",

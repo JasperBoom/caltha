@@ -1,2 +1,2 @@
 ### Checklist
-- [ ] Pull request details were added to CHANGELOG.md
+- [ ] Pull request details were added to CHANGELOG.md.

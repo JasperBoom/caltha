@@ -17,10 +17,10 @@ requirements:
   host:
     - python
     - pip
-    - pandas >=0.25.1
+    - pandas >=1.0.1
   run:
     - python
-    - pandas >=0.25.1
+    - pandas >=1.0.1
 
 about:
   home: "https://github.com/JasperBoom/caltha"
