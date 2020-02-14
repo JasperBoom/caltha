@@ -16,3 +16,5 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 name = "caltha"
+description = "A python package to process UMI tagged mixed amplicon\
+               metabarcoding data."

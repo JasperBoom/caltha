@@ -24,6 +24,7 @@ import subprocess as sp
 from contextlib import closing
 
 
+# TestSingleEnd
 class TestSingleEnd(object):
     def test_umi5_primer(self):
         flInput = "tests/data/umi5_primer_single.fasta"
@@ -64,7 +65,7 @@ class TestSingleEnd(object):
                     ".",
                 ]
             )
-        except:
+        except Exception:  # FIXME: should use pytest.raises(Exception)!
             pytest.fail("umi5 primer search failed")
         lstFiles = []
         for flZip in lstOutput:
