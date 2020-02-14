@@ -1,0 +1,4 @@
+pandas>=1.0.1
+pre-commit>=2.0.1
+pytest>=5.3.5
+setuptools>=45.2.0
