@@ -36,4 +36,4 @@ with this conda package. This dependency is VSEARCH, which can be installed usin
 
 extra:
   recipe-maintainers:
-    - JasperBoom
+    - Jasper Boom

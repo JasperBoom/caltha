@@ -1,0 +1,2 @@
+pandas>=0.25.1
+pre-commit>=2.0.1
