@@ -1,3 +1,17 @@
+# Copyright (C) 2018 Jasper Boom (jboom@infernum.nl)
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License version 3 as 
+# published by the Free Software Foundation.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
+
 {% set name = "caltha" %}
 {% set version = "0.5" %}
 
@@ -32,7 +46,7 @@ about:
 with this conda package. This dependency is VSEARCH, which can be installed using: conda install -c bioconda vsearch"
   dev_url: "https://github.com/JasperBoom/caltha/tree/master/src"
   doc_url: "https://jasperboom.github.io/caltha"
-  doc_source_url: "https://github.com/JasperBoom/caltha/blob/master/docs/index.md"
+  doc_source_url: "https://github.com/JasperBoom/caltha/tree/gh-pages"
 
 extra:
   recipe-maintainers:
