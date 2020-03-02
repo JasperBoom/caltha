@@ -21,7 +21,7 @@ package:
 
 source:
   url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
-  sha256: "c484373574513225ace7bab148b10e5ae1b508425b74eb4441edb62dfa4bedf7"
+  sha256: "fd4baf4f74e7b78b3d428be89e5ef7a1b8bde5548336b6642c6f7c39431ec619"
 
 build:
   number: 0
@@ -35,6 +35,10 @@ requirements:
   run:
     - python
     - pandas >=1.0.1
+
+test:
+  imports:
+    - src
 
 about:
   home: "https://github.com/JasperBoom/caltha"
