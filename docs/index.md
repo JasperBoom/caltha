@@ -1,3 +1,21 @@
+## Installation
+The current version of __Caltha__ requires Python 3.7+.
+
+To install __Caltha__, simply run the pip install command or the conda install command:
+```
+pip install caltha
+
+conda install -c jboom caltha
+```
+
+NOTE: __Caltha__ does require one more dependency which can not be installed
+with the __Caltha__ pip or conda package. This dependency is
+[Vsearch](https://github.com/torognes/vsearch) (2.14.1+).  
+Executing the following conda install command should install the dependency.
+```
+conda install -c bioconda vsearch
+```
+
 ## How to run
 __Caltha__ can be run directly from the command line.
 ```
@@ -53,6 +71,8 @@ optional arguments:
 This python package requires one extra dependency which can be easily
 installed with conda (conda install -c bioconda vsearch).
 ```
+
+Further documentation can be found [here](https://jasperboom.github.io/caltha/).
 
 ## Package links
 * [PyPI](https://pypi.org/project/caltha/)
