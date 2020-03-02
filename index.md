@@ -1,3 +1,21 @@
+## Installation
+The current version of __Caltha__ requires Python 3.7+.
+
+To install __Caltha__, simply run the pip install command or the conda install command:
+```
+pip install caltha
+
+conda install -c jboom caltha
+```
+
+NOTE: __Caltha__ does require one more dependency which can not be installed
+with the __Caltha__ pip or conda package. This dependency is
+[Vsearch](https://github.com/torognes/vsearch) (2.14.1+).  
+Executing the following conda install command should install the dependency.
+```
+conda install -c bioconda vsearch
+```
+
 ## How to run
 __Caltha__ can be run directly from the command line.
 ```
@@ -54,6 +72,8 @@ This python package requires one extra dependency which can be easily
 installed with conda (conda install -c bioconda vsearch).
 ```
 
+Further documentation can be found [here](https://jasperboom.github.io/caltha/).
+
 ## Package links
 * [PyPI](https://pypi.org/project/caltha/)
 * [Conda](https://anaconda.org/jboom/caltha)
@@ -86,12 +106,11 @@ installed with conda (conda install -c bioconda vsearch).
   GitHub repository: https://github.com/JasperBoom/caltha
 
 ```
-Copyright (C) 2018 Jasper Boom
+Copyright (C) 2018 Jasper Boom (jboom@infernum.nl)
 
 This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published
-by the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+it under the terms of the GNU Affero General Public License version 3 as 
+published by the Free Software Foundation.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
