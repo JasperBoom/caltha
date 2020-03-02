@@ -16,7 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 ```
 
-## Version 0.5
+## Version 0.5.1
 + Setup pre-commit with Black and Flake8.
 + Add code style Black.
 
