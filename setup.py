@@ -39,7 +39,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3.7",
         "Topic :: Scientific/Engineering :: Bio-Informatics",
     ],
-    keywords="UMI Metabarcoding",
+    keywords="UMI Metabarcoding Amplicon",
     packages=setuptools.find_packages(),
     python_requires=">=3.7",
     install_requires=[
