@@ -23,7 +23,7 @@ with open("README.md", "r") as oisReadme:
 # Setup
 setuptools.setup(
     name="caltha",
-    version="0.5",
+    version="0.5.1",
     description="A python package to process UMI tagged mixed amplicon\
                  metabarcoding data.",
     long_description=strDescription,
@@ -42,7 +42,10 @@ setuptools.setup(
     keywords="UMI Metabarcoding",
     packages=setuptools.find_packages(),
     python_requires=">=3.7",
-    install_requires=["pandas>=1.0.1"],
+    install_requires=[
+        "pandas>=1.0.1",
+        "numpy>=1.18.1"
+    ],
     project_urls={
         "Source": "https://github.com/JasperBoom/caltha/tree/master/src",
         "Tracker": "https://github.com/JasperBoom/caltha/issues",

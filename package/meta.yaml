@@ -13,7 +13,7 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 {% set name = "caltha" %}
-{% set version = "0.5" %}
+{% set version = "0.5.1" %}
 
 package:
   name: "{{ name|lower }}"
@@ -32,13 +32,11 @@ requirements:
     - python
     - pip
     - pandas >=1.0.1
+    - numpy >= 1.18.1
   run:
     - python
     - pandas >=1.0.1
-
-test:
-  imports:
-    - src
+    - numpy >= 1.18.1
 
 about:
   home: "https://github.com/JasperBoom/caltha"
@@ -54,4 +52,4 @@ with this conda package. This dependency is VSEARCH, which can be installed usin
 
 extra:
   recipe-maintainers:
-    - Jasper Boom
+    - JasperBoom
