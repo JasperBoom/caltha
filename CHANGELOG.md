@@ -16,22 +16,36 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 ```
 
+## Version 0.5.2
++
+
 ## Version 0.5.1
++ Restructure version to match PyPI package.
+
+## Version 0.5
 + Setup pre-commit with Black and Flake8.
-+ Add code style Black.
 
 ## Version 0.4
-+ Updated python script for umi5 primer single test to work with parallel processing.
-+ Added zip file for umi5 primer multiple test.
-+ Added parallel processing [issue #2](https://github.com/JasperBoom/caltha/issues/2).
-+ Added .travis.yml configuration file.
-+ Added python script for umi5 primer single test.
++ Add code style Black.
 
 ## Version 0.3
-+ Added fasta file for umi5 primer single test.
-+ Created a Zenodo DOI code for Caltha.
++ Updated python script for umi5 primer single test to work with parallel processing.
++ Added zip file for umi5 primer multiple test.
 
 ## Version 0.2
++ Added parallel processing [issue #2](https://github.com/JasperBoom/caltha/issues/2).
++ Added .travis.yml configuration file.
+
+## Version 0.1.3
++ Added python script for umi5 primer single test.
+
+## Version 0.1.2
++ Added fasta file for umi5 primer single test.
+
+## Version 0.1.1
++ Created a Zenodo DOI code for Caltha.
+
+## Version 0.1
 + Implemented a UMI length check.
 + Created Conda package for Caltha.
 + Created PyPI package for Caltha.
