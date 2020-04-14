@@ -3,7 +3,7 @@
 # Copyright (C) 2018 Jasper Boom (jboom@infernum.nl)
 
 # This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License version 3 as 
+# it under the terms of the GNU Affero General Public License version 3 as
 # published by the Free Software Foundation.
 
 # This program is distributed in the hope that it will be useful,
@@ -42,10 +42,7 @@ setuptools.setup(
     keywords="UMI Metabarcoding Amplicon",
     packages=setuptools.find_packages(),
     python_requires=">=3.7",
-    install_requires=[
-        "pandas>=1.0.1",
-        "numpy>=1.18.1"
-    ],
+    install_requires=["pandas>=1.0.1", "numpy>=1.18.1"],
     project_urls={
         "Source": "https://github.com/JasperBoom/caltha/tree/master/src",
         "Tracker": "https://github.com/JasperBoom/caltha/issues",
