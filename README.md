@@ -100,6 +100,15 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
 * __Langa L, Willing C, Meyer C, Zijlstra J, Naylor M, Dollenstein Z__,  
   The uncompromising Python code formatter.  
   [Black](https://black.readthedocs.io/en/stable/)
+* __Ziadé T, Cordasco I__,  
+  Your tool for style guide enforcement.  
+  [Flake8](http://flake8.pycqa.org/en/latest/index.html)
+* __Sottile A, Struys K, Kuehl C, Finkle M__,  
+  A framework for managing and maintaining multi-language pre-commit hooks.  
+  [pre-commit](https://pre-commit.com/)
+* __Python Software Foundation__,  
+  PyPI - The Python Package index.  
+  [PyPI](https://pypi.org/)
 
 ## Author(s)
 * [Jasper Boom](https://github.com/JasperBoom)
