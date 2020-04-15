@@ -33,6 +33,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 + Added zip file for umi5 primer multiple test.
 
 ## Version 0.2
+This release of Caltha implements parallel processing. Caltha now allows a .zip
+file with either fasta or fastq files as input. The output has been changed to
+three zip files, one for the tabular files, one for the pre validation zip files
+and one for blast files.
+
 + Added parallel processing [issue #2](https://github.com/JasperBoom/caltha/issues/2).
 + Added .travis.yml configuration file.
 
@@ -43,10 +48,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 + Added fasta file for umi5 primer single test.
 
 ## Version 0.1.1
-+ Created a Zenodo DOI code for Caltha.
++ Implemented a UMI length check.
 
 ## Version 0.1
-+ Implemented a UMI length check.
+First release on GitHub for the new Caltha tool.
+Any changes mentioned below were applied to the main python script after it was
+isolated from the old "galaxy-tools-umi-isolation" repository. This python
+script is now a package on both PyPI and Conda and will be maintained in this
+repository.
+
 + Created Conda package for Caltha.
 + Created PyPI package for Caltha.
 + Added documentation page to repository (still needs to be filled).

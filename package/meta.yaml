@@ -13,7 +13,7 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 {% set name = "caltha" %}
-{% set version = "0.5.1" %}
+{% set version = "0.6" %}
 
 package:
   name: "{{ name|lower }}"
@@ -31,12 +31,12 @@ requirements:
   host:
     - python
     - pip
-    - pandas >=1.0.1
-    - numpy >=1.18.1
+    - pandas >=1.0.3
+    - numpy >=1.18.2
   run:
     - python
-    - pandas >=1.0.1
-    - numpy >=1.18.1
+    - pandas >=1.0.3
+    - numpy >=1.18.2
 
 about:
   home: "https://github.com/JasperBoom/caltha"

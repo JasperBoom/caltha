@@ -1,7 +1,6 @@
 # Caltha
 A python package to process UMI tagged mixed amplicon metabarcoding data.
 
-[![DOI](https://zenodo.org/badge/216898964.svg)](https://zenodo.org/badge/latestdoi/216898964)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Installation
@@ -16,7 +15,7 @@ conda install -c jboom caltha
 
 NOTE: __Caltha__ does require one more dependency which can not be installed
 with the __Caltha__ pip or conda package. This dependency is
-[Vsearch](https://github.com/torognes/vsearch) (2.14.1+).  
+[Vsearch](https://github.com/torognes/vsearch) (2.14.2).  
 Executing the following conda install command should install the dependency.
 ```
 conda install -c bioconda vsearch
@@ -82,7 +81,6 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
 
 ## Package links
 * [PyPI](https://pypi.org/project/caltha/)
-* [Conda](https://anaconda.org/jboom/caltha)
 
 ## Source(s)
 * __Giardine B, Riemer C, Hardison RC, Burhans R, Elnitski L, Shah P__,  
@@ -107,8 +105,7 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
 * [Jasper Boom](https://github.com/JasperBoom)
 
 ## Citation
-* __Boom J__, Caltha. 
-  [![DOI](https://zenodo.org/badge/216898964.svg)](https://zenodo.org/badge/latestdoi/216898964)  
+* __Boom J__, Caltha.  
   GitHub repository: https://github.com/JasperBoom/caltha
 
 ```
