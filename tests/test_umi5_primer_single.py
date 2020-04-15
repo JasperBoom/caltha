@@ -22,6 +22,7 @@ import pandas as pd
 import subprocess as sp
 from contextlib import closing
 
+
 # TestSingleEnd
 class TestSingleEnd(object):
     def test_umi5_primer(self):

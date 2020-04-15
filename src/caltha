@@ -26,6 +26,7 @@ import multiprocessing as mp
 import pandas as pd
 import subprocess as sp
 
+
 # The removeWorkDirs function.
 # This function removes all temporary working directories.
 def removeWorkDirs(strDir):

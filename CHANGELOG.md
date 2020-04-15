@@ -16,8 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 ```
 
-## Version 0.5.2
-+
+## Version 0.6
++ Update README.md & index.md to reflect current project state.
++ Fix pre-commit files.
 
 ## Version 0.5.1
 + Restructure version to match PyPI package.
