@@ -67,7 +67,7 @@ optional arguments:
                         (default: .)
   -p DISPROCESSES, -processes DISPROCESSES
                         The number of threads to run Caltha with. (default:
-                        12)
+                        number of threads available on system)
 
 This python package requires one extra dependency which can be easily
 installed with conda (conda install -c bioconda vsearch).
