@@ -1,4 +1,4 @@
-# Copyright (C) 2018 Jasper Boom (jboom@infernum.nl)
+# Copyright (C) 2018 Jasper Boom
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License version 3 as
@@ -43,7 +43,7 @@ about:
   license: "GNU Affero General Public v3"
   license_family: "AGPL"
   license_file: "../LICENSE.md"
-  summary: "A python package to process UMI tagged mixed amplicon metabarcoding data."
+  summary: "A python package for processing UMI tagged mixed amplicon metabarcoding data."
   description: "Caltha requires one more dependency which can not be installed
 with this conda package. This dependency is VSEARCH, which can be installed using: conda install -c bioconda vsearch"
   dev_url: "https://github.com/JasperBoom/caltha/tree/master/src"

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (C) 2018 Jasper Boom (jboom@infernum.nl)
+# Copyright (C) 2018 Jasper Boom
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License version 3 as
@@ -25,12 +25,6 @@ import zipfile
 import multiprocessing as mp
 import pandas as pd
 import subprocess as sp
-
-
-# The removeWorkDirs function.
-# This function removes all temporary working directories.
-def removeWorkDirs(strDir):
-    shutil.rmtree(strDir)
 
 
 # The setOutputFiles function.
@@ -97,7 +91,7 @@ def setOutputFiles(strDir, strOutputFileName):
 
 # The setClusterSize function.
 # This function controls the Vsearch clustering. Every fasta file created by
-# setSortBySize is clustered using Vsearch. The expected result is a single
+# getSortBySize is clustered using Vsearch. The expected result is a single
 # centroid sequence. This is checked in the setOutputFiles function.
 def setClusterSize(strDir, strIdentity):
     for strFileName in os.listdir(strDir + "/clustering"):
@@ -128,11 +122,11 @@ def setClusterSize(strDir, strIdentity):
             pass
 
 
-# The setSortBySize function.
+# The getSortBySize function.
 # This function controls the Vsearch sorting. Every fasta file created by
-# setDereplication is sorted based on abundance. Any reads with a abundance
+# getDereplication is sorted based on abundance. Any reads with a abundance
 # lower than strAbundance will be discarded.
-def setSortBySize(strDir, strAbundance):
+def getSortBySize(strDir, strAbundance):
     for strFileName in os.listdir(strDir + "/clustering"):
         if strFileName.startswith("derep"):
             strInputCommand = strDir + "/clustering/" + strFileName
@@ -157,11 +151,11 @@ def setSortBySize(strDir, strAbundance):
             pass
 
 
-# The setDereplication function.
+# The getDereplication function.
 # This function controls the Vsearch dereplication. Every fasta file created by
 # getFastaFile is dereplicated. This step is necessary for the sorting step to
 # work.
-def setDereplication(strDir):
+def getDereplication(strDir):
     for strFileName in os.listdir(strDir + "/preZip"):
         if strFileName.endswith(".fasta"):
             strInputCommand = strDir + "/preZip/" + strFileName
@@ -183,17 +177,6 @@ def setDereplication(strDir):
             strOut, strError = rafDerep.communicate()
         else:
             pass
-
-
-# The getZipArchive function.
-# This function creates a zip archive from all files in the specified
-# directory.
-def getZipArchive(strDir, flZip, strExtension):
-    with zipfile.ZipFile(flZip, "w") as objZip:
-        for strFileName in os.listdir(strDir):
-            if strFileName.endswith(strExtension):
-                strFullPath = strDir + "/" + strFileName
-                objZip.write(strFullPath, os.path.basename(strFullPath))
 
 
 # The getFastaFile function.
@@ -531,8 +514,8 @@ def processInputFile(
 def runCaltha(
     flInput,
     strMainDir,
-    strSearch,
-    strApproach,
+    strLocation,
+    strAnchor,
     intUmiLength,
     strForward,
     strReverse,
@@ -545,8 +528,8 @@ def runCaltha(
     strTempDir = setWorkDirs(strMainDir, True)
     processInputFile(
         flInput,
-        strSearch,
-        strApproach,
+        strLocation,
+        strAnchor,
         intUmiLength,
         strForward,
         strReverse,
@@ -556,20 +539,37 @@ def runCaltha(
     getZipArchive(
         (strTempDir + "/preZip"), (strOutputFileName + "_PREZIP.zip"), ".fasta"
     )
-    setDereplication(strTempDir)
-    setSortBySize(strTempDir, intAbundance)
+    getDereplication(strTempDir)
+    getSortBySize(strTempDir, intAbundance)
     setClusterSize(strTempDir, fltIdentity)
     setOutputFiles(strTempDir, strOutputFileName)
     return "DONE"
+
+
+# The removeWorkDirs function.
+# This function removes all temporary working directories.
+def removeWorkDirs(strDir):
+    shutil.rmtree(strDir)
+
+
+# The getZipArchive function.
+# This function creates a zip archive from all files in the specified
+# directory.
+def getZipArchive(strDir, flZip, strExtension):
+    with zipfile.ZipFile(flZip, "w") as objZip:
+        for strFileName in os.listdir(strDir):
+            if strFileName.endswith(strExtension):
+                strFullPath = strDir + "/" + strFileName
+                objZip.write(strFullPath, os.path.basename(strFullPath))
 
 
 # The createInputList function.
 # This function creates a list of all input file names. If the input is a zip
 # file, it will create a temporary storage directory where the contents of the
 # zip file is extracted to.
-def createInputList(flInput, strDir, strFormat):
+def createInputList(flInput, strMainDir, strFormat):
     if strFormat == "zipfasta" or strFormat == "zipfastq":
-        strCreate = strDir + "/" + "inputFiles"
+        strCreate = strMainDir + "/" + "inputFiles"
         os.mkdir(strCreate)
         with zipfile.ZipFile(flInput, "r") as objZip:
             objZip.extractall(strCreate)
@@ -583,19 +583,19 @@ def createInputList(flInput, strDir, strFormat):
 
 
 # The setWorkDirs function.
-# This function creates the main temporary directory and all subprocess
+# This function creates the main temporary working directory and all subprocess
 # directories. It checks if the directories already exist and creates them
 # if they don't.
-def setWorkDirs(strDir, blnExtra):
+def setWorkDirs(strDirectory, blnExtra):
     strRandom = "".join(
         random.choice(string.ascii_lowercase) for i in range(10)
     )
     lstWorkDirs = []
-    lstWorkDirs.append(strDir + "/" + strRandom)
+    lstWorkDirs.append(strDirectory + "/" + strRandom)
     if blnExtra is True:
-        lstWorkDirs.append(strDir + "/" + strRandom + "/preZip")
-        lstWorkDirs.append(strDir + "/" + strRandom + "/clustering")
-        lstWorkDirs.append(strDir + "/" + strRandom + "/postClustering")
+        lstWorkDirs.append(strDirectory + "/" + strRandom + "/PreZip")
+        lstWorkDirs.append(strDirectory + "/" + strRandom + "/Clustering")
+        lstWorkDirs.append(strDirectory + "/" + strRandom + "/PostClustering")
     else:
         pass
     for strDirectory in lstWorkDirs:
@@ -607,8 +607,8 @@ def setWorkDirs(strDir, blnExtra):
 
 
 # The setFormat function.
-# This function specifies the first character of the read headers. This
-# character is based on the input file format. The function then returns this
+# This function identifies the first character of the read headers. This
+# character is based on the input file format. The function returns this
 # character.
 def setFormat(strFormat):
     if strFormat == "fasta" or strFormat == "zipfasta":
@@ -621,7 +621,7 @@ def setFormat(strFormat):
 
 # The argvs function.
 def parseArgvs():
-    strDescription = "A python package to process UMI tagged mixed amplicon\
+    strDescription = "A python package for processing UMI tagged mixed amplicon\
                       metabarcoding data."
     strEpilog = "This python package requires one extra dependency which can\
                  be easily installed with conda (conda install -c bioconda\
@@ -632,123 +632,121 @@ def parseArgvs():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "-v", "-version", action="version", version="%(prog)s [0.4]"
+        "-v", "--version", action="version", version="%(prog)s [0.6]"
     )
     parser.add_argument(
         "-i",
-        "-input",
+        "--input",
         action="store",
-        dest="fisInput",
+        dest="flInput",
         default=argparse.SUPPRESS,
-        help="The location of the input fasta/fastq file(s).",
+        help="The input fasta/fastq file(s).",
     )
     parser.add_argument(
         "-t",
-        "-tabular",
+        "--tabular",
         action="store",
-        dest="fosTabular",
+        dest="flTabular",
         default=argparse.SUPPRESS,
-        help="The location of the output tabular zip file.",
+        help="The output tabular zip file.",
     )
     parser.add_argument(
         "-z",
-        "-zip",
+        "--zip",
         action="store",
-        dest="fosPreZip",
+        dest="flPreZip",
         default=argparse.SUPPRESS,
-        help="The location of the pre validation zip file.",
+        help="The pre validation zip file.",
     )
     parser.add_argument(
         "-b",
-        "-blast",
+        "--blast",
         action="store",
-        dest="fosBlast",
+        dest="flBlast",
         default=argparse.SUPPRESS,
-        help="The location of the output blast zip file.",
+        help="The output blast zip file.",
     )
     parser.add_argument(
         "-f",
-        "-format",
+        "--format",
         action="store",
-        dest="disFormat",
-        default=argparse.SUPPRESS,
+        dest="strFormat",
+        default="fasta",
         help="The format of the input file [fasta/fastq/zipfasta/zipfastq].",
     )
     parser.add_argument(
-        "-s",
-        "-search",
+        "-l",
+        "--location",
         action="store",
-        dest="disSearch",
+        dest="strLocation",
         default="umi5",
-        help="Search UMIs at the 5'-end\
+        help="Search for UMIs at the 5'-end\
               [umi5], 3'-end [umi3] or at the 5'-end and 3'-end [umidouble].",
     )
     parser.add_argument(
         "-a",
-        "-approach",
+        "--anchor",
         action="store",
-        dest="disApproach",
+        dest="strAnchor",
         default="primer",
-        help="The UMI search approach [primer/adapter/zero].",
+        help="Which anchor type to use [primer/adapter/zero].",
     )
     parser.add_argument(
         "-u",
-        "-length",
+        "--length",
         action="store",
-        dest="disUmiLength",
-        default=argparse.SUPPRESS,
+        dest="intUmiLength",
+        default="5",
         help="The length of the UMI sequence.",
     )
     parser.add_argument(
         "-y",
-        "-identity",
+        "--identity",
         action="store",
-        dest="disIdentity",
+        dest="fltIdentity",
         default="0.97",
         help="The identity percentage with which to perform the validation.",
     )
     parser.add_argument(
         "-c",
-        "-abundance",
+        "--abundance",
         action="store",
-        dest="disAbundance",
+        dest="intAbundance",
         default="1",
-        help="The minimum abundance of a read\
-              in order to be included during validation.",
+        help="The minimum abundance of a sequence\
+              in order for it to be included during validation.",
     )
     parser.add_argument(
         "-w",
-        "-forward",
+        "--forward",
         action="store",
-        dest="disForward",
+        dest="strForward",
         default=argparse.SUPPRESS,
-        help="The 5'-end search nucleotides.",
+        help="The 5'-end anchor nucleotides.",
     )
     parser.add_argument(
         "-r",
-        "-reverse",
+        "--reverse",
         action="store",
-        dest="disReverse",
+        dest="strReverse",
         default=argparse.SUPPRESS,
-        help="The 3'-end search nucleotides.",
+        help="The 3'-end anchor nucleotides.",
     )
     parser.add_argument(
         "-d",
-        "-directory",
+        "--directory",
         action="store",
-        dest="fisDirectory",
+        dest="strDirectory",
         default=".",
-        help="The location where the temporary working directory will\
-              be created.",
+        help="The location of the temporary working directory.",
     )
     parser.add_argument(
-        "-p",
-        "-processes",
+        "-@",
+        "--threads",
         action="store",
-        dest="disProcesses",
+        dest="intThreads",
         default=mp.cpu_count(),
-        help="The number of threads/cores/processes to simultaneously run\
-              Caltha with.",
+        help="The number of threads to run Caltha with.",
     )
     argvs = parser.parse_args()
     return argvs
@@ -757,33 +755,33 @@ def parseArgvs():
 # The main function.
 def main():
     argvs = parseArgvs()
-    strOperand = setFormat(argvs.disFormat)
-    strMainDir = setWorkDirs(argvs.fisDirectory, False)
-    lstInput = createInputList(argvs.fisInput, strMainDir, argvs.disFormat)
-    mpPool = mp.Pool(int(argvs.disProcesses))
+    strOperand = setFormat(argvs.strFormat)
+    strMainDir = setWorkDirs(argvs.strDirectory, False)
+    lstInput = createInputList(argvs.flInput, strMainDir, argvs.strFormat)
+    mpPool = mp.Pool(int(argvs.intThreads))
     mpTemporary = [
         mpPool.apply_async(
             runCaltha,
             args=(
                 flInput,
                 strMainDir,
-                argvs.disSearch,
-                argvs.disApproach,
-                argvs.disUmiLength,
-                argvs.disForward,
-                argvs.disReverse,
+                argvs.strLocation,
+                argvs.strAnchor,
+                argvs.intUmiLength,
+                argvs.strForward,
+                argvs.strReverse,
                 strOperand,
-                argvs.disAbundance,
-                argvs.disIdentity,
+                argvs.intAbundance,
+                argvs.fltIdentity,
             ),
         )
         for flInput in lstInput
     ]
     mpPool.close()
     mpPool.join()
-    getZipArchive(strMainDir, argvs.fosTabular, ".tbl")
-    getZipArchive(strMainDir, argvs.fosPreZip, ".zip")
-    getZipArchive(strMainDir, argvs.fosBlast, ".fasta")
+    getZipArchive(strMainDir, argvs.flTabular, ".tbl")
+    getZipArchive(strMainDir, argvs.flPreZip, ".zip")
+    getZipArchive(strMainDir, argvs.flBlast, ".fasta")
     removeWorkDirs(strMainDir)
     print(mpTemporary)
 

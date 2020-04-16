@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (C) 2018 Jasper Boom (jboom@infernum.nl)
+# Copyright (C) 2018 Jasper Boom
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License version 3 as
@@ -15,5 +15,5 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 name = "caltha"
-description = "A python package to process UMI tagged mixed amplicon\
+description = "A python package for processing UMI tagged mixed amplicon\
                metabarcoding data."

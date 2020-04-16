@@ -1,16 +1,14 @@
 # Caltha
-A python package to process UMI tagged mixed amplicon metabarcoding data.
+A python package for processing UMI tagged mixed amplicon metabarcoding data.
 
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Installation
 The current version of __Caltha__ requires Python 3.7+.
 
-To install __Caltha__, simply run the pip install command or the conda install command:
+To install __Caltha__, simply run the pip install command:
 ```
 pip install caltha
-
-conda install -c jboom caltha
 ```
 
 NOTE: __Caltha__ does require one more dependency which can not be installed
@@ -24,15 +22,13 @@ conda install -c bioconda vsearch
 ## How to run
 __Caltha__ can be run directly from the command line.
 ```
-caltha -h
-
 usage: caltha [-h] [-v] [-i FISINPUT] [-t FOSTABULAR] [-z FOSPREZIP]
               [-b FOSBLAST] [-f DISFORMAT] [-s DISSEARCH] [-a DISAPPROACH]
               [-u DISUMILENGTH] [-y DISIDENTITY] [-c DISABUNDANCE]
               [-w DISFORWARD] [-r DISREVERSE] [-d FISDIRECTORY]
               [-p DISPROCESSES]
 
-A python package to process UMI tagged mixed amplicon metabarcoding data.
+A python package for processing UMI tagged mixed amplicon metabarcoding data.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -49,10 +45,10 @@ optional arguments:
                         The format of the input file
                         [fasta/fastq/zipfasta/zipfastq].
   -s DISSEARCH, -search DISSEARCH
-                        Search UMIs at the 5'-end [umi5], 3'-end [umi3] or at
-                        the 5'-end and 3'-end [umidouble]. (default: umi5)
+                        Search for UMIs at the 5'-end [umi5], 3'-end [umi3] or
+                        at the 5'-end and 3'-end [umidouble]. (default: umi5)
   -a DISAPPROACH, -approach DISAPPROACH
-                        The UMI search approach [primer/adapter/zero].
+                        Which anchor type to use [primer/adapter/zero].
                         (default: primer)
   -u DISUMILENGTH, -length DISUMILENGTH
                         The length of the UMI sequence.
@@ -60,18 +56,18 @@ optional arguments:
                         The identity percentage with which to perform the
                         validation. (default: 0.97)
   -c DISABUNDANCE, -abundance DISABUNDANCE
-                        The minimum abundance of a read in order to be
-                        included during validation. (default: 1)
+                        The minimum abundance of a sequence in order for it to
+                        be included during validation. (default: 1)
   -w DISFORWARD, -forward DISFORWARD
-                        The 5'-end search nucleotides.
+                        The 5'-end anchor nucleotides.
   -r DISREVERSE, -reverse DISREVERSE
-                        The 3'-end search nucleotides.
+                        The 3'-end anchor nucleotides.
   -d FISDIRECTORY, -directory FISDIRECTORY
-                        The location where the temporary working directory
-                        will be created. (default: .)
+                        The location of the temporary working directory.
+                        (default: .)
   -p DISPROCESSES, -processes DISPROCESSES
-                        The number of threads/cores/processes to
-                        simultaneously run Caltha with. (default: number of cores available)
+                        The number of threads to run Caltha with. (default:
+                        12)
 
 This python package requires one extra dependency which can be easily
 installed with conda (conda install -c bioconda vsearch).
@@ -100,6 +96,15 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
 * __Langa L, Willing C, Meyer C, Zijlstra J, Naylor M, Dollenstein Z__,  
   The uncompromising Python code formatter.  
   [Black](https://black.readthedocs.io/en/stable/)
+* __Ziadé T, Cordasco I__,  
+  Your tool for style guide enforcement.  
+  [Flake8](http://flake8.pycqa.org/en/latest/index.html)
+* __Sottile A, Struys K, Kuehl C, Finkle M__,  
+  A framework for managing and maintaining multi-language pre-commit hooks.  
+  [Pre-commit](https://pre-commit.com/)
+* __Python Software Foundation__,  
+  The Python Package index.  
+  [PyPI](https://pypi.org/)
 
 ## Author(s)
 * [Jasper Boom](https://github.com/JasperBoom)
@@ -109,7 +114,7 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
   GitHub repository: https://github.com/JasperBoom/caltha
 
 ```
-Copyright (C) 2018 Jasper Boom (jboom@infernum.nl)
+Copyright (C) 2018 Jasper Boom
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3 as

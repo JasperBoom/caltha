@@ -1,7 +1,7 @@
 # Changelog
 
 ```
-Copyright (C) 2018 Jasper Boom (jboom@infernum.nl)
+Copyright (C) 2018 Jasper Boom
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3 as
@@ -17,6 +17,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 ```
 
 ## Version 0.6
+Current stable version. Previous versions should be ignored.
+
++ Rename variables in core script and update Caltha --help page.
 + Update README.md & index.md to reflect current project state.
 + Fix pre-commit files.
 
