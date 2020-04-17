@@ -28,7 +28,7 @@ import subprocess as sp
 
 
 # The setOutputFiles function.
-# This function creates the tabular and BLAST output files.
+# This function creates the tabular and blast output files.
 def setOutputFiles(strDir, strOutputFileName):
     dfOutput = pd.DataFrame(
         columns=["UMI ID", "UMI Seq", "Read Count", "Centroid Read"]
@@ -93,7 +93,7 @@ def setOutputFiles(strDir, strOutputFileName):
 # This function controls the Vsearch clustering. Every fasta file created by
 # getSortBySize is clustered using Vsearch. The expected result is a single
 # centroid sequence. This is checked in the setOutputFiles function.
-def setClusterSize(strDir, strIdentity):
+def setClusterSize(strDir, fltIdentity):
     for strFileName in os.listdir(strDir + "/clustering"):
         if strFileName.startswith("sorted"):
             strInputCommand = strDir + "/clustering/" + strFileName
@@ -106,7 +106,7 @@ def setClusterSize(strDir, strIdentity):
                     "--fasta_width",
                     "0",
                     "--id",
-                    strIdentity,
+                    fltIdentity,
                     "--sizein",
                     "--minseqlength",
                     "1",
@@ -125,8 +125,8 @@ def setClusterSize(strDir, strIdentity):
 # The getSortBySize function.
 # This function controls the Vsearch sorting. Every fasta file created by
 # getDereplication is sorted based on abundance. Any reads with a abundance
-# lower than strAbundance will be discarded.
-def getSortBySize(strDir, strAbundance):
+# lower than intAbundance will be discarded.
+def getSortBySize(strDir, intAbundance):
     for strFileName in os.listdir(strDir + "/clustering"):
         if strFileName.startswith("derep"):
             strInputCommand = strDir + "/clustering/" + strFileName
@@ -141,7 +141,7 @@ def getSortBySize(strDir, strAbundance):
                     "--minseqlength",
                     "1",
                     "--minsize",
-                    strAbundance,
+                    intAbundance,
                 ],
                 stdout=sp.PIPE,
                 stderr=sp.PIPE,
@@ -196,24 +196,26 @@ def getFastaFile(strDir, dicUniqueUmi, strHeader, strRead, strCode):
 
 # The useZeroPosition function.
 # This function will isolate either a 5'-end, 3'-end or double UMI based on
-# the starting or ending position of a read.
+# the start or end position of a sequence.
 # It will check if both the forward and reverse primer can be found. If this
 # check is passed, the 5'-end, 3'-end UMI or double UMI will be isolated by
 # adding or subtracting the UMI length from the first or last position of the
-# read. The function will return (if possible) the UMI nucleotides.
-def useZeroPosition(strSearch, intUmiLength, strRead, strForward, strReverse):
+# sequence. The function will return (if possible) the UMI nucleotides.
+def useZeroPosition(
+    strLocation, intUmiLength, strRead, strForward, strReverse
+):
     tplCheckForward = re.search(strForward, strRead)
     if tplCheckForward is not None:
         tplCheckReverse = re.search(strReverse, strRead)
         if tplCheckReverse is not None:
-            if strSearch == "umi5":
+            if strLocation == "umi5":
                 return strRead[0 : int(intUmiLength)]
-            elif strSearch == "umidouble":
+            elif strLocation == "umidouble":
                 return (
                     strRead[0 : int(intUmiLength)],
                     strRead[-int(intUmiLength) :],
                 )
-            elif strSearch == "umi3":
+            elif strLocation == "umi3":
                 return strRead[-int(intUmiLength) :]
             else:
                 pass
@@ -224,9 +226,9 @@ def useZeroPosition(strSearch, intUmiLength, strRead, strForward, strReverse):
 
 
 # The useAdapter function.
-# This function searches for a regex string in the provided read. It will
+# This function searches for a regex string in the provided sequence. It will
 # isolate either a 5'-end, 3'-end or double UMI. The isolation is based on
-# this read structure:
+# this sequence structure:
 #     ADAPTER(F)-UMI(5')-PRIMER(F)-INSERT-PRIMER(R)-UMI(3')-ADAPTER(R).
 # When looking for the 5'-end UMI, the last position of ADAPTER(F) is used,
 # when looking for the 3'-end UMI, the first position of ADAPTER(R) is used,
@@ -235,25 +237,25 @@ def useZeroPosition(strSearch, intUmiLength, strRead, strForward, strReverse):
 # In the case of umi5 or umi3, a check needs to be passed. This check makes
 # sure the opposite adapters are also present, otherwise no UMI is returned.
 # The function will return (if possible) the UMI nucleotides.
-def useAdapter(strSearch, intUmiLength, strRead, strForward, strReverse):
-    if strSearch == "umi5" or strSearch == "umidouble":
+def useAdapter(strLocation, intUmiLength, strRead, strForward, strReverse):
+    if strLocation == "umi5" or strLocation == "umidouble":
         intPositionForward = re.search(strForward, strRead).end()
         intPositionUmiForward = intPositionForward + int(intUmiLength)
         strUmiForward = strRead[intPositionForward:intPositionUmiForward]
-        if strSearch == "umi5":
+        if strLocation == "umi5":
             tplCheckReverse = re.search(strReverse, strRead)
             if tplCheckReverse is not None:
                 return strUmiForward
             else:
                 pass
-        elif strSearch == "umidouble":
+        elif strLocation == "umidouble":
             intPositionReverse = re.search(strReverse, strRead).start()
             intPositionUmiReverse = intPositionReverse - int(intUmiLength)
             strUmiReverse = strRead[intPositionUmiReverse:intPositionReverse]
             return strUmiForward, strUmiReverse
         else:
             pass
-    elif strSearch == "umi3":
+    elif strLocation == "umi3":
         tplCheckForward = re.search(strForward, strRead)
         if tplCheckForward is not None:
             intPositionReverse = re.search(strReverse, strRead).start()
@@ -267,36 +269,36 @@ def useAdapter(strSearch, intUmiLength, strRead, strForward, strReverse):
 
 
 # The usePrimer function.
-# This function searches for a regex string in the provided read. It will
+# This function searches for a regex string in the provided sequence. It will
 # isolate either a 5'-end, 3'-end or double UMI. The isolation is based on
-# this read structure:
+# this sequence structure:
 #     UMI(5')-PRIMER(F)-INSERT-PRIMER(R)-UMI(3').
 # When looking for the 5'-end UMI, the first position of PRIMER(F) is used,
 # when looking for the 3'-end UMI, the last position of PRIMER(R) is used,
 # when looking for the double UMI, both mentioned positions are used.
 # These positons plus or minus the UMI length result in the UMI nucleotides.
 # In the case of umi5 or umi3, a check needs to be passed. This check makes
-# sure the opposite primer are also present, otherwise no UMI is returned.
-# The function will return (if possible) the UMI nucleotides.
-def usePrimer(strSearch, intUmiLength, strRead, strForward, strReverse):
-    if strSearch == "umi5" or strSearch == "umidouble":
+# sure the opposite primer is also present, otherwise no UMI is returned.
+# The function returns (if possible) the UMI nucleotides.
+def usePrimer(strLocation, intUmiLength, strRead, strForward, strReverse):
+    if strLocation == "umi5" or strLocation == "umidouble":
         intPositionForward = re.search(strForward, strRead).start()
         intPositionUmiForward = intPositionForward - int(intUmiLength)
         strUmiForward = strRead[intPositionUmiForward:intPositionForward]
-        if strSearch == "umi5":
+        if strLocation == "umi5":
             tplCheckReverse = re.search(strReverse, strRead)
             if tplCheckReverse is not None:
                 return strUmiForward
             else:
                 pass
-        elif strSearch == "umidouble":
+        elif strLocation == "umidouble":
             intPositionReverse = re.search(strReverse, strRead).end()
             intPositionUmiReverse = intPositionReverse + int(intUmiLength)
             strUmiReverse = strRead[intPositionReverse:intPositionUmiReverse]
             return strUmiForward, strUmiReverse
         else:
             pass
-    elif strSearch == "umi3":
+    elif strLocation == "umi3":
         tplCheckForward = re.search(strForward, strRead)
         if tplCheckForward is not None:
             intPositionReverse = re.search(strReverse, strRead).end()
@@ -312,7 +314,8 @@ def usePrimer(strSearch, intUmiLength, strRead, strForward, strReverse):
 # The getReverseComplement function.
 # This function creates a complementary string using a nucleotide string as
 # input. The function loops through a list version of the nucleotide string
-# and checks/changes every character. The function then returns he new string.
+# and checks/changes every character for its complement version. The function
+# returns the  string.
 def getReverseComplement(strLine):
     dicComplementCodes = {
         "A": "T",
@@ -339,10 +342,10 @@ def getReverseComplement(strLine):
 
 # The getRegex function.
 # This function creates a regex string using a nucleotide string as input. This
-# regex string is based on IUPAC ambiguity codes. The function loops through
-# a list version of the nucleotide string and checks per character if it is a
-# ambiguous character. If a ambiguous character is found, it is replaced by a
-# regex version. The function then returns the new string.
+# regex string is based on the IUPAC ambiguity codes. The function loops
+# through a list version of the nucleotide string and checks per character if
+# it is a ambiguous character. If a ambiguous character is found, it is
+# replaced by a regex version. The function returns the new regex string.
 def getRegex(strLine):
     dicAmbiguityCodes = {
         "M": "[AC]",

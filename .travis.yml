@@ -1,7 +1,7 @@
 language: python
 
 python:
-  - "3.7"
+  - 3.7
 
 install:
   - sudo apt-get update
@@ -19,4 +19,7 @@ install:
   - conda activate test-environment
 
 script:
-  - python3 -m pytest tests/
+  - python3 -m pytest --keep-workflow-wd-on-fail tests/
+
+after_failure:
+  - bash -c 'tail -n 1000 /tmp/pytest_workflow_*/*/log.out'
