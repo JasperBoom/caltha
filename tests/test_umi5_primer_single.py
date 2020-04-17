@@ -46,7 +46,7 @@ class TestSingleEnd(object):
                     lstOutput[2],
                     "-f",
                     "fasta",
-                    "-s",
+                    "-l",
                     "umi5",
                     "-a",
                     "primer",
@@ -62,6 +62,8 @@ class TestSingleEnd(object):
                     "GATCAWACAAATAAAGGTAWTCGATC",
                     "-d",
                     ".",
+                    "-@",
+                    "1",
                 ]
             )
         except Exception:  # FIXME: should use pytest.raises(Exception)!
