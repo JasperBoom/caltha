@@ -25,6 +25,7 @@ import zipfile
 import multiprocessing as mp
 import pandas as pd
 import subprocess as sp
+from Bio import SeqIO
 
 
 # The setOutputFiles function.
@@ -440,76 +441,73 @@ def processInputFile(
     strReverse,
     strTempDir,
     strOperand,
+    strFormat,
 ):
     dicUniqueUmi = {}
     intUniqueUmi = 1
-    with open(flInput) as oisInput:
-        for strLine in oisInput:
-            if (
-                strLine[0] == strOperand
-                and bool(re.match("[A-Za-z0-9]", strLine[1])) is True
-            ):
-                strHeader = strLine
-                strRead = next(oisInput)
-                try:
-                    strUmi = getUmi(
-                        strLocation,
-                        strAnchor,
-                        intUmiLength,
-                        strForward.upper(),
-                        strReverse.upper(),
+    with open(flInput) as handle:
+        for record in SeqIO.parse(handle, strFormat):
+            strHeader = record.id
+            strRead = record.seq
+            try:
+                strUmi = getUmi(
+                    strLocation,
+                    strAnchor,
+                    intUmiLength,
+                    strForward.upper(),
+                    strReverse.upper(),
+                    strRead.upper(),
+                )
+            except UnboundLocalError:
+                pass
+            try:
+                if strUmi is not None:
+                    if strLocation == "umi5" or strLocation == "umi3":
+                        intLengthPotentialUmi = len(strUmi)
+                        if int(intLengthPotentialUmi) == int(intUmiLength):
+                            strCode = strUmi
+                        else:
+                            strCode = None
+                    elif strLocation == "umidouble":
+                        strCombined = strUmi[0] + strUmi[1]
+                        intLengthPotentialUmi = len(strCombined)
+                        intDoubleUmi = intUmiLength * 2
+                        if int(intLengthPotentialUmi) == int(intDoubleUmi):
+                            strCode = strCombined
+                        else:
+                            strCode = None
+                    else:
+                        pass
+                else:
+                    pass
+            except UnboundLocalError:
+                pass
+            try:
+                if strCode is not None:
+                    if strCode not in dicUniqueUmi:
+                        dicUniqueUmi[strCode] = intUniqueUmi
+                        intUniqueUmi += 1
+                    else:
+                        pass
+                else:
+                    pass
+            except UnboundLocalError:
+                pass
+            try:
+                if strCode is not None:
+                    getFastaFile(
+                        strTempDir,
+                        dicUniqueUmi,
+                        strHeader,
                         strRead.upper(),
+                        strCode,
                     )
-                except UnboundLocalError:
+                else:
                     pass
-                try:
-                    if strUmi is not None:
-                        if strLocation == "umi5" or strLocation == "umi3":
-                            intLengthPotentialUmi = len(strUmi)
-                            if int(intLengthPotentialUmi) == int(intUmiLength):
-                                strCode = strUmi
-                            else:
-                                strCode = None
-                        elif strLocation == "umidouble":
-                            strCombined = strUmi[0] + strUmi[1]
-                            intLengthPotentialUmi = len(strCombined)
-                            intDoubleUmi = intUmiLength * 2
-                            if int(intLengthPotentialUmi) == int(intDoubleUmi):
-                                strCode = strCombined
-                            else:
-                                strCode = None
-                        else:
-                            pass
-                    else:
-                        pass
-                except UnboundLocalError:
-                    pass
-                try:
-                    if strCode is not None:
-                        if strCode not in dicUniqueUmi:
-                            dicUniqueUmi[strCode] = intUniqueUmi
-                            intUniqueUmi += 1
-                        else:
-                            pass
-                    else:
-                        pass
-                except UnboundLocalError:
-                    pass
-                try:
-                    if strCode is not None:
-                        getFastaFile(
-                            strTempDir,
-                            dicUniqueUmi,
-                            strHeader,
-                            strRead.upper(),
-                            strCode,
-                        )
-                    else:
-                        pass
-                except UnboundLocalError:
-                    pass
-            strUmi = None
-            strCode = None
+            except UnboundLocalError:
+                pass
+        strUmi = None
+        strCode = None
 
 
 # The runCaltha function.
@@ -525,6 +523,7 @@ def runCaltha(
     strOperand,
     intAbundance,
     fltIdentity,
+    strFormat,
 ):
     strInputFileName = flInput.split("/")[-1].split(".")[0]
     strOutputFileName = strMainDir + "/" + strInputFileName
@@ -538,6 +537,7 @@ def runCaltha(
         strReverse,
         strTempDir,
         strOperand,
+        strFormat,
     )
     getZipArchive(
         (strTempDir + "/preZip"), (strOutputFileName + "_PREZIP.zip"), ".fasta"
@@ -776,6 +776,7 @@ def main():
                 strOperand,
                 argvs.intAbundance,
                 argvs.fltIdentity,
+                argvs.strFormat,
             ),
         )
         for flInput in lstInput
