@@ -35,7 +35,7 @@ class TestSingleEnd(object):
         try:
             sp.check_output(
                 [
-                    "caltha",
+                    "src/caltha",
                     "-i",
                     flInput,
                     "-t",

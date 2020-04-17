@@ -375,19 +375,19 @@ def getRegex(strLine):
 # This function controls the UMI searching approach. It first uses the
 # functions getRegex and getReverseComplement to create regex strings of both
 # the forward and reverse primers/adapters. The regex strings are then directed
-# to the associated approach functions [primer/adapter/zero].
+# to the associated anchor functions [primer/adapter/zero].
 def getUmi(
-    strSearch, strApproach, intUmiLength, strForward, strReverse, strRead
+    strLocation, strAnchor, intUmiLength, strForward, strReverse, strRead
 ):
     strRead = strRead.strip("\n")
     strRegexForward = getRegex(strForward)
     strRegexComplementReverse = getRegex(
         getReverseComplement(strReverse[::-1])
     )
-    if strApproach == "primer":
+    if strAnchor == "primer":
         try:
             return usePrimer(
-                strSearch,
+                strLocation,
                 intUmiLength,
                 strRead,
                 strRegexForward,
@@ -395,10 +395,10 @@ def getUmi(
             )
         except AttributeError:
             pass
-    elif strApproach == "adapter":
+    elif strAnchor == "adapter":
         try:
             return useAdapter(
-                strSearch,
+                strLocation,
                 intUmiLength,
                 strRead,
                 strRegexForward,
@@ -406,10 +406,10 @@ def getUmi(
             )
         except AttributeError:
             pass
-    elif strApproach == "zero":
+    elif strAnchor == "zero":
         try:
             return useZeroPosition(
-                strSearch,
+                strLocation,
                 intUmiLength,
                 strRead,
                 strRegexForward,
@@ -423,19 +423,19 @@ def getUmi(
 
 # The processInputFile function.
 # This function opens the input file and loops through it. It stores the read
-# header and read nucleotides. For every read the getUmi function is called,
-# this outputs one or two UMI codes. In the case of a double UMI search
-# [umidouble], the two UMIs are combined. The length of the UMI is checked
-# before continuing. The getFastaFile function is called for every read that
-# contains a UMI.
+# header and nucleotides. For every read the getUmi function is called,
+# this outputs one or two UMI codes. In the case of a double UMI [umidouble],
+# the two UMIs are combined. The length of the UMI is checked before
+# continuing. The getFastaFile function is called for every read that contains
+# a UMI.
 def processInputFile(
     flInput,
-    strSearch,
-    strApproach,
+    strLocation,
+    strAnchor,
     intUmiLength,
     strForward,
     strReverse,
-    strDir,
+    strTempDir,
     strOperand,
 ):
     dicUniqueUmi = {}
@@ -450,8 +450,8 @@ def processInputFile(
                 strRead = next(oisInput)
                 try:
                     strUmi = getUmi(
-                        strSearch,
-                        strApproach,
+                        strLocation,
+                        strAnchor,
                         intUmiLength,
                         strForward.upper(),
                         strReverse.upper(),
@@ -461,13 +461,13 @@ def processInputFile(
                     pass
                 try:
                     if strUmi is not None:
-                        if strSearch == "umi5" or strSearch == "umi3":
+                        if strLocation == "umi5" or strLocation == "umi3":
                             intLengthPotentialUmi = len(strUmi)
                             if int(intLengthPotentialUmi) == int(intUmiLength):
                                 strCode = strUmi
                             else:
                                 strCode = None
-                        elif strSearch == "umidouble":
+                        elif strLocation == "umidouble":
                             strCombined = strUmi[0] + strUmi[1]
                             intLengthPotentialUmi = len(strCombined)
                             intDoubleUmi = intUmiLength * 2
@@ -495,7 +495,7 @@ def processInputFile(
                 try:
                     if strCode is not None:
                         getFastaFile(
-                            strDir,
+                            strTempDir,
                             dicUniqueUmi,
                             strHeader,
                             strRead.upper(),
