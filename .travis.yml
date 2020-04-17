@@ -19,7 +19,4 @@ install:
   - conda activate test-environment
 
 script:
-  - python3 -m pytest --keep-workflow-wd-on-fail tests/
-
-after_failure:
-  - bash -c 'tail -n 1000 /tmp/pytest_workflow_*/*/log.out'
+  - python3 -m pytest tests/
