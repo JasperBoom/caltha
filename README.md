@@ -4,7 +4,7 @@ A python package for processing UMI tagged mixed amplicon metabarcoding data.
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## Installation
-The current version of __Caltha__ requires Python 3.7+.
+The current version of __Caltha__ requires Python 3.8+.
 
 To install __Caltha__, simply run the pip install command:
 ```
@@ -84,7 +84,7 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
   Genome Research. 2005; 15(10) 1451-1455. __doi: 10.1101/gr.4086505__  
   [Galaxy](https://www.galaxyproject.org/)
 * __Python Software Foundation__,  
-  Python 3.7+. 2019.  
+  Python 3.8+. 2019.  
   [Python](https://www.python.org/)
 * __Rognes T, Flouri T, Nichols B, Quince C, Mahe F__,  
   VSEARCH: A versatile open source tool for metagenomics.  

@@ -37,14 +37,14 @@ def setOutputFiles(strDir, strOutputFileName):
     intCount = 0
     flBlast = strOutputFileName + "_BLAST.fasta"
     flTabular = strOutputFileName + "_TABULAR.tbl"
-    for strFileName in os.listdir(strDir + "/postClustering"):
+    for strFileName in os.listdir(strDir + "/PostClustering"):
         strUmiNumber = strFileName.split("_")[0]
         strUmiString = strFileName.split("_")[1][:-6]
         intLineCount = 0
-        with open(strDir + "/postClustering/" + strFileName) as oisClusterFile:
+        with open(strDir + "/PostClustering/" + strFileName) as oisClusterFile:
             for strLine in oisClusterFile:
                 intLineCount += 1
-        with open(strDir + "/postClustering/" + strFileName) as oisUmiFile:
+        with open(strDir + "/PostClustering/" + strFileName) as oisUmiFile:
             if intLineCount == 2:
                 for strLine in oisUmiFile:
                     if strLine.startswith(">"):
@@ -95,10 +95,10 @@ def setOutputFiles(strDir, strOutputFileName):
 # getSortBySize is clustered using Vsearch. The expected result is a single
 # centroid sequence. This is checked in the setOutputFiles function.
 def setClusterSize(strDir, fltIdentity):
-    for strFileName in os.listdir(strDir + "/clustering"):
+    for strFileName in os.listdir(strDir + "/Clustering"):
         if strFileName.startswith("sorted"):
-            strInputCommand = strDir + "/clustering/" + strFileName
-            strOutputCommand = strDir + "/postClustering/" + strFileName[11:]
+            strInputCommand = strDir + "/Clustering/" + strFileName
+            strOutputCommand = strDir + "/PostClustering/" + strFileName[11:]
             rafClustering = sp.Popen(
                 [
                     "vsearch",
@@ -128,10 +128,10 @@ def setClusterSize(strDir, fltIdentity):
 # getDereplication is sorted based on abundance. Any reads with a abundance
 # lower than intAbundance will be discarded.
 def getSortBySize(strDir, intAbundance):
-    for strFileName in os.listdir(strDir + "/clustering"):
+    for strFileName in os.listdir(strDir + "/Clustering"):
         if strFileName.startswith("derep"):
-            strInputCommand = strDir + "/clustering/" + strFileName
-            strOutputCommand = strDir + "/clustering/" + "sorted" + strFileName
+            strInputCommand = strDir + "/Clustering/" + strFileName
+            strOutputCommand = strDir + "/Clustering/" + "sorted" + strFileName
             rafSort = sp.Popen(
                 [
                     "vsearch",
@@ -157,10 +157,10 @@ def getSortBySize(strDir, intAbundance):
 # getFastaFile is dereplicated. This step is necessary for the sorting step to
 # work.
 def getDereplication(strDir):
-    for strFileName in os.listdir(strDir + "/preZip"):
+    for strFileName in os.listdir(strDir + "/PreZip"):
         if strFileName.endswith(".fasta"):
-            strInputCommand = strDir + "/preZip/" + strFileName
-            strOutputCommand = strDir + "/clustering/" + "derep" + strFileName
+            strInputCommand = strDir + "/PreZip/" + strFileName
+            strOutputCommand = strDir + "/Clustering/" + "derep" + strFileName
             rafDerep = sp.Popen(
                 [
                     "vsearch",
@@ -189,7 +189,7 @@ def getFastaFile(strDir, dicUniqueUmi, strHeader, strRead, strCode):
     strFileIdentifier = (
         "UMI#" + str(dicUniqueUmi[strCode]) + "_" + strCode + ".fasta"
     )
-    strFileName = strDir + "/preZip/" + strFileIdentifier
+    strFileName = strDir + "/PreZip/" + strFileIdentifier
     with open(strFileName, "a") as flOutput:
         flOutput.write(strHeader)
         flOutput.write(strRead)
@@ -445,10 +445,11 @@ def processInputFile(
 ):
     dicUniqueUmi = {}
     intUniqueUmi = 1
-    with open(flInput) as handle:
-        for record in SeqIO.parse(handle, strFormat):
-            strHeader = record.id
-            strRead = record.seq
+    with open(flInput) as oisFile:
+        for oisRecord in SeqIO.parse(oisFile, strFormat):
+            strHeader = oisRecord.id
+            strRead = oisRecord.seq
+            print(strHeader)
             try:
                 strUmi = getUmi(
                     strLocation,
@@ -507,7 +508,7 @@ def processInputFile(
             except UnboundLocalError:
                 pass
         strUmi = None
-        strCode = None
+        SSstrCode = None
 
 
 # The runCaltha function.
@@ -540,7 +541,7 @@ def runCaltha(
         strFormat,
     )
     getZipArchive(
-        (strTempDir + "/preZip"), (strOutputFileName + "_PREZIP.zip"), ".fasta"
+        (strTempDir + "/PreZip"), (strOutputFileName + "_PREZIP.zip"), ".fasta"
     )
     getDereplication(strTempDir)
     getSortBySize(strTempDir, intAbundance)
@@ -786,8 +787,7 @@ def main():
     getZipArchive(strMainDir, argvs.flTabular, ".tbl")
     getZipArchive(strMainDir, argvs.flPreZip, ".zip")
     getZipArchive(strMainDir, argvs.flBlast, ".fasta")
-    removeWorkDirs(strMainDir)
-    print(mpTemporary)
+    # removeWorkDirs(strMainDir)
 
 
 if __name__ == "__main__":

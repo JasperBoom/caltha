@@ -14,4 +14,4 @@
     -w "GGRKCHGGDACWGGDTGAAC" \
     -r "GATCAWACAAATAAAGGTAWTCGATC" \
     -d "/home/jboom/Temp/test-output" \
-    -@ "1"
+    -@ "2"

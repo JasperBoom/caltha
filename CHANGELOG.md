@@ -19,6 +19,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 ## Version 0.6
 Current stable version. Previous versions should be ignored.
 
++ Update documented python version to 3.8.
 + Rename variables in core script and update Caltha --help page.
 + Update README.md & index.md to reflect current project state.
 + Fix pre-commit files.
