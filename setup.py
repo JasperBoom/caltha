@@ -42,7 +42,12 @@ setuptools.setup(
     keywords="UMI Metabarcoding Amplicon",
     packages=setuptools.find_packages(),
     python_requires=">=3.8",
-    install_requires=["pandas>=1.0.3", "numpy>=1.18.2", "pyfastx>=0.6.11"],
+    install_requires=[
+        "pandas>=1.0.3",
+        "numpy>=1.18.2",
+        "pyfastx>=0.6.11",
+        "biopython>=1.76",
+    ],
     project_urls={
         "Source": "https://github.com/JasperBoom/caltha/tree/master/src",
         "Tracker": "https://github.com/JasperBoom/caltha/issues",

@@ -28,6 +28,8 @@ import time
 import multiprocessing as mp
 import pandas as pd
 import subprocess as sp
+from Bio.Seq import Seq
+from Bio.Alphabet import generic_dna
 
 
 # The setOutputFiles function.
@@ -314,35 +316,6 @@ def usePrimer(strLocation, intUmiLength, strRead, strForward, strReverse):
         pass
 
 
-# The getReverseComplement function.
-# This function creates a complementary string using a nucleotide string as
-# input. The function loops through a list version of the nucleotide string
-# and checks/changes every character for its complement version. The function
-# returns the  string.
-def getReverseComplement(strLine):
-    dicComplementCodes = {
-        "A": "T",
-        "T": "A",
-        "G": "C",
-        "C": "G",
-        "M": "K",
-        "R": "Y",
-        "W": "W",
-        "S": "S",
-        "Y": "R",
-        "K": "M",
-        "V": "B",
-        "H": "D",
-        "D": "H",
-        "B": "V",
-        "N": "N",
-    }
-    lstLine = list(strLine)
-    for intPosition in range(len(lstLine)):
-        lstLine[intPosition] = dicComplementCodes[lstLine[intPosition]]
-    return "".join(lstLine)
-
-
 # The getRegex function.
 # This function creates a regex string using a nucleotide string as input. This
 # regex string is based on the IUPAC ambiguity codes. The function loops
@@ -379,16 +352,16 @@ def getRegex(strLine):
 
 # The getUmi function.
 # This function controls the UMI searching approach. It first uses the
-# functions getRegex and getReverseComplement to create regex strings of both
-# the forward and reverse primers/adapters. The regex strings are then directed
-# to the associated anchor functions [primer/adapter/zero].
+# functions getRegex to create regex strings of both the forward and reverse
+# primers/adapters. The regex strings are then directed to the associated
+# anchor functions [primer/adapter/zero].
 def getUmi(
     strLocation, strAnchor, intUmiLength, strForward, strReverse, strRead
 ):
     strRegexForward = getRegex(strForward)
-    strRegexComplementReverse = getRegex(
-        getReverseComplement(strReverse[::-1])
-    )
+    strReverseComplement = Seq(strReverse, generic_dna)
+    strReverseComplement = strReverseComplement.reverse_complement()
+    strRegexReverseComplement = getRegex(strReverseComplement)
     if strAnchor == "primer":
         try:
             return usePrimer(
@@ -396,7 +369,7 @@ def getUmi(
                 intUmiLength,
                 strRead,
                 strRegexForward,
-                strRegexComplementReverse,
+                strRegexReverseComplement,
             )
         except AttributeError:
             pass
@@ -407,7 +380,7 @@ def getUmi(
                 intUmiLength,
                 strRead,
                 strRegexForward,
-                strRegexComplementReverse,
+                strRegexReverseComplement,
             )
         except AttributeError:
             pass
@@ -418,7 +391,7 @@ def getUmi(
                 intUmiLength,
                 strRead,
                 strRegexForward,
-                strRegexComplementReverse,
+                strRegexReverseComplement,
             )
         except AttributeError:
             pass
@@ -440,9 +413,9 @@ def processInputFile(
     strForward,
     strReverse,
     strTempDir,
+    dicUniqueUmi,
+    intUniqueUmi,
 ):
-    dicUniqueUmi = {}
-    intUniqueUmi = 1
     try:
         strUmi = getUmi(
             strLocation,
@@ -498,6 +471,7 @@ def processInputFile(
         pass
     strUmi = None
     strCode = None
+    return dicUniqueUmi, intUniqueUmi
 
 
 # The runCaltha function.
@@ -519,9 +493,11 @@ def runCaltha(
     strInputFileName = flInput.split("/")[-1].split(".")[0]
     strOutputFileName = strMainDir + "/" + strInputFileName
     strTempDir = setWorkDirs(strMainDir, True)
+    dicUniqueUmi = {}
+    intUniqueUmi = 1
     if strFormat == "fasta":
         for oisRecord in pyfastx.Fasta(flInput):
-            processInputFile(
+            lstProcessOutput = processInputFile(
                 oisRecord.name,
                 oisRecord.seq.upper(),
                 strLocation,
@@ -530,10 +506,14 @@ def runCaltha(
                 strForward,
                 strReverse,
                 strTempDir,
+                dicUniqueUmi,
+                intUniqueUmi,
             )
+            dicUniqueUmi = lstProcessOutput[0]
+            intUniqueUmi = lstProcessOutput[1]
     elif strFormat == "fastq":
         for oisRecord in pyfastx.Fastq(flInput):
-            processInputFile(
+            lstProcessOutput = processInputFile(
                 oisRecord.name,
                 oisRecord.seq.upper(),
                 strLocation,
@@ -542,7 +522,11 @@ def runCaltha(
                 strForward,
                 strReverse,
                 strTempDir,
+                dicUniqueUmi,
+                intUniqueUmi,
             )
+            dicUniqueUmi = lstProcessOutput[0]
+            intUniqueUmi = lstProcessOutput[1]
     else:
         pass
     getZipArchive(
@@ -785,7 +769,7 @@ def main():
     getZipArchive(strMainDir, disArgvs.flTabular, ".tbl")
     getZipArchive(strMainDir, disArgvs.flPreZip, ".zip")
     getZipArchive(strMainDir, disArgvs.flBlast, ".fasta")
-    removeWorkDirs(strMainDir)
+    # removeWorkDirs(strMainDir)
     print(mpOutput)
 
 
