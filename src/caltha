@@ -750,7 +750,6 @@ def parseArgvs():
     argvs = parser.parse_args()
     return argvs
 
-
 # The main function.
 def main():
     disArgvs = parseArgvs()
@@ -781,7 +780,6 @@ def main():
     getZipArchive(strMainDir, disArgvs.flPreZip, ".zip")
     getZipArchive(strMainDir, disArgvs.flBlast, ".fasta")
     removeWorkDirs(strMainDir)
-
 
 if __name__ == "__main__":
     main()
