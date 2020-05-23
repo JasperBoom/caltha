@@ -553,8 +553,8 @@ def runCaltha(
     setClusterSize(strTempDir, fltIdentity)
     setOutputFiles(strTempDir, strOutputFileName)
     fltEnd = time.time() - fltStart
-    fltEnd = ntpath.basename(flInput) + ": " + "%.2f" % fltEnd + "s"
-    return fltEnd
+    strEnd = ntpath.basename(flInput) + ": " + "%.2f" % fltEnd + "s"
+    return strEnd
 
 
 # The removeWorkDirs function.
