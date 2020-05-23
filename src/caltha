@@ -24,6 +24,7 @@ import os
 import zipfile
 import pyfastx
 import ntpath
+import time
 import multiprocessing as mp
 import pandas as pd
 import subprocess as sp
@@ -514,6 +515,7 @@ def runCaltha(
     fltIdentity,
     strFormat,
 ):
+    fltStart = time.time()
     strInputFileName = flInput.split("/")[-1].split(".")[0]
     strOutputFileName = strMainDir + "/" + strInputFileName
     strTempDir = setWorkDirs(strMainDir, True)
@@ -550,7 +552,9 @@ def runCaltha(
     getSortBySize(strTempDir, intAbundance)
     setClusterSize(strTempDir, fltIdentity)
     setOutputFiles(strTempDir, strOutputFileName)
-    return "DONE"
+    fltEnd = time.time() - fltStart
+    fltEnd = ntpath.basename(flInput) + ": " + "%.2f" % fltEnd + "s"
+    return fltEnd
 
 
 # The removeWorkDirs function.
@@ -750,6 +754,7 @@ def parseArgvs():
     argvs = parser.parse_args()
     return argvs
 
+
 # The main function.
 def main():
     disArgvs = parseArgvs()
@@ -776,10 +781,13 @@ def main():
     ]
     mpPool.close()
     mpPool.join()
+    mpOutput = [mpProcess.get() for mpProcess in mpTemporary]
     getZipArchive(strMainDir, disArgvs.flTabular, ".tbl")
     getZipArchive(strMainDir, disArgvs.flPreZip, ".zip")
     getZipArchive(strMainDir, disArgvs.flBlast, ".fasta")
     removeWorkDirs(strMainDir)
+    print(mpOutput)
+
 
 if __name__ == "__main__":
     main()
