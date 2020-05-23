@@ -101,6 +101,10 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
 * __Python Software Foundation__,  
   The Python Package index.  
   [PyPI](https://pypi.org/)
+* __Du L__,  
+  A lightweight Python C extension for easy access to sequences from plain and
+  gzipped fasta/q files.  
+  [Pyfastx](https://pyfastx.readthedocs.io/en/latest/)
 
 ## Author(s)
 * [Jasper Boom](https://github.com/JasperBoom)

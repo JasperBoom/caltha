@@ -33,10 +33,12 @@ requirements:
     - pip
     - pandas >=1.0.3
     - numpy >=1.18.2
+    - pyfastx >= 0.6.11
   run:
     - python
     - pandas >=1.0.3
     - numpy >=1.18.2
+    - pyfastx >= 0.6.11
 
 about:
   home: "https://github.com/JasperBoom/caltha"
