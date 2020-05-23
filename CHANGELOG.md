@@ -23,7 +23,7 @@ Current stable version. Previous versions should be ignored.
   support for single gzipped input files or multiple gzipped files in a zip
   archive).
 + Update documented python version to 3.8.
-+ Rename variables in core script and update Caltha --help page.
++ Rename variables in core script and update Caltha `--help` page.
 + Update README.md & index.md to reflect current project state.
 + Fix pre-commit files.
 
