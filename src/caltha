@@ -158,7 +158,6 @@ def getSortBySize(strDir, intAbundance):
 # getFastaFile is dereplicated. This step is necessary for the sorting step to
 # work.
 def getDereplication(strDir):
-    print(strDir)
     for strFileName in os.listdir(strDir + "/PreZip"):
         if strFileName.endswith(".fasta"):
             strInputCommand = strDir + "/PreZip/" + strFileName
@@ -178,7 +177,6 @@ def getDereplication(strDir):
                 stderr=sp.PIPE,
             )
             strOut, strError = rafDerep.communicate()
-            print(strError)
         else:
             pass
 
@@ -779,10 +777,10 @@ def main():
     ]
     mpPool.close()
     mpPool.join()
-    # getZipArchive(strMainDir, disArgvs.flTabular, ".tbl")
-    # getZipArchive(strMainDir, disArgvs.flPreZip, ".zip")
-    # getZipArchive(strMainDir, disArgvs.flBlast, ".fasta")
-    # removeWorkDirs(strMainDir)
+    getZipArchive(strMainDir, disArgvs.flTabular, ".tbl")
+    getZipArchive(strMainDir, disArgvs.flPreZip, ".zip")
+    getZipArchive(strMainDir, disArgvs.flBlast, ".fasta")
+    removeWorkDirs(strMainDir)
 
 
 if __name__ == "__main__":
