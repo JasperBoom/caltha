@@ -105,6 +105,11 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
   A lightweight Python C extension for easy access to sequences from plain and
   gzipped fasta/q files.  
   [Pyfastx](https://pyfastx.readthedocs.io/en/latest/)
+* __Cock P, Antao T, Chang J, Chapman B, Cox C, Dalke A__,  
+  Biopython: freely available Python tools for computational molecular biology
+  and bioinformatics.  
+  Bioinformatics. 2009; 25(11): 1422-1423. __doi: 10.1093/bioinformatics/btp163__  
+  [Biopython](https://biopython.org/)
 
 ## Author(s)
 * [Jasper Boom](https://github.com/JasperBoom)

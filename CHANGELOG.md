@@ -19,11 +19,13 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 ## Version 0.6
 Current stable version. Previous versions should be ignored.
 
++ Fix bug where umi count would be reset to 1 for every read.
++ Replace reverse complement function with the biopython Seq class.
 + Add pyfastx for the parsing of the fasta/fastq files (which also adds
   support for single gzipped input files or multiple gzipped files in a zip
   archive).
 + Update documented python version to 3.8.
-+ Rename variables in core script and update Caltha --help page.
++ Rename variables in core script and update Caltha `--help` page.
 + Update README.md & index.md to reflect current project state.
 + Fix pre-commit files.
 
