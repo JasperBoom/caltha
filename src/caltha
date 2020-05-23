@@ -769,7 +769,7 @@ def main():
     getZipArchive(strMainDir, disArgvs.flTabular, ".tbl")
     getZipArchive(strMainDir, disArgvs.flPreZip, ".zip")
     getZipArchive(strMainDir, disArgvs.flBlast, ".fasta")
-    # removeWorkDirs(strMainDir)
+    removeWorkDirs(strMainDir)
     print(mpOutput)
 
 
