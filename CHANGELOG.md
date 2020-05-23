@@ -20,7 +20,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 Current stable version. Previous versions should be ignored.
 
 + Add pyfastx for the parsing of the fasta/fastq files (which also adds
-  support for gzipped input files).
+  support for single gzipped input files or multiple gzipped files in a zip
+  archive).
 + Update documented python version to 3.8.
 + Rename variables in core script and update Caltha --help page.
 + Update README.md & index.md to reflect current project state.
