@@ -22,6 +22,9 @@ import random
 import re
 import os
 import zipfile
+import pyfastx
+import ntpath
+import time
 import multiprocessing as mp
 import pandas as pd
 import subprocess as sp
@@ -36,14 +39,14 @@ def setOutputFiles(strDir, strOutputFileName):
     intCount = 0
     flBlast = strOutputFileName + "_BLAST.fasta"
     flTabular = strOutputFileName + "_TABULAR.tbl"
-    for strFileName in os.listdir(strDir + "/postClustering"):
+    for strFileName in os.listdir(strDir + "/PostClustering"):
         strUmiNumber = strFileName.split("_")[0]
         strUmiString = strFileName.split("_")[1][:-6]
         intLineCount = 0
-        with open(strDir + "/postClustering/" + strFileName) as oisClusterFile:
+        with open(strDir + "/PostClustering/" + strFileName) as oisClusterFile:
             for strLine in oisClusterFile:
                 intLineCount += 1
-        with open(strDir + "/postClustering/" + strFileName) as oisUmiFile:
+        with open(strDir + "/PostClustering/" + strFileName) as oisUmiFile:
             if intLineCount == 2:
                 for strLine in oisUmiFile:
                     if strLine.startswith(">"):
@@ -94,10 +97,10 @@ def setOutputFiles(strDir, strOutputFileName):
 # getSortBySize is clustered using Vsearch. The expected result is a single
 # centroid sequence. This is checked in the setOutputFiles function.
 def setClusterSize(strDir, fltIdentity):
-    for strFileName in os.listdir(strDir + "/clustering"):
+    for strFileName in os.listdir(strDir + "/Clustering"):
         if strFileName.startswith("sorted"):
-            strInputCommand = strDir + "/clustering/" + strFileName
-            strOutputCommand = strDir + "/postClustering/" + strFileName[11:]
+            strInputCommand = strDir + "/Clustering/" + strFileName
+            strOutputCommand = strDir + "/PostClustering/" + strFileName[11:]
             rafClustering = sp.Popen(
                 [
                     "vsearch",
@@ -127,10 +130,10 @@ def setClusterSize(strDir, fltIdentity):
 # getDereplication is sorted based on abundance. Any reads with a abundance
 # lower than intAbundance will be discarded.
 def getSortBySize(strDir, intAbundance):
-    for strFileName in os.listdir(strDir + "/clustering"):
+    for strFileName in os.listdir(strDir + "/Clustering"):
         if strFileName.startswith("derep"):
-            strInputCommand = strDir + "/clustering/" + strFileName
-            strOutputCommand = strDir + "/clustering/" + "sorted" + strFileName
+            strInputCommand = strDir + "/Clustering/" + strFileName
+            strOutputCommand = strDir + "/Clustering/" + "sorted" + strFileName
             rafSort = sp.Popen(
                 [
                     "vsearch",
@@ -156,10 +159,10 @@ def getSortBySize(strDir, intAbundance):
 # getFastaFile is dereplicated. This step is necessary for the sorting step to
 # work.
 def getDereplication(strDir):
-    for strFileName in os.listdir(strDir + "/preZip"):
+    for strFileName in os.listdir(strDir + "/PreZip"):
         if strFileName.endswith(".fasta"):
-            strInputCommand = strDir + "/preZip/" + strFileName
-            strOutputCommand = strDir + "/clustering/" + "derep" + strFileName
+            strInputCommand = strDir + "/PreZip/" + strFileName
+            strOutputCommand = strDir + "/Clustering/" + "derep" + strFileName
             rafDerep = sp.Popen(
                 [
                     "vsearch",
@@ -188,9 +191,9 @@ def getFastaFile(strDir, dicUniqueUmi, strHeader, strRead, strCode):
     strFileIdentifier = (
         "UMI#" + str(dicUniqueUmi[strCode]) + "_" + strCode + ".fasta"
     )
-    strFileName = strDir + "/preZip/" + strFileIdentifier
+    strFileName = strDir + "/PreZip/" + strFileIdentifier
     with open(strFileName, "a") as flOutput:
-        flOutput.write(strHeader)
+        flOutput.write(">" + strHeader + "\n")
         flOutput.write(strRead)
 
 
@@ -382,7 +385,6 @@ def getRegex(strLine):
 def getUmi(
     strLocation, strAnchor, intUmiLength, strForward, strReverse, strRead
 ):
-    strRead = strRead.strip("\n")
     strRegexForward = getRegex(strForward)
     strRegexComplementReverse = getRegex(
         getReverseComplement(strReverse[::-1])
@@ -425,95 +427,82 @@ def getUmi(
 
 
 # The processInputFile function.
-# This function opens the input file and loops through it. It stores the read
-# header and nucleotides. For every read the getUmi function is called,
-# this outputs one or two UMI codes. In the case of a double UMI [umidouble],
-# the two UMIs are combined. The length of the UMI is checked before
-# continuing. The getFastaFile function is called for every read that contains
-# a UMI.
+# This function calls the getUmi function for the supplied read, this outputs
+# one or two UMI codes. In the case of a double UMI [umidouble], the two UMIs
+# are combined. The length of the UMI is checked before continuing. The
+# getFastaFile function is called if the read contains a UMI.
 def processInputFile(
-    flInput,
+    strHeader,
+    strRead,
     strLocation,
     strAnchor,
     intUmiLength,
     strForward,
     strReverse,
     strTempDir,
-    strOperand,
 ):
     dicUniqueUmi = {}
     intUniqueUmi = 1
-    with open(flInput) as oisInput:
-        for strLine in oisInput:
-            if (
-                strLine[0] == strOperand
-                and bool(re.match("[A-Za-z0-9]", strLine[1])) is True
-            ):
-                strHeader = strLine
-                strRead = next(oisInput)
-                try:
-                    strUmi = getUmi(
-                        strLocation,
-                        strAnchor,
-                        intUmiLength,
-                        strForward.upper(),
-                        strReverse.upper(),
-                        strRead.upper(),
-                    )
-                except UnboundLocalError:
-                    pass
-                try:
-                    if strUmi is not None:
-                        if strLocation == "umi5" or strLocation == "umi3":
-                            intLengthPotentialUmi = len(strUmi)
-                            if int(intLengthPotentialUmi) == int(intUmiLength):
-                                strCode = strUmi
-                            else:
-                                strCode = None
-                        elif strLocation == "umidouble":
-                            strCombined = strUmi[0] + strUmi[1]
-                            intLengthPotentialUmi = len(strCombined)
-                            intDoubleUmi = intUmiLength * 2
-                            if int(intLengthPotentialUmi) == int(intDoubleUmi):
-                                strCode = strCombined
-                            else:
-                                strCode = None
-                        else:
-                            pass
-                    else:
-                        pass
-                except UnboundLocalError:
-                    pass
-                try:
-                    if strCode is not None:
-                        if strCode not in dicUniqueUmi:
-                            dicUniqueUmi[strCode] = intUniqueUmi
-                            intUniqueUmi += 1
-                        else:
-                            pass
-                    else:
-                        pass
-                except UnboundLocalError:
-                    pass
-                try:
-                    if strCode is not None:
-                        getFastaFile(
-                            strTempDir,
-                            dicUniqueUmi,
-                            strHeader,
-                            strRead.upper(),
-                            strCode,
-                        )
-                    else:
-                        pass
-                except UnboundLocalError:
-                    pass
-            strUmi = None
-            strCode = None
+    try:
+        strUmi = getUmi(
+            strLocation,
+            strAnchor,
+            intUmiLength,
+            strForward.upper(),
+            strReverse.upper(),
+            strRead,
+        )
+    except UnboundLocalError:
+        pass
+    try:
+        if strUmi is not None:
+            if strLocation == "umi5" or strLocation == "umi3":
+                intLengthPotentialUmi = len(strUmi)
+                if int(intLengthPotentialUmi) == int(intUmiLength):
+                    strCode = strUmi
+                else:
+                    strCode = None
+            elif strLocation == "umidouble":
+                strCombined = strUmi[0] + strUmi[1]
+                intLengthPotentialUmi = len(strCombined)
+                intDoubleUmi = intUmiLength * 2
+                if int(intLengthPotentialUmi) == int(intDoubleUmi):
+                    strCode = strCombined
+                else:
+                    strCode = None
+            else:
+                pass
+        else:
+            pass
+    except UnboundLocalError:
+        pass
+    try:
+        if strCode is not None:
+            if strCode not in dicUniqueUmi:
+                dicUniqueUmi[strCode] = intUniqueUmi
+                intUniqueUmi += 1
+            else:
+                pass
+        else:
+            pass
+    except UnboundLocalError:
+        pass
+    try:
+        if strCode is not None:
+            getFastaFile(
+                strTempDir, dicUniqueUmi, strHeader, strRead, strCode,
+            )
+        else:
+            pass
+    except UnboundLocalError:
+        pass
+    strUmi = None
+    strCode = None
 
 
 # The runCaltha function.
-# This function controls and calls the main functionality of Caltha.
+# This function controls and calls the main functionality of Caltha. It loops
+# through the input file(s) using pyfastx.
 def runCaltha(
     flInput,
     strMainDir,
@@ -522,31 +511,50 @@ def runCaltha(
     intUmiLength,
     strForward,
     strReverse,
-    strOperand,
     intAbundance,
     fltIdentity,
+    strFormat,
 ):
+    fltStart = time.time()
     strInputFileName = flInput.split("/")[-1].split(".")[0]
     strOutputFileName = strMainDir + "/" + strInputFileName
     strTempDir = setWorkDirs(strMainDir, True)
-    processInputFile(
-        flInput,
-        strLocation,
-        strAnchor,
-        intUmiLength,
-        strForward,
-        strReverse,
-        strTempDir,
-        strOperand,
-    )
+    if strFormat == "fasta":
+        for oisRecord in pyfastx.Fasta(flInput):
+            processInputFile(
+                oisRecord.name,
+                oisRecord.seq.upper(),
+                strLocation,
+                strAnchor,
+                intUmiLength,
+                strForward,
+                strReverse,
+                strTempDir,
+            )
+    elif strFormat == "fastq":
+        for oisRecord in pyfastx.Fastq(flInput):
+            processInputFile(
+                oisRecord.name,
+                oisRecord.seq.upper(),
+                strLocation,
+                strAnchor,
+                intUmiLength,
+                strForward,
+                strReverse,
+                strTempDir,
+            )
+    else:
+        pass
     getZipArchive(
-        (strTempDir + "/preZip"), (strOutputFileName + "_PREZIP.zip"), ".fasta"
+        (strTempDir + "/PreZip"), (strOutputFileName + "_PREZIP.zip"), ".fasta"
     )
     getDereplication(strTempDir)
     getSortBySize(strTempDir, intAbundance)
     setClusterSize(strTempDir, fltIdentity)
     setOutputFiles(strTempDir, strOutputFileName)
-    return "DONE"
+    fltEnd = time.time() - fltStart
+    strEnd = ntpath.basename(flInput) + ": " + "%.2f" % fltEnd + "s"
+    return strEnd
 
 
 # The removeWorkDirs function.
@@ -567,21 +575,24 @@ def getZipArchive(strDir, flZip, strExtension):
 
 
 # The createInputList function.
-# This function creates a list of all input file names. If the input is a zip
-# file, it will create a temporary storage directory where the contents of the
-# zip file is extracted to.
-def createInputList(flInput, strMainDir, strFormat):
-    if strFormat == "zipfasta" or strFormat == "zipfastq":
-        strCreate = strMainDir + "/" + "inputFiles"
-        os.mkdir(strCreate)
+# This function copies the input file(s) to a new temporary folder. It then
+# creates a list of all input file names.
+def createInputList(flInput, strMainDir):
+    strCreate = strMainDir + "/" + "inputFiles"
+    os.mkdir(strCreate)
+    if (
+        os.path.splitext(flInput)[1] == ".zip"
+        or os.path.splitext(flInput)[1] == ".ZIP"
+    ):
         with zipfile.ZipFile(flInput, "r") as objZip:
             objZip.extractall(strCreate)
             lstInput = [
                 strCreate + "/" + strFile
                 for strFile in zipfile.ZipFile.namelist(objZip)
             ]
-    elif strFormat == "fasta" or strFormat == "fastq":
-        lstInput = [flInput]
+    else:
+        shutil.copyfile(flInput, strCreate + "/" + ntpath.basename(flInput))
+        lstInput = [strCreate + "/" + ntpath.basename(flInput)]
     return lstInput
 
 
@@ -609,26 +620,13 @@ def setWorkDirs(strDirectory, blnExtra):
     return lstWorkDirs[0]
 
 
-# The setFormat function.
-# This function identifies the first character of the read headers. This
-# character is based on the input file format. The function returns this
-# character.
-def setFormat(strFormat):
-    if strFormat == "fasta" or strFormat == "zipfasta":
-        return ">"
-    elif strFormat == "fastq" or strFormat == "zipfastq":
-        return "@"
-    else:
-        pass
-
-
 # The argvs function.
 def parseArgvs():
     strDescription = "A python package for processing UMI tagged mixed amplicon\
                       metabarcoding data."
     strEpilog = "This python package requires one extra dependency which can\
                  be easily installed with conda (conda install -c bioconda\
-                 vsearch)."
+                 vsearch=2.14.2)."
     parser = argparse.ArgumentParser(
         description=strDescription,
         epilog=strEpilog,
@@ -643,7 +641,8 @@ def parseArgvs():
         action="store",
         dest="flInput",
         default=argparse.SUPPRESS,
-        help="The input fasta/fastq file(s).",
+        help="The input fasta/fastq file(s). This can either be a zip archive\
+              or a single fasta/fastq file.",
     )
     parser.add_argument(
         "-t",
@@ -675,7 +674,7 @@ def parseArgvs():
         action="store",
         dest="strFormat",
         default="fasta",
-        help="The format of the input file [fasta/fastq/zipfasta/zipfastq].",
+        help="The format of the input file [fasta/fastq].",
     )
     parser.add_argument(
         "-l",
@@ -741,7 +740,8 @@ def parseArgvs():
         action="store",
         dest="strDirectory",
         default=".",
-        help="The location of the temporary working directory.",
+        help="The location of the temporary working directory (not created\
+              by program).",
     )
     parser.add_argument(
         "-@",
@@ -757,36 +757,36 @@ def parseArgvs():
 
 # The main function.
 def main():
-    argvs = parseArgvs()
-    strOperand = setFormat(argvs.strFormat)
-    strMainDir = setWorkDirs(argvs.strDirectory, False)
-    lstInput = createInputList(argvs.flInput, strMainDir, argvs.strFormat)
-    mpPool = mp.Pool(int(argvs.intThreads))
+    disArgvs = parseArgvs()
+    strMainDir = setWorkDirs(disArgvs.strDirectory, False)
+    lstInput = createInputList(disArgvs.flInput, strMainDir)
+    mpPool = mp.Pool(int(disArgvs.intThreads))
     mpTemporary = [
         mpPool.apply_async(
             runCaltha,
             args=(
                 flInput,
                 strMainDir,
-                argvs.strLocation,
-                argvs.strAnchor,
-                argvs.intUmiLength,
-                argvs.strForward,
-                argvs.strReverse,
-                strOperand,
-                argvs.intAbundance,
-                argvs.fltIdentity,
+                disArgvs.strLocation,
+                disArgvs.strAnchor,
+                disArgvs.intUmiLength,
+                disArgvs.strForward,
+                disArgvs.strReverse,
+                disArgvs.intAbundance,
+                disArgvs.fltIdentity,
+                disArgvs.strFormat,
             ),
         )
         for flInput in lstInput
     ]
     mpPool.close()
     mpPool.join()
-    getZipArchive(strMainDir, argvs.flTabular, ".tbl")
-    getZipArchive(strMainDir, argvs.flPreZip, ".zip")
-    getZipArchive(strMainDir, argvs.flBlast, ".fasta")
+    mpOutput = [mpProcess.get() for mpProcess in mpTemporary]
+    getZipArchive(strMainDir, disArgvs.flTabular, ".tbl")
+    getZipArchive(strMainDir, disArgvs.flPreZip, ".zip")
+    getZipArchive(strMainDir, disArgvs.flBlast, ".fasta")
     removeWorkDirs(strMainDir)
-    print(mpTemporary)
+    print(mpOutput)
 
 
 if __name__ == "__main__":
