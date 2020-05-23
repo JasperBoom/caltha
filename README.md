@@ -70,7 +70,7 @@ optional arguments:
                         number of threads available on system)
 
 This python package requires one extra dependency which can be easily
-installed with conda (conda install -c bioconda vsearch).
+installed with conda (conda install -c bioconda vsearch=2.14.2).
 ```
 
 Further documentation can be found [here](https://jasperboom.github.io/caltha/).

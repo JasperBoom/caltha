@@ -626,7 +626,7 @@ def parseArgvs():
                       metabarcoding data."
     strEpilog = "This python package requires one extra dependency which can\
                  be easily installed with conda (conda install -c bioconda\
-                 vsearch)."
+                 vsearch=2.14.2)."
     parser = argparse.ArgumentParser(
         description=strDescription,
         epilog=strEpilog,
