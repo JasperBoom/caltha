@@ -46,7 +46,7 @@ def setOutputFiles(strDir, strOutputFileName):
             for strLine in oisClusterFile:
                 intLineCount += 1
         with open(strDir + "/PostClustering/" + strFileName) as oisUmiFile:
-            if intLineCount == 1:
+            if intLineCount == 2:
                 for strLine in oisUmiFile:
                     if strLine.startswith(">"):
                         strHeader = strLine.split("=")[1].strip("\n")
@@ -60,7 +60,7 @@ def setOutputFiles(strDir, strOutputFileName):
                             flOutput.write(strRead.strip("\n").upper() + "\n")
                     else:
                         pass
-            elif intLineCount > 1:
+            elif intLineCount > 2:
                 intVersionCount = 1
                 for strLine in oisUmiFile:
                     if strLine.startswith(">"):
@@ -764,7 +764,7 @@ def main():
     getZipArchive(strMainDir, disArgvs.flTabular, ".tbl")
     getZipArchive(strMainDir, disArgvs.flPreValidation, ".zip")
     getZipArchive(strMainDir, disArgvs.flBlast, ".fasta")
-    # removeWorkDirs(strMainDir)
+    removeWorkDirs(strMainDir)
     print(mpOutput)
 
 
