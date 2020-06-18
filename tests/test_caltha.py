@@ -22,7 +22,7 @@ import subprocess as sp
 def test_gzip_fasta():
     rafRunCaltha = sp.Popen(
         [
-            "/home/travis/build/JasperBoom/caltha/src/caltha",
+            "./../src/caltha",
             "-i",
             "./data/umi5_primer_single.fasta.gz",
             "-t",
