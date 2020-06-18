@@ -20,10 +20,10 @@ before_install:
 
 install:
  - conda install -c bioconda vsearch=2.14.2
- - conda install -c anaconda pytest=5.4.3
- - conda install -c anaconda pandas=1.0.4
- - conda install -c bioconda pyfastx=0.6.12
- - conda install -c conda-forge biopython=1.76
+ - pip install pandas==1.0.4
+ - pip install pytest==5.4.3
+ - pip install pyfastx==0.6.12
+ - pip install biopython==1.76
 
 stages:
   - test
