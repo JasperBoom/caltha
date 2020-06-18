@@ -24,8 +24,8 @@ Current stable version. Previous versions should be ignored.
 + Remove both the umi sequence and the centroid sequence from the tabular
   output, as requested by users and noted in
   (issue 7)[https://github.com/JasperBoom/caltha/issues/7].
-+ Fix fasta file creation, where reads after the first would not correctly
-  start on a new line.
++ Fix fasta file creation, where new read headers would not start on a
+  new line, but append to the sequence of the previous read.
 + Rename `PreZip` folders and files to `PreValidation`.
 + Fix bug where umi count would be reset to 1 for every read.
 + Replace reverse complement function with the `biopython` Seq class.
