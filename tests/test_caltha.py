@@ -15,22 +15,25 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 # Imports
+import zipfile
 import subprocess as sp
 
 
 # The test_gzip_fasta function.
 def test_gzip_fasta():
+    strOutputDirectory = "/home/travis/build/JasperBoom/test-output"
     rafRunCaltha = sp.Popen(
         [
-            "./../src/caltha",
+            "/home/travis/build/JasperBoom/caltha/src/caltha",
             "-i",
-            "./data/umi5_primer_single.fasta.gz",
+            "/home/travis/build/JasperBoom/caltha/tests/data/\
+             umi5_primer_single.fasta.gz",
             "-t",
-            "./test-output/tab.zip",
+            "/home/travis/build/JasperBoom/caltha/tests/test-output/tab.zip",
             "-z",
-            "./test-output/zip.zip",
+            "/home/travis/build/JasperBoom/caltha/tests/test-output/zip.zip",
             "-b",
-            "./test-output/blast.zip",
+            "/home/travis/build/JasperBoom/caltha/tests/test-output/blast.zip",
             "-f",
             "fasta",
             "-l",
@@ -48,7 +51,7 @@ def test_gzip_fasta():
             "-r",
             "GATCAWACAAATAAAGGTAWTCGATC",
             "-d",
-            "./test-output",
+            strOutputDirectory,
             "-@",
             "2",
         ],
@@ -56,3 +59,15 @@ def test_gzip_fasta():
         stderr=sp.PIPE,
     )
     strOut, strError = rafRunCaltha.communicate()
+
+    with zipfile.ZipFile(strOutputDirectory + "/blast.zip", "r") as objZip:
+        objZip.extractall(strOutputDirectory)
+
+    with open(
+        strOutputDirectory + "umi5_primer_single_BLAST.fasta"
+    ) as oisBlastFile:
+        intBlastLineCount = 0
+        for strLine in oisBlastFile:
+            intBlastLineCount += 1
+
+    assert intBlastLineCount == 1560
