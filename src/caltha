@@ -35,15 +35,12 @@ from Bio.Alphabet import generic_dna
 # The setOutputFiles function.
 # This function creates the tabular and blast output files.
 def setOutputFiles(strDir, strOutputFileName):
-    dfOutput = pd.DataFrame(
-        columns=["UMI ID", "UMI Seq", "Read Count", "Centroid Read"]
-    )
+    dfOutput = pd.DataFrame(columns=["UMI_ID", "Read_Count"])
     intCount = 0
     flBlast = strOutputFileName + "_BLAST.fasta"
     flTabular = strOutputFileName + "_TABULAR.tbl"
     for strFileName in os.listdir(strDir + "/PostClustering"):
         strUmiNumber = strFileName.split("_")[0]
-        strUmiString = strFileName.split("_")[1][:-6]
         intLineCount = 0
         with open(strDir + "/PostClustering/" + strFileName) as oisClusterFile:
             for strLine in oisClusterFile:
@@ -56,9 +53,7 @@ def setOutputFiles(strDir, strOutputFileName):
                         strRead = next(oisUmiFile)
                         dfOutput.loc[intCount] = [
                             strUmiNumber,
-                            strUmiString,
                             strHeader.strip("\n"),
-                            strRead.strip("\n").upper(),
                         ]
                         with open(flBlast, "a") as flOutput:
                             flOutput.write(">" + strUmiNumber + "\n")
@@ -76,9 +71,7 @@ def setOutputFiles(strDir, strOutputFileName):
                         )
                         dfOutput.loc[intCount] = [
                             strUmiVersion,
-                            strUmiString,
                             strHeader.strip("\n"),
-                            strRead.strip("\n").upper(),
                         ]
                         with open(flBlast, "a") as flOutput:
                             flOutput.write(">" + strUmiVersion + "\n")
@@ -90,7 +83,7 @@ def setOutputFiles(strDir, strOutputFileName):
             else:
                 pass
         intCount += 1
-    dfOutput = dfOutput.set_index("UMI ID")
+    dfOutput = dfOutput.set_index("UMI_ID")
     dfOutput.to_csv(flTabular, sep="\t", encoding="utf-8")
 
 
@@ -161,9 +154,9 @@ def getSortBySize(strDir, intAbundance):
 # getFastaFile is dereplicated. This step is necessary for the sorting step to
 # work.
 def getDereplication(strDir):
-    for strFileName in os.listdir(strDir + "/PreZip"):
+    for strFileName in os.listdir(strDir + "/PreValidation"):
         if strFileName.endswith(".fasta"):
-            strInputCommand = strDir + "/PreZip/" + strFileName
+            strInputCommand = strDir + "/PreValidation/" + strFileName
             strOutputCommand = strDir + "/Clustering/" + "derep" + strFileName
             rafDerep = sp.Popen(
                 [
@@ -193,10 +186,10 @@ def getFastaFile(strDir, dicUniqueUmi, strHeader, strRead, strCode):
     strFileIdentifier = (
         "UMI#" + str(dicUniqueUmi[strCode]) + "_" + strCode + ".fasta"
     )
-    strFileName = strDir + "/PreZip/" + strFileIdentifier
+    strFileName = strDir + "/PreValidation/" + strFileIdentifier
     with open(strFileName, "a") as flOutput:
         flOutput.write(">" + strHeader + "\n")
-        flOutput.write(strRead)
+        flOutput.write(strRead + "\n")
 
 
 # The useZeroPosition function.
@@ -530,7 +523,9 @@ def runCaltha(
     else:
         pass
     getZipArchive(
-        (strTempDir + "/PreZip"), (strOutputFileName + "_PREZIP.zip"), ".fasta"
+        (strTempDir + "/PreValidation"),
+        (strOutputFileName + "_PREVALIDATION.zip"),
+        ".fasta",
     )
     getDereplication(strTempDir)
     getSortBySize(strTempDir, intAbundance)
@@ -591,7 +586,7 @@ def setWorkDirs(strDirectory, blnExtra):
     lstWorkDirs = []
     lstWorkDirs.append(strDirectory + "/" + strRandom)
     if blnExtra is True:
-        lstWorkDirs.append(strDirectory + "/" + strRandom + "/PreZip")
+        lstWorkDirs.append(strDirectory + "/" + strRandom + "/PreValidation")
         lstWorkDirs.append(strDirectory + "/" + strRandom + "/Clustering")
         lstWorkDirs.append(strDirectory + "/" + strRandom + "/PostClustering")
     else:
@@ -640,7 +635,7 @@ def parseArgvs():
         "-z",
         "--zip",
         action="store",
-        dest="flPreZip",
+        dest="flPreValidation",
         default=argparse.SUPPRESS,
         help="The pre validation zip file.",
     )
@@ -767,7 +762,7 @@ def main():
     mpPool.join()
     mpOutput = [mpProcess.get() for mpProcess in mpTemporary]
     getZipArchive(strMainDir, disArgvs.flTabular, ".tbl")
-    getZipArchive(strMainDir, disArgvs.flPreZip, ".zip")
+    getZipArchive(strMainDir, disArgvs.flPreValidation, ".zip")
     getZipArchive(strMainDir, disArgvs.flBlast, ".fasta")
     removeWorkDirs(strMainDir)
     print(mpOutput)

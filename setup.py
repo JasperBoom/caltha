@@ -43,9 +43,9 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     python_requires=">=3.8",
     install_requires=[
-        "pandas>=1.0.3",
+        "pandas>=1.0.4",
         "numpy>=1.18.2",
-        "pyfastx>=0.6.11",
+        "pyfastx>=0.6.12",
         "biopython>=1.76",
     ],
     project_urls={
