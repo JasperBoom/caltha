@@ -23,19 +23,19 @@ import subprocess as sp
 # The test_gzip_fasta function.
 def test_gzip_fasta():
     strOutputDirectory = "/home/travis/build/JasperBoom/test-output"
+    strTestDirectory = "/home/travis/build/JasperBoom/caltha/tests"
     os.mkdir(strOutputDirectory)
-    rafRunCaltha = sp.Popen(
+    sp.call(
         [
             "/home/travis/build/JasperBoom/caltha/src/caltha",
             "-i",
-            "/home/travis/build/JasperBoom/caltha/tests/data/\
-             umi5_primer_single.fasta.gz",
+            strTestDirectory + "/data/umi5_primer_single.fasta.gz",
             "-t",
-            "/home/travis/build/JasperBoom/caltha/tests/test-output/tab.zip",
+            strTestDirectory + "/test-output/tab.zip",
             "-z",
-            "/home/travis/build/JasperBoom/caltha/tests/test-output/zip.zip",
+            strTestDirectory + "/test-output/zip.zip",
             "-b",
-            "/home/travis/build/JasperBoom/caltha/tests/test-output/blast.zip",
+            strTestDirectory + "/test-output/blast.zip",
             "-f",
             "fasta",
             "-l",
@@ -57,19 +57,42 @@ def test_gzip_fasta():
             "-@",
             "2",
         ],
-        stdout=sp.PIPE,
-        stderr=sp.PIPE,
     )
-    strOut, strError = rafRunCaltha.communicate()
 
     with zipfile.ZipFile(strOutputDirectory + "/blast.zip", "r") as objZip:
         objZip.extractall(strOutputDirectory)
+    with zipfile.ZipFile(strOutputDirectory + "/tab.zip", "r") as objZip:
+        objZip.extractall(strOutputDirectory)
+    with zipfile.ZipFile(strOutputDirectory + "/zip.zip", "r") as objZip:
+        objZip.extractall(strOutputDirectory)
 
     with open(
-        strOutputDirectory + "umi5_primer_single_BLAST.fasta"
+        strOutputDirectory + "/umi5_primer_single_BLAST.fasta"
     ) as oisBlastFile:
         intBlastLineCount = 0
         for strLine in oisBlastFile:
             intBlastLineCount += 1
 
+    with open(
+        strOutputDirectory + "/umi5_primer_single_TABULAR.tbl"
+    ) as oisBlastFile:
+        intTabularLineCount = 0
+        for strLine in oisBlastFile:
+            intTabularLineCount += 1
+
+    if (
+        os.path.exists(
+            strOutputDirectory + "/umi5_primer_single_PREVALIDATION.zip"
+        )
+        and os.path.getsize(
+            strOutputDirectory + "/umi5_primer_single_PREVALIDATION.zip"
+        )
+        > 0
+    ):
+        blnArchiveCheck = True
+    else:
+        blnArchiveCheck = False
+
     assert intBlastLineCount == 1560
+    assert intTabularLineCount == 781
+    assert blnArchiveCheck
