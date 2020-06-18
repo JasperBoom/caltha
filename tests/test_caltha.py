@@ -15,6 +15,7 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 # Imports
+import os
 import zipfile
 import subprocess as sp
 
@@ -22,6 +23,7 @@ import subprocess as sp
 # The test_gzip_fasta function.
 def test_gzip_fasta():
     strOutputDirectory = "/home/travis/build/JasperBoom/test-output"
+    os.mkdir(strOutputDirectory)
     rafRunCaltha = sp.Popen(
         [
             "/home/travis/build/JasperBoom/caltha/src/caltha",
