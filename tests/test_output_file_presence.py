@@ -55,7 +55,7 @@ def test_gzip_fasta():
             "-d",
             strOutputDirectory,
             "-@",
-            "2",
+            "1",
         ],
     )
 
@@ -66,36 +66,33 @@ def test_gzip_fasta():
     with zipfile.ZipFile(strOutputDirectory + "/zip.zip", "r") as objZip:
         objZip.extractall(strOutputDirectory)
 
-    with open(
-        strOutputDirectory + "/umi5_primer_single_BLAST.fasta"
-    ) as oisBlastFile:
-        intBlastLineCount = 0
-        for strLine in oisBlastFile:
-            intBlastLineCount += 1
+    lstOutputFiles = [
+        "umi5_primer_single_BLAST.fasta",
+        "umi5_primer_single_TABULAR.tbl",
+    ]
+    dicLineCounts = {}
 
-    with open(
-        strOutputDirectory + "/umi5_primer_single_TABULAR.tbl"
-    ) as oisBlastFile:
-        intTabularLineCount = 0
-        for strLine in oisBlastFile:
-            intTabularLineCount += 1
+    for strFileName in lstOutputFiles:
+        with open(strOutputDirectory + "/" + strFileName) as oisBlastFile:
+            intLineCount = 0
+            for strLine in oisBlastFile:
+                intLineCount += 1
+        dicLineCounts[strFileName] = intLineCount
 
-    if (
-        os.path.exists(
-            strOutputDirectory + "/umi5_primer_single_PREVALIDATION.zip"
-        )
-        and os.path.getsize(
-            strOutputDirectory + "/umi5_primer_single_PREVALIDATION.zip"
-        )
-        > 0
-    ):
-        blnArchiveCheck = True
-    else:
-        blnArchiveCheck = False
+    lstOutputZips = ["umi5_primer_single_PREVALIDATION.zip"]
 
-    assert intBlastLineCount == 1560
-    assert intTabularLineCount == 781
-    assert blnArchiveCheck
+    for strZipFile in lstOutputZips:
+        if (
+            os.path.exists(strOutputDirectory + "/" + strZipFile)
+            and os.path.getsize(strOutputDirectory + "/" + strZipFile) > 0
+        ):
+            blnArchiveCheck = 1
+        else:
+            blnArchiveCheck = 0
+        assert blnArchiveCheck == 1
+
+    assert dicLineCounts["umi5_primer_single_BLAST.fasta"] == 1560
+    assert dicLineCounts["umi5_primer_single_TABULAR.tbl"] == 781
 
 
 # The test_fasta function.
@@ -133,7 +130,7 @@ def test_fasta():
             "-d",
             strOutputDirectory,
             "-@",
-            "2",
+            "1",
         ],
     )
 
@@ -144,36 +141,33 @@ def test_fasta():
     with zipfile.ZipFile(strOutputDirectory + "/zip.zip", "r") as objZip:
         objZip.extractall(strOutputDirectory)
 
-    with open(
-        strOutputDirectory + "/umi5_primer_single_BLAST.fasta"
-    ) as oisBlastFile:
-        intBlastLineCount = 0
-        for strLine in oisBlastFile:
-            intBlastLineCount += 1
+    lstOutputFiles = [
+        "umi5_primer_single_BLAST.fasta",
+        "umi5_primer_single_TABULAR.tbl",
+    ]
+    dicLineCounts = {}
 
-    with open(
-        strOutputDirectory + "/umi5_primer_single_TABULAR.tbl"
-    ) as oisBlastFile:
-        intTabularLineCount = 0
-        for strLine in oisBlastFile:
-            intTabularLineCount += 1
+    for strFileName in lstOutputFiles:
+        with open(strOutputDirectory + "/" + strFileName) as oisBlastFile:
+            intLineCount = 0
+            for strLine in oisBlastFile:
+                intLineCount += 1
+        dicLineCounts[strFileName] = intLineCount
 
-    if (
-        os.path.exists(
-            strOutputDirectory + "/umi5_primer_single_PREVALIDATION.zip"
-        )
-        and os.path.getsize(
-            strOutputDirectory + "/umi5_primer_single_PREVALIDATION.zip"
-        )
-        > 0
-    ):
-        blnArchiveCheck = True
-    else:
-        blnArchiveCheck = False
+    lstOutputZips = ["umi5_primer_single_PREVALIDATION.zip"]
 
-    assert intBlastLineCount == 1560
-    assert intTabularLineCount == 781
-    assert blnArchiveCheck
+    for strZipFile in lstOutputZips:
+        if (
+            os.path.exists(strOutputDirectory + "/" + strZipFile)
+            and os.path.getsize(strOutputDirectory + "/" + strZipFile) > 0
+        ):
+            blnArchiveCheck = 1
+        else:
+            blnArchiveCheck = 0
+        assert blnArchiveCheck == 1
+
+    assert dicLineCounts["umi5_primer_single_BLAST.fasta"] == 1560
+    assert dicLineCounts["umi5_primer_single_TABULAR.tbl"] == 781
 
 
 # The test_gzip_fastq function.
@@ -211,7 +205,7 @@ def test_gzip_fastq():
             "-d",
             strOutputDirectory,
             "-@",
-            "2",
+            "1",
         ],
     )
 
@@ -222,36 +216,33 @@ def test_gzip_fastq():
     with zipfile.ZipFile(strOutputDirectory + "/zip.zip", "r") as objZip:
         objZip.extractall(strOutputDirectory)
 
-    with open(
-        strOutputDirectory + "/umi5_primer_single_BLAST.fasta"
-    ) as oisBlastFile:
-        intBlastLineCount = 0
-        for strLine in oisBlastFile:
-            intBlastLineCount += 1
+    lstOutputFiles = [
+        "umi5_primer_single_BLAST.fasta",
+        "umi5_primer_single_TABULAR.tbl",
+    ]
+    dicLineCounts = {}
 
-    with open(
-        strOutputDirectory + "/umi5_primer_single_TABULAR.tbl"
-    ) as oisBlastFile:
-        intTabularLineCount = 0
-        for strLine in oisBlastFile:
-            intTabularLineCount += 1
+    for strFileName in lstOutputFiles:
+        with open(strOutputDirectory + "/" + strFileName) as oisBlastFile:
+            intLineCount = 0
+            for strLine in oisBlastFile:
+                intLineCount += 1
+        dicLineCounts[strFileName] = intLineCount
 
-    if (
-        os.path.exists(
-            strOutputDirectory + "/umi5_primer_single_PREVALIDATION.zip"
-        )
-        and os.path.getsize(
-            strOutputDirectory + "/umi5_primer_single_PREVALIDATION.zip"
-        )
-        > 0
-    ):
-        blnArchiveCheck = True
-    else:
-        blnArchiveCheck = False
+    lstOutputZips = ["umi5_primer_single_PREVALIDATION.zip"]
 
-    assert intBlastLineCount == 1560
-    assert intTabularLineCount == 781
-    assert blnArchiveCheck
+    for strZipFile in lstOutputZips:
+        if (
+            os.path.exists(strOutputDirectory + "/" + strZipFile)
+            and os.path.getsize(strOutputDirectory + "/" + strZipFile) > 0
+        ):
+            blnArchiveCheck = 1
+        else:
+            blnArchiveCheck = 0
+        assert blnArchiveCheck == 1
+
+    assert dicLineCounts["umi5_primer_single_BLAST.fasta"] == 1560
+    assert dicLineCounts["umi5_primer_single_TABULAR.tbl"] == 781
 
 
 # The test_fastq function.
@@ -289,7 +280,7 @@ def test_fastq():
             "-d",
             strOutputDirectory,
             "-@",
-            "2",
+            "1",
         ],
     )
 
@@ -300,33 +291,119 @@ def test_fastq():
     with zipfile.ZipFile(strOutputDirectory + "/zip.zip", "r") as objZip:
         objZip.extractall(strOutputDirectory)
 
-    with open(
-        strOutputDirectory + "/umi5_primer_single_BLAST.fasta"
-    ) as oisBlastFile:
-        intBlastLineCount = 0
-        for strLine in oisBlastFile:
-            intBlastLineCount += 1
+    lstOutputFiles = [
+        "umi5_primer_single_BLAST.fasta",
+        "umi5_primer_single_TABULAR.tbl",
+    ]
+    dicLineCounts = {}
 
-    with open(
-        strOutputDirectory + "/umi5_primer_single_TABULAR.tbl"
-    ) as oisBlastFile:
-        intTabularLineCount = 0
-        for strLine in oisBlastFile:
-            intTabularLineCount += 1
+    for strFileName in lstOutputFiles:
+        with open(strOutputDirectory + "/" + strFileName) as oisBlastFile:
+            intLineCount = 0
+            for strLine in oisBlastFile:
+                intLineCount += 1
+        dicLineCounts[strFileName] = intLineCount
 
-    if (
-        os.path.exists(
-            strOutputDirectory + "/umi5_primer_single_PREVALIDATION.zip"
-        )
-        and os.path.getsize(
-            strOutputDirectory + "/umi5_primer_single_PREVALIDATION.zip"
-        )
-        > 0
-    ):
-        blnArchiveCheck = True
-    else:
-        blnArchiveCheck = False
+    lstOutputZips = ["umi5_primer_single_PREVALIDATION.zip"]
 
-    assert intBlastLineCount == 1560
-    assert intTabularLineCount == 781
-    assert blnArchiveCheck
+    for strZipFile in lstOutputZips:
+        if (
+            os.path.exists(strOutputDirectory + "/" + strZipFile)
+            and os.path.getsize(strOutputDirectory + "/" + strZipFile) > 0
+        ):
+            blnArchiveCheck = 1
+        else:
+            blnArchiveCheck = 0
+        assert blnArchiveCheck == 1
+
+    assert dicLineCounts["umi5_primer_single_BLAST.fasta"] == 1560
+    assert dicLineCounts["umi5_primer_single_TABULAR.tbl"] == 781
+
+
+# The test_multiple_fasta_zip function.
+def test_multiple_fasta_zip():
+    strOutputDirectory = (
+        "/home/travis/build/JasperBoom/test-output/multiple_fasta_zip"
+    )
+    strTestDirectory = "/home/travis/build/JasperBoom/caltha/tests"
+    os.makedirs(strOutputDirectory)
+    sp.call(
+        [
+            "/home/travis/build/JasperBoom/caltha/src/caltha",
+            "-i",
+            strTestDirectory + "/data/umi5_primer_single.fastq",
+            "-t",
+            strOutputDirectory + "/tab.zip",
+            "-z",
+            strOutputDirectory + "/zip.zip",
+            "-b",
+            strOutputDirectory + "/blast.zip",
+            "-f",
+            "fasta",
+            "-l",
+            "umi5",
+            "-a",
+            "primer",
+            "-u",
+            "20",
+            "-y",
+            "0.97",
+            "-c",
+            "1",
+            "-w",
+            "GGRKCHGGDACWGGDTGAAC",
+            "-r",
+            "GATCAWACAAATAAAGGTAWTCGATC",
+            "-d",
+            strOutputDirectory,
+            "-@",
+            "3",
+        ],
+    )
+
+    with zipfile.ZipFile(strOutputDirectory + "/blast.zip", "r") as objZip:
+        objZip.extractall(strOutputDirectory)
+    with zipfile.ZipFile(strOutputDirectory + "/tab.zip", "r") as objZip:
+        objZip.extractall(strOutputDirectory)
+    with zipfile.ZipFile(strOutputDirectory + "/zip.zip", "r") as objZip:
+        objZip.extractall(strOutputDirectory)
+
+    lstOutputFiles = [
+        "zipTest1_BLAST.fasta",
+        "zipTest1_TABULAR.tbl",
+        "zipTest2_BLAST.fasta",
+        "zipTest2_TABULAR.tbl",
+        "zipTest3_BLAST.fasta",
+        "zipTest3_TABULAR.tbl",
+    ]
+    dicLineCounts = {}
+
+    for strFileName in lstOutputFiles:
+        with open(strOutputDirectory + "/" + strFileName) as oisBlastFile:
+            intLineCount = 0
+            for strLine in oisBlastFile:
+                intLineCount += 1
+        dicLineCounts[strFileName] = intLineCount
+
+    lstOutputZips = [
+        "zipTest1_PREVALIDATION.zip",
+        "zipTest2_PREVALIDATION.zip",
+        "zipTest3_PREVALIDATION.zip",
+    ]
+
+    for strZipFile in lstOutputZips:
+        if (
+            os.path.exists(strOutputDirectory + "/" + strZipFile)
+            and os.path.getsize(strOutputDirectory + "/" + strZipFile) > 0
+        ):
+            blnArchiveCheck = 1
+        else:
+            blnArchiveCheck = 0
+        assert blnArchiveCheck == 1
+
+    assert dicLineCounts["zipTest1_BLAST.fasta"] == 1560
+    assert dicLineCounts["zipTest1_TABULAR.tbl"] == 781
+    assert dicLineCounts["zipTest2_BLAST.fasta"] == 1560
+    assert dicLineCounts["zipTest2_TABULAR.tbl"] == 781
+    assert dicLineCounts["zipTest3_BLAST.fasta"] == 1560
+    assert dicLineCounts["zipTest3_TABULAR.tbl"] == 781
