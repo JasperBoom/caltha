@@ -193,7 +193,7 @@ def test_gzip_fastq():
             "-b",
             strOutputDirectory + "/blast.zip",
             "-f",
-            "fasta",
+            "fastq",
             "-l",
             "umi5",
             "-a",
