@@ -22,7 +22,7 @@ import subprocess as sp
 
 # The test_gzip_fasta function.
 def test_gzip_fasta():
-    strOutputDirectory = "/home/travis/build/JasperBoom/test-output"
+    strOutputDirectory = "/home/travis/build/JasperBoom/test-output/gzip-fasta"
     strTestDirectory = "/home/travis/build/JasperBoom/caltha/tests"
     os.mkdir(strOutputDirectory)
     sp.call(
@@ -100,7 +100,7 @@ def test_gzip_fasta():
 
 # The test_fasta function.
 def test_fasta():
-    strOutputDirectory = "/home/travis/build/JasperBoom/test-output"
+    strOutputDirectory = "/home/travis/build/JasperBoom/test-output/fasta"
     strTestDirectory = "/home/travis/build/JasperBoom/caltha/tests"
     os.mkdir(strOutputDirectory)
     sp.call(
