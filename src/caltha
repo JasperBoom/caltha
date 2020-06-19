@@ -558,7 +558,7 @@ def getZipArchive(strDir, flZip, strExtension):
 # creates a list of all input file names.
 def createInputList(flInput, strMainDir):
     strCreate = strMainDir + "/" + "inputFiles"
-    os.mkdir(strCreate)
+    os.makedirs(strCreate)
     if (
         os.path.splitext(flInput)[1] == ".zip"
         or os.path.splitext(flInput)[1] == ".ZIP"
@@ -593,7 +593,7 @@ def setWorkDirs(strDirectory, blnExtra):
         pass
     for strDirectory in lstWorkDirs:
         if not os.path.exists(strDirectory):
-            os.mkdir(strDirectory)
+            os.makedirs(strDirectory)
         else:
             pass
     return lstWorkDirs[0]
