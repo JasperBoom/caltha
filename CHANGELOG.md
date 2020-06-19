@@ -19,6 +19,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 ## Version 0.6
 Current stable version. Previous versions should be ignored.
 
++ Add `pytest` test function for regular fasta file input.
 + Re-add `pytest` test file with test for gzipped fasta file input (further
   tests will be added later).
 + Remove both the umi sequence and the centroid sequence from the tabular
