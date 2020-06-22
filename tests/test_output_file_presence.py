@@ -22,12 +22,12 @@ import subprocess as sp
 
 # The test_fasta function.
 def test_fasta():
-    strOutputDirectory = "/home/jboom/Temp/test-output/fasta"
-    strTestDirectory = "/home/jboom/Temp/caltha/tests"
+    strOutputDirectory = "/home/travis/build/JasperBoom/test-output/fasta"
+    strTestDirectory = "/home/travis/build/JasperBoom/caltha/tests"
     os.makedirs(strOutputDirectory)
     sp.call(
         [
-            "/home/jboom/Temp/caltha/src/caltha",
+            "/home/travis/build/JasperBoom/caltha/src/caltha",
             "-i",
             strTestDirectory + "/data/umi5_primer_single.fasta",
             "-t",
@@ -97,12 +97,12 @@ def test_fasta():
 
 # The test_gzip_fasta function.
 def test_gzip_fasta():
-    strOutputDirectory = "/home/jboom/Temp/test-output/gzip-fasta"
-    strTestDirectory = "/home/jboom/Temp/caltha/tests"
+    strOutputDirectory = "/home/travis/build/JasperBoom/test-output/gzip-fasta"
+    strTestDirectory = "/home/travis/build/JasperBoom/caltha/tests"
     os.makedirs(strOutputDirectory)
     sp.call(
         [
-            "/home/jboom/Temp/caltha/src/caltha",
+            "/home/travis/build/JasperBoom/caltha/src/caltha",
             "-i",
             strTestDirectory + "/data/umi5_primer_gzip.fasta.gz",
             "-t",
@@ -172,12 +172,12 @@ def test_gzip_fasta():
 
 # The test_fastq function.
 def test_fastq():
-    strOutputDirectory = "/home/jboom/Temp/test-output/fastq"
-    strTestDirectory = "/home/jboom/Temp/caltha/tests"
+    strOutputDirectory = "/home/travis/build/JasperBoom/test-output/fastq"
+    strTestDirectory = "/home/travis/build/JasperBoom/caltha/tests"
     os.makedirs(strOutputDirectory)
     sp.call(
         [
-            "/home/jboom/Temp/caltha/src/caltha",
+            "/home/travis/build/JasperBoom/caltha/src/caltha",
             "-i",
             strTestDirectory + "/data/umi5_primer_single.fastq",
             "-t",
@@ -246,14 +246,13 @@ def test_fastq():
 
 
 # The test_gzip_fastq function.
-# /home/jboom/Temp/
 def test_gzip_fastq():
-    strOutputDirectory = "/home/jboom/Temp/test-output/gzip-fastq"
-    strTestDirectory = "/home/jboom/Temp/caltha/tests"
+    strOutputDirectory = "/home/travis/build/JasperBoom/test-output/gzip-fastq"
+    strTestDirectory = "/home/travis/build/JasperBoom/caltha/tests"
     os.makedirs(strOutputDirectory)
     sp.call(
         [
-            "/home/jboom/Temp/caltha/src/caltha",
+            "/home/travis/build/JasperBoom/caltha/src/caltha",
             "-i",
             strTestDirectory + "/data/umi5_primer_gzip.fastq.gz",
             "-t",
@@ -323,12 +322,14 @@ def test_gzip_fastq():
 
 # The test_multiple_fasta_zip function.
 def test_multiple_fasta_zip():
-    strOutputDirectory = "/home/jboom/Temp/test-output/multiple_fasta_zip"
-    strTestDirectory = "/home/jboom/Temp/caltha/tests"
+    strOutputDirectory = (
+        "/home/travis/build/JasperBoom/test-output/multiple_fasta_zip"
+    )
+    strTestDirectory = "/home/travis/build/JasperBoom/caltha/tests"
     os.makedirs(strOutputDirectory)
     sp.call(
         [
-            "/home/jboom/Temp/caltha/src/caltha",
+            "/home/travis/build/JasperBoom/caltha/src/caltha",
             "-i",
             strTestDirectory + "/data/umi5_primer_multiple.zip",
             "-t",
