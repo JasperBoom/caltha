@@ -19,8 +19,11 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 ## Version 0.6
 Current stable version. Previous versions should be ignored.
 
-+ Re-add `pytest` test file with test for gzipped fasta file input (further
-  tests will be added later).
++ Add `pytest` file presence test function for regular fastq file input.
++ Add `pytest` file presence test function for gzipped fastq file input.
++ Add `pytest` file presence test function for regular fasta file input.
++ Re-add `pytest` test file with file presence test for gzipped fasta
+  file input (further tests will be added later).
 + Remove both the umi sequence and the centroid sequence from the tabular
   output, as requested by users and noted in
   (issue 7)[https://github.com/JasperBoom/caltha/issues/7].
