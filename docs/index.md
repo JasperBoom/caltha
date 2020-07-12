@@ -2,8 +2,9 @@
 A python package for processing UMI tagged mixed amplicon metabarcoding data.
 
 [![DOI](https://zenodo.org/badge/216898964.svg)](https://zenodo.org/badge/latestdoi/216898964)
-[![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Build Status](https://travis-ci.org/JasperBoom/caltha.svg?branch=master)](https://travis-ci.org/JasperBoom/caltha)
+[![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
 ## Installation
 The current version of __Caltha__ requires Python 3.8+.
