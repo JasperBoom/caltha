@@ -16,6 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 ```
 
+## Version 0.7
++ ...
+
 ## Version 0.6
 Current stable version. Previous versions should be ignored.
 

@@ -23,7 +23,7 @@ with open("README.md", "r") as oisReadme:
 # Setup
 setuptools.setup(
     name="caltha",
-    version="0.6",
+    version="0.7",
     description="A python package to process UMI tagged mixed amplicon\
                  metabarcoding data.",
     long_description=strDescription,

@@ -1,7 +1,9 @@
 # Caltha
 A python package for processing UMI tagged mixed amplicon metabarcoding data.
 
+[![DOI](https://zenodo.org/badge/216898964.svg)](https://zenodo.org/badge/latestdoi/216898964)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Build Status](https://travis-ci.org/JasperBoom/caltha.svg?branch=master)](https://travis-ci.org/JasperBoom/caltha)
 
 ## Installation
 The current version of __Caltha__ requires Python 3.8+.

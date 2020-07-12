@@ -13,7 +13,7 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 {% set name = "caltha" %}
-{% set version = "0.6" %}
+{% set version = "0.7" %}
 
 package:
   name: "{{ name|lower }}"

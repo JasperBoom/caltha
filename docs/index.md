@@ -1,7 +1,9 @@
 # Caltha
 A python package for processing UMI tagged mixed amplicon metabarcoding data.
 
+[![DOI](https://zenodo.org/badge/216898964.svg)](https://zenodo.org/badge/latestdoi/216898964)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Build Status](https://travis-ci.org/JasperBoom/caltha.svg?branch=master)](https://travis-ci.org/JasperBoom/caltha)
 
 ## Installation
 The current version of __Caltha__ requires Python 3.8+.
@@ -13,7 +15,7 @@ pip install caltha
 
 NOTE: __Caltha__ does require one more dependency which can not be installed
 with the __Caltha__ pip or conda package. This dependency is
-[Vsearch](https://github.com/torognes/vsearch) (2.14.2).  
+[vsearch](https://github.com/torognes/vsearch) (2.14.2).  
 Executing the following conda install command should install the dependency.
 ```
 conda install -c bioconda vsearch
@@ -85,7 +87,7 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
 * __Rognes T, Flouri T, Nichols B, Quince C, Mahe F__,  
   VSEARCH: A versatile open source tool for metagenomics.  
   PeerJ. 2016. __doi: 10.7717/peerj.2584__  
-  [Vsearch](https://github.com/torognes/vsearch)
+  [vsearch](https://github.com/torognes/vsearch)
 * __Augspurger T, Ayd W, Bartak C, Battiston P, Cloud P, Garcia M__,  
   Python Data Analysis Library.  
   [Pandas](https://pandas.pydata.org/)
