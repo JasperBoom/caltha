@@ -16,20 +16,22 @@
 
 # Imports
 import argparse
-import shutil
-import string
+import ntpath
+import os
+import pyfastx
 import random
 import re
-import os
-import zipfile
-import pyfastx
-import ntpath
+import shutil
+import sre_yield
+import string
 import time
+import zipfile
+import jellyfish.cjellyfish as cjellyfish
 import multiprocessing as mp
 import pandas as pd
 import subprocess as sp
-from Bio.Seq import Seq
 from Bio.Alphabet import generic_dna
+from Bio.Seq import Seq
 
 
 # The setOutputFiles function.
@@ -392,6 +394,39 @@ def getUmi(
         pass
 
 
+# The getUmiCode function.
+def getUmiCode(
+    strLocation, strAnchor, intUmiLength, strForward, strReverse, strRead
+):
+    strRegexForward = getRegex(strForward)
+    lstAllVariants = list(sre_yield.AllStrings(strRegexForward))
+
+    if strLocation == "umi5" or strLocation == "umidouble":
+        intLastCharacter = len(strForward)
+        for intPosition in range(len(strRead)):
+            strSubSequence = strRead[intPosition:intLastCharacter]
+            if len(strSubSequence) == len(strForward):
+                if strSubSequence.startswith(
+                    strForward[:1]
+                ) and strSubSequence.endswith(strForward[-1:]):
+                    dicVariantCheck = {}
+                    for strVariant in lstAllVariants:
+                        dicVariantCheck[
+                            strVariant
+                        ] = cjellyfish.hamming_distance(
+                            strVariant, strSubSequence
+                        )
+                    strLowestKey = min(
+                        dicVariantCheck, key=dicVariantCheck.get
+                    )
+                    print(
+                        strLowestKey + " " + str(dicVariantCheck[strLowestKey])
+                    )
+            intLastCharacter += 1
+    elif strLocation == "umi3":
+        pass
+
+
 # The processInputFile function.
 # This function calls the getUmi function for the supplied read, this outputs
 # one or two UMI codes. In the case of a double UMI [umidouble], the two UMIs
@@ -410,7 +445,7 @@ def processInputFile(
     intUniqueUmi,
 ):
     try:
-        strUmi = getUmi(
+        strUmi = getUmiCode(
             strLocation,
             strAnchor,
             intUmiLength,
@@ -420,6 +455,10 @@ def processInputFile(
         )
     except UnboundLocalError:
         pass
+    print(strUmi)
+
+
+"""
     try:
         if strUmi is not None:
             if strLocation == "umi5" or strLocation == "umi3":
@@ -465,6 +504,7 @@ def processInputFile(
     strUmi = None
     strCode = None
     return dicUniqueUmi, intUniqueUmi
+"""
 
 
 # The runCaltha function.
@@ -483,8 +523,8 @@ def runCaltha(
     strFormat,
 ):
     fltStart = time.time()
-    strInputFileName = flInput.split("/")[-1].split(".")[0]
-    strOutputFileName = strMainDir + "/" + strInputFileName
+    # strInputFileName = flInput.split("/")[-1].split(".")[0]
+    # strOutputFileName = strMainDir + "/" + strInputFileName
     strTempDir = setWorkDirs(strMainDir, True)
     dicUniqueUmi = {}
     intUniqueUmi = 1
@@ -502,8 +542,8 @@ def runCaltha(
                 dicUniqueUmi,
                 intUniqueUmi,
             )
-            dicUniqueUmi = lstProcessOutput[0]
-            intUniqueUmi = lstProcessOutput[1]
+            # dicUniqueUmi = lstProcessOutput[0]
+            # intUniqueUmi = lstProcessOutput[1]
     elif strFormat == "fastq":
         for oisRecord in pyfastx.Fastq(flInput):
             lstProcessOutput = processInputFile(
@@ -518,19 +558,20 @@ def runCaltha(
                 dicUniqueUmi,
                 intUniqueUmi,
             )
-            dicUniqueUmi = lstProcessOutput[0]
-            intUniqueUmi = lstProcessOutput[1]
+            # dicUniqueUmi = lstProcessOutput[0]
+            # intUniqueUmi = lstProcessOutput[1]
     else:
         pass
-    getZipArchive(
-        (strTempDir + "/PreValidation"),
-        (strOutputFileName + "_PREVALIDATION.zip"),
-        ".fasta",
-    )
-    getDereplication(strTempDir)
-    getSortBySize(strTempDir, intAbundance)
-    setClusterSize(strTempDir, fltIdentity)
-    setOutputFiles(strTempDir, strOutputFileName)
+    print(lstProcessOutput)
+    # getZipArchive(
+    #    (strTempDir + "/PreValidation"),
+    #    (strOutputFileName + "_PREVALIDATION.zip"),
+    #    ".fasta",
+    # )
+    # getDereplication(strTempDir)
+    # getSortBySize(strTempDir, intAbundance)
+    # setClusterSize(strTempDir, fltIdentity)
+    # setOutputFiles(strTempDir, strOutputFileName)
     fltEnd = time.time() - fltStart
     strEnd = ntpath.basename(flInput) + ": " + "%.2f" % fltEnd + "s"
     return strEnd
@@ -761,10 +802,10 @@ def main():
     mpPool.close()
     mpPool.join()
     mpOutput = [mpProcess.get() for mpProcess in mpTemporary]
-    getZipArchive(strMainDir, disArgvs.flTabular, ".tbl")
-    getZipArchive(strMainDir, disArgvs.flPreValidation, ".zip")
-    getZipArchive(strMainDir, disArgvs.flBlast, ".fasta")
-    removeWorkDirs(strMainDir)
+    # getZipArchive(strMainDir, disArgvs.flTabular, ".tbl")
+    # getZipArchive(strMainDir, disArgvs.flPreValidation, ".zip")
+    # getZipArchive(strMainDir, disArgvs.flBlast, ".fasta")
+    # removeWorkDirs(strMainDir)
     print(mpOutput)
 
 
