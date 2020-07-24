@@ -1,0 +1,10 @@
+    seq = "AGTCAAGGTTCCAGTCAGTCGAAAAG"
+    primer = "GTCAAG"
+
+    intLastCharacter = len(primer) 
+    for intPosition in range(len(seq)):
+        strSubSequence = seq[intPosition:intLastCharacter]
+        if len(strSubSequence) == len(primer):
+            if strSubSequence.startswith(primer[:1]) and strSubSequence.endswith(primer[-1:]):
+                print(cjellyfish.hamming_distance(primer, strSubSequence))
+        intLastCharacter += 1
