@@ -41,7 +41,7 @@ Current stable version. Previous versions should be ignored.
 + Fix `pre-commit` files.
 
 ## Version 0.5.1
-+ Restructure version to match PyPI package.
++ Restructure versioning to match PyPI package.
 
 ## Version 0.5
 + Setup `pre-commit` with `Black` and `Flake8`.
