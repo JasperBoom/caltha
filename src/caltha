@@ -640,7 +640,7 @@ def setWorkDirs(strDirectory, blnExtra):
     return lstWorkDirs[0]
 
 
-# The argvs function.
+# The parseArgvs function.
 def parseArgvs():
     strDescription = "A python package for processing UMI tagged mixed amplicon\
                       metabarcoding data."
@@ -660,6 +660,7 @@ def parseArgvs():
         "--input",
         action="store",
         dest="flInput",
+        type=str,
         default=argparse.SUPPRESS,
         help="The input fasta/fastq file(s). This can either be a zip archive\
               or a single fasta/fastq file.",
@@ -669,6 +670,7 @@ def parseArgvs():
         "--tabular",
         action="store",
         dest="flTabular",
+        type=str,
         default=argparse.SUPPRESS,
         help="The output tabular zip file.",
     )
@@ -677,6 +679,7 @@ def parseArgvs():
         "--zip",
         action="store",
         dest="flPreValidation",
+        type=str,
         default=argparse.SUPPRESS,
         help="The pre validation zip file.",
     )
@@ -685,6 +688,7 @@ def parseArgvs():
         "--blast",
         action="store",
         dest="flBlast",
+        type=str,
         default=argparse.SUPPRESS,
         help="The output blast zip file.",
     )
@@ -693,31 +697,41 @@ def parseArgvs():
         "--format",
         action="store",
         dest="strFormat",
+        type=str,
+        choices=["fasta", "fastq"],
+        nargs="?",
         default="fasta",
-        help="The format of the input file [fasta/fastq].",
+        help="The format of the input file.",
     )
     parser.add_argument(
         "-l",
         "--location",
         action="store",
         dest="strLocation",
+        type=str,
+        choices=["umi5", "umi3", "umidouble"],
+        nargs="?",
         default="umi5",
-        help="Search for UMIs at the 5'-end\
-              [umi5], 3'-end [umi3] or at the 5'-end and 3'-end [umidouble].",
+        help="Search for UMIs at the 5'-end, 3'-end or at the 5'-end\
+              and 3'-end.",
     )
     parser.add_argument(
         "-a",
         "--anchor",
         action="store",
         dest="strAnchor",
+        type=str,
+        choices=["primer", "adapter", "zero"],
+        nargs="?",
         default="primer",
-        help="Which anchor type to use [primer/adapter/zero].",
+        help="Which anchor type to use.",
     )
     parser.add_argument(
         "-u",
         "--length",
         action="store",
         dest="intUmiLength",
+        type=int,
         default="5",
         help="The length of the UMI sequence.",
     )
@@ -726,6 +740,7 @@ def parseArgvs():
         "--identity",
         action="store",
         dest="fltIdentity",
+        type=float,
         default="0.97",
         help="The identity percentage with which to perform the validation.",
     )
@@ -734,6 +749,7 @@ def parseArgvs():
         "--abundance",
         action="store",
         dest="intAbundance",
+        type=int,
         default="1",
         help="The minimum abundance of a sequence\
               in order for it to be included during validation.",
@@ -743,6 +759,7 @@ def parseArgvs():
         "--forward",
         action="store",
         dest="strForward",
+        type=str,
         default=argparse.SUPPRESS,
         help="The 5'-end anchor nucleotides.",
     )
@@ -751,6 +768,7 @@ def parseArgvs():
         "--reverse",
         action="store",
         dest="strReverse",
+        type=str,
         default=argparse.SUPPRESS,
         help="The 3'-end anchor nucleotides.",
     )
@@ -759,6 +777,7 @@ def parseArgvs():
         "--directory",
         action="store",
         dest="strDirectory",
+        type=str,
         default=".",
         help="The location of the temporary working directory (not created\
               by program).",
@@ -768,6 +787,7 @@ def parseArgvs():
         "--threads",
         action="store",
         dest="intThreads",
+        type=int,
         default=mp.cpu_count(),
         help="The number of threads to run Caltha with.",
     )
