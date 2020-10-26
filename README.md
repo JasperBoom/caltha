@@ -27,9 +27,9 @@ __Caltha__ can be run directly from the command line.
 ```
 usage: caltha [-h] [-v] [-i FLINPUT] [-t FLTABULAR] [-z FLPREVALIDATION]
               [-b FLBLAST] [-f [{fasta,fastq}]] [-l [{umi5,umi3,umidouble}]]
-			  [-a [{primer,adapter,zero}]] [-u INTUMILENGTH] [-y FLTIDENTITY]
+              [-a [{primer,adapter,zero}]] [-u INTUMILENGTH] [-y FLTIDENTITY]
               [-c INTABUNDANCE] [-w STRFORWARD] [-r STRREVERSE]
-			  [-d STRDIRECTORY] [-@ INTTHREADS]
+              [-d STRDIRECTORY] [-@ INTTHREADS]
 
 A python package for processing UMI tagged mixed amplicon metabarcoding data.
 
@@ -37,8 +37,8 @@ optional arguments:
   -h, --help            show this help message and exit
   -v, --version         show program's version number and exit
   -i FLINPUT, --input FLINPUT
-                        The input fasta/fastq file(s). This can either be a zip
-						archive or a single fasta/fastq file.
+                        The input fasta/fastq file(s). This can either be a
+                        zip archive or a single fasta/fastq file.
   -t FLTABULAR, --tabular FLTABULAR
                         The output tabular zip file.
   -z FLPREVALIDATION, --zip FLPREVALIDATION
@@ -49,29 +49,29 @@ optional arguments:
                         The format of the input file. (default: fasta)
   -l [{umi5,umi3,umidouble}], --location [{umi5,umi3,umidouble}]
                         Search for UMIs at the 5'-end, 3'-end or at the 5'-end
-						and 3'-end. (default: umi5)
+                        and 3'-end. (default: umi5)
   -a [{primer,adapter,zero}], --anchor [{primer,adapter,zero}]
                         Which anchor type to use. (default: primer)
   -u INTUMILENGTH, --length INTUMILENGTH
                         The length of the UMI sequence. (default: 5)
   -y FLTIDENTITY, --identity FLTIDENTITY
-                        The identity percentage with which to perform the
-						validation. (default: 0.97)
+                        The identity percentage with which to perform
+                        the validation. (default: 0.97)
   -c INTABUNDANCE, --abundance INTABUNDANCE
-                        The minimum abundance of a sequence in order for it to
-						be included during validation. (default: 1)
+                        The minimum abundance of a sequence in order for
+                        it to be included during validation. (default: 1)
   -w STRFORWARD, --forward STRFORWARD
                         The 5'-end anchor nucleotides.
   -r STRREVERSE, --reverse STRREVERSE
                         The 3'-end anchor nucleotides.
   -d STRDIRECTORY, --directory STRDIRECTORY
-                        The location of the temporary working directory
-						(not created by Caltha). (default: .)
+                        The location of the temporary working
+                        directory (not created by Caltha). (default: .)
   -@ INTTHREADS, --threads INTTHREADS
                         The number of threads to run Caltha with. (default: 8)
 
-This python package requires one extra dependency which can be easily installed
-with conda (conda install -c bioconda vsearch=2.15.0).
+This python package requires one extra dependency which can be easily
+installed with conda (conda install -c bioconda vsearch=2.15.0).
 ```
 
 Further documentation can be found [here](https://jasperboom.github.io/caltha/).
@@ -92,11 +92,11 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
   [vsearch](https://github.com/torognes/vsearch)
 * __Reback J, McKinney W, Mendel JB, van den Bossche J, Augspurger T, Cloud P__,  
   Pandas: powerful Python data analysis toolkit.  
-  Zenodo. 2020. __doi: 10.5281/zenodo.4067057__
+  Zenodo. 2020. __doi: 10.5281/zenodo.4067057__  
   [Pandas](https://pandas.pydata.org/)
 * __Du L__,  
-  Pyfastx: a robust Python module for fast random access to sequences from plain
-  and gzipped FASTA/Q files.  
+  Pyfastx: a robust Python module for fast random access to sequences from
+  plain and gzipped FASTA/Q files.  
   [Pyfastx](https://pyfastx.readthedocs.io/en/latest/)
 * __Cock P, Antao T, Chang J, Chapman B, Cox C, Dalke A__,  
   Biopython: freely available Python tools for computational molecular biology
@@ -123,8 +123,8 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
   pre-commit hooks.  
   [Pre-commit](https://pre-commit.com/)
 * __Krekel H, Oliveira B, Hahler D, Pfannschmidt R, Benita R__,  
-  Pytest: a framework making it easy to write small test, yet scales to support
-  complex functional testing for applications and libraries.  
+  Pytest: a framework making it easy to write small test, yet scales to
+  support complex functional testing for applications and libraries.  
   [Pytest](https://docs.pytest.org/en/latest/)
 * __Coombs JR, Ziadé T, Eby PJ, Fulton J, Bicking I, Ippolito B__,  
   Setuptools: a library designed t facilitate packaging Python projects.  
