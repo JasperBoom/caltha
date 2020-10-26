@@ -43,10 +43,12 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     python_requires=">=3.8",
     install_requires=[
-        "pandas>=1.0.5",
-        "numpy>=1.19.0",
-        "pyfastx>=0.6.13",
-        "biopython>=1.77",
+        "numpy>=1.19.2",
+        "pandas>=1.1.3",
+        "pyfastx>=0.7.0",
+        "biopython>=1.78",
+        "jellyfish>=0.8.2",
+        "sre-yield>=1.2"
     ],
     project_urls={
         "Source": "https://github.com/JasperBoom/caltha/tree/master/src",

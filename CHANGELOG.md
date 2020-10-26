@@ -17,7 +17,21 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 ```
 
 ## Version 0.7
-+ ...
+Major improvements to lowering code complexity. This was achieved by replacing
+regular python code and using well designed python packages. All third party
+packages can be found in the README.
+
++ Updated `Source(s)` in the README.
++ Remove secondary primer/adapter check in case of umi5 and
+  umi3 (this can be handled in preprocessing, with tools such as `CutAdapt`).
++ Replace regex search with hamming distance algorithm
+  using https://github.com/jamesturk/jellyfish.
++ Update default versions of a number of packages:
+  `Biopython: 1.78`
+  `Numpy: 1.19.1`
+  `Pandas: 1.1.3`
+  `Pyfastx: 0.7.0`
++ Remove `Bio.Alphabet` from imports, removed from `biopython`.
 
 ## Version 0.6
 Current stable version. Previous versions should be ignored.

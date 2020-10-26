@@ -30,7 +30,6 @@ import jellyfish.cjellyfish as cjellyfish
 import multiprocessing as mp
 import pandas as pd
 import subprocess as sp
-from Bio.Alphabet import generic_dna
 from Bio.Seq import Seq
 
 
@@ -354,7 +353,7 @@ def getUmi(
     strLocation, strAnchor, intUmiLength, strForward, strReverse, strRead
 ):
     strRegexForward = getRegex(strForward)
-    strReverseComplement = Seq(strReverse, generic_dna)
+    strReverseComplement = Seq(strReverse)
     strReverseComplement = strReverseComplement.reverse_complement()
     strRegexReverseComplement = getRegex(strReverseComplement)
     if strAnchor == "primer":
@@ -393,42 +392,64 @@ def getUmi(
     else:
         pass
 
+# The setHammingDistance function.
+def setHammingDistance(strSearchSequence, strRead, lstAllVariants):
+    dicLowestVariants = {}
+    dicLowestVariantsPostions = {}
+    intLastCharacter = len(strSearchSequence)
+    for intPosition in range(len(strRead)):
+        strSubSequence = strRead[intPosition:intLastCharacter]
+        if len(strSubSequence) == len(strSearchSequence):
+            if strSubSequence.startswith(strSearchSequence[:1]) and strSubSequence.endswith(strSearchSequence[-1:]):
+                dicVariantCheck = {}
+                for strVariant in lstAllVariants:
+                    dicVariantCheck[strVariant] = cjellyfish.hamming_distance(strVariant, strSubSequence)
+                strLowestKey = min(dicVariantCheck, key=dicVariantCheck.get)
+                dicLowestVariants[strLowestKey] = dicVariantCheck[strLowestKey]
+                dicLowestVariantsPostions[strLowestKey] = [intPosition, intLastCharacter]
+        intLastCharacter += 1
+    strLowestVaraintPosition = dicLowestVariantsPostions[min(dicLowestVariants, key=dicLowestVariants.get)]
+    #print(min(dicLowestVariants, key=dicLowestVariants.get))
+    return strLowestVaraintPosition
+    
 
 # The getUmiCode function.
 def getUmiCode(
     strLocation, strAnchor, intUmiLength, strForward, strReverse, strRead
 ):
     strRegexForward = getRegex(strForward)
-    lstAllVariants = list(sre_yield.AllStrings(strRegexForward))
-
-    if strLocation == "umi5" or strLocation == "umidouble":
-        intLastCharacter = len(strForward)
-        for intPosition in range(len(strRead)):
-            strSubSequence = strRead[intPosition:intLastCharacter]
-            if len(strSubSequence) == len(strForward):
-                if strSubSequence.startswith(
-                    strForward[:1]
-                ) and strSubSequence.endswith(strForward[-1:]):
-                    dicVariantCheck = {}
-                    for strVariant in lstAllVariants:
-                        dicVariantCheck[
-                            strVariant
-                        ] = cjellyfish.hamming_distance(
-                            strVariant, strSubSequence
-                        )
-                    strLowestKey = min(
-                        dicVariantCheck, key=dicVariantCheck.get
-                    )
-                    print(
-                        strLowestKey + " " + str(dicVariantCheck[strLowestKey])
-                    )
-            intLastCharacter += 1
+    strComplement = Seq(strReverse)
+    strComplement = strComplement.complement()
+    strRegexComplement = getRegex(strComplement)
+    lstAllVariantsForward = list(sre_yield.AllStrings(strRegexForward))
+    lstAllVariantsReverse = list(sre_yield.AllStrings(strRegexComplement))
+    if strLocation == "umi5":
+        lstPositions = setHammingDistance(strForward, strRead, lstAllVariantsForward)
+        if strAnchor == "primer":
+            intStart = int(lstPositions[0]) - intUmiLength
+            strUmi = strRead[intStart:lstPositions[0]]
+        elif strAnchor == "adapter":
+            intEnd = int(lstPositions[1]) + intUmiLength
+            strUmi = strRead[lstPositions[1]:intEnd]
+        elif strAnchor == "zero":
+            pass
     elif strLocation == "umi3":
+        lstPositions = setHammingDistance(strRegexComplement, strRead[::-1], lstAllVariantsReverse)
+        if strAnchor == "primer":
+            intStart = int(lstPositions[0]) - intUmiLength
+            strUmi = strRead[intStart:lstPositions[0]]
+        elif strAnchor == "adapter":
+            intEnd = int(lstPositions[1]) + intUmiLength
+            strUmi = strRead[lstPositions[1]:intEnd]
+        elif strAnchor == "zero":
+            pass
+    elif strLocation == "umidouble":
         pass
+    return strUmi
 
 
 # The processInputFile function.
-# This function calls the getUmi function for the supplied read, this outputs
+# This function calls the getUmiCode function for the supplied read, this outputs
 # one or two UMI codes. In the case of a double UMI [umidouble], the two UMIs
 # are combined. The length of the UMI is checked before continuing. The
 # getFastaFile function is called if the read contains a UMI.
@@ -455,7 +476,7 @@ def processInputFile(
         )
     except UnboundLocalError:
         pass
-    print(strUmi)
+    #print(strUmi)
 
 
 """
@@ -523,13 +544,15 @@ def runCaltha(
     strFormat,
 ):
     fltStart = time.time()
-    # strInputFileName = flInput.split("/")[-1].split(".")[0]
-    # strOutputFileName = strMainDir + "/" + strInputFileName
+    strInputFileName = flInput.split("/")[-1].split(".")[0]
+    strOutputFileName = strMainDir + "/" + strInputFileName
     strTempDir = setWorkDirs(strMainDir, True)
     dicUniqueUmi = {}
     intUniqueUmi = 1
     if strFormat == "fasta":
         for oisRecord in pyfastx.Fasta(flInput):
+            print(oisRecord.name)
+            print(oisRecord.seq.upper())
             lstProcessOutput = processInputFile(
                 oisRecord.name,
                 oisRecord.seq.upper(),
@@ -562,7 +585,6 @@ def runCaltha(
             # intUniqueUmi = lstProcessOutput[1]
     else:
         pass
-    print(lstProcessOutput)
     # getZipArchive(
     #    (strTempDir + "/PreValidation"),
     #    (strOutputFileName + "_PREVALIDATION.zip"),
@@ -646,7 +668,7 @@ def parseArgvs():
                       metabarcoding data."
     strEpilog = "This python package requires one extra dependency which can\
                  be easily installed with conda (conda install -c bioconda\
-                 vsearch=2.14.2)."
+                 vsearch=2.15.0)."
     parser = argparse.ArgumentParser(
         description=strDescription,
         epilog=strEpilog,
@@ -780,7 +802,7 @@ def parseArgvs():
         type=str,
         default=".",
         help="The location of the temporary working directory (not created\
-              by program).",
+              by Caltha).",
     )
     parser.add_argument(
         "-@",
@@ -826,7 +848,6 @@ def main():
     # getZipArchive(strMainDir, disArgvs.flPreValidation, ".zip")
     # getZipArchive(strMainDir, disArgvs.flBlast, ".fasta")
     # removeWorkDirs(strMainDir)
-    print(mpOutput)
 
 
 if __name__ == "__main__":
