@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-/mnt/e/ubuntu/caltha/src/caltha \
-    -i /mnt/e/ubuntu/caltha/tests/data/integration.fasta \
-    -t /mnt/e/ubuntu/test-output/tab.zip \
-    -z /mnt/e/ubuntu/test-output/zip.zip \
-    -b /mnt/e/ubuntu/test-output/blast.zip \
+/home/jboom/caltha/src/caltha \
+    -i /home/jboom/caltha/tests/data/integration.fasta \
+    -t /home/jboom/caltha/caltha_test/test-output/tab.zip \
+    -z /home/jboom/caltha/caltha_test/test-output/zip.zip \
+    -b /home/jboom/caltha/caltha_test/test-output/blast.zip \
     -f "fasta" \
     -l "umi5" \
     -a "primer" \
@@ -13,5 +13,5 @@
     -c "0" \
     -w "AYACTCTCAGGWTAWAGAGC" \
     -r "GBTACCTGAAMTTTGCGGCG" \
-    -d "/mnt/e/ubuntu/test-output" \
+    -d "/home/jboom/caltha/caltha_test/test-output" \
     -@ "2"

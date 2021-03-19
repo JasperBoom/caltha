@@ -1,5 +1,4 @@
 # Changelog
-
 ```
 Copyright (C) 2018 Jasper Boom
 
@@ -13,7 +12,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
+along with this program. If not, see <https://www.gnu.org/licenses/=.
 ```
 
 ## Version 0.7
@@ -25,12 +24,20 @@ packages can be found in the README.
 + Remove secondary primer/adapter check in case of umi5 and
   umi3 (this can be handled in preprocessing, with tools such as `CutAdapt`).
 + Replace regex search with hamming distance algorithm
-  using https://github.com/jamesturk/jellyfish.
-+ Update default versions of a number of packages:
-  `Biopython: 1.78`
-  `Numpy: 1.19.1`
-  `Pandas: 1.1.3`
-  `Pyfastx: 0.7.0`
+  using [Jellyfish](https://github.com/jamesturk/jellyfish).
++ Update required versions of a number of packages:
+  `black: 20.8b1`,
+  `biopython: 1.78`,
+  `flake8: 3.9.0`,
+  `jellyfish: 0.8.2`,
+  `numpy: 1.20.1`,
+  `pandas: 1.2.3`,
+  `pre-commit: 2.11.1`,
+  `pyfastx: 0.8.2`,
+  `pytest: 6.2.2`,
+  `setuptools: 54.1.2`,
+  `sre-yield: 1.2`,
+  `vsearch: 2.15.2`
 + Remove `Bio.Alphabet` from imports, removed from `biopython`.
 
 ## Version 0.6
@@ -72,9 +79,10 @@ Current stable version. Previous versions should be ignored.
 + Added zip file for umi5 primer multiple test.
 
 ## Version 0.2
-This release of `Caltha` implements parallel processing. `Caltha` now allows
-a .zip file with either fasta or fastq files as input. The output has been
-changed to three zip files, one for the tabular files, one for the pre
+This release of `Caltha` implements parallel processing. This parallel
+processing only has effect when multiple input files are provided. `Caltha` now
+allows a .zip file with either fasta or fastq files as input. The output has
+been changed to three zip files, one for the tabular files, one for the pre
 validation zip files and one for blast files.
 
 + Added `parallel
@@ -94,7 +102,7 @@ validation zip files and one for blast files.
 First release on GitHub for the new `Caltha` tool.
 Any changes mentioned below were applied to the main python script after it was
 isolated from the old "galaxy-tools-umi-isolation" repository. This python
-script is now a package on PyPI and will be maintained in thism repository.
+script is now a package on PyPI and will be maintained in this repository.
 
 + Created PyPI package for `Caltha`.
 + Added documentation page to repository (still needs to be filled).

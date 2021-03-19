@@ -14,28 +14,32 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-# Imports
+"""
+Imports:
+"""
 import os
 import zipfile
 import subprocess as sp
 
 
-# The test_fasta function.
 def test_fasta():
-    strOutputDirectory = "/home/travis/build/JasperBoom/test-output/fasta"
-    strTestDirectory = "/home/travis/build/JasperBoom/caltha/tests"
-    os.makedirs(strOutputDirectory)
+    """
+    The test_fasta function:
+    """
+    output_directory = "/home/travis/build/JasperBoom/test-output/fasta"
+    test_directory = "/home/travis/build/JasperBoom/caltha/tests"
+    os.makedirs(output_directory)
     sp.call(
         [
             "/home/travis/build/JasperBoom/caltha/src/caltha",
             "-i",
-            strTestDirectory + "/data/umi5_primer_single.fasta",
+            test_directory + "/data/umi5_primer_single.fasta",
             "-t",
-            strOutputDirectory + "/tab.zip",
+            output_directory + "/tab.zip",
             "-z",
-            strOutputDirectory + "/zip.zip",
+            output_directory + "/zip.zip",
             "-b",
-            strOutputDirectory + "/blast.zip",
+            output_directory + "/blast.zip",
             "-f",
             "fasta",
             "-l",
@@ -53,64 +57,66 @@ def test_fasta():
             "-r",
             "GATCAWACAAATAAAGGTAWTCGATC",
             "-d",
-            strOutputDirectory,
+            output_directory,
             "-@",
             "1",
         ],
     )
 
-    with zipfile.ZipFile(strOutputDirectory + "/blast.zip", "r") as objZip:
-        objZip.extractall(strOutputDirectory)
-    with zipfile.ZipFile(strOutputDirectory + "/tab.zip", "r") as objZip:
-        objZip.extractall(strOutputDirectory)
-    with zipfile.ZipFile(strOutputDirectory + "/zip.zip", "r") as objZip:
-        objZip.extractall(strOutputDirectory)
+    with zipfile.ZipFile(output_directory + "/blast.zip", "r") as zip_object:
+        zip_object.extractall(output_directory)
+    with zipfile.ZipFile(output_directory + "/tab.zip", "r") as zip_object:
+        zip_object.extractall(output_directory)
+    with zipfile.ZipFile(output_directory + "/zip.zip", "r") as zip_object:
+        zip_object.extractall(output_directory)
 
-    lstOutputFiles = [
+    output_files_list = [
         "umi5_primer_single_BLAST.fasta",
         "umi5_primer_single_TABULAR.tbl",
     ]
-    dicLineCounts = {}
+    line_counts_dictionary = {}
 
-    for strFileName in lstOutputFiles:
-        with open(strOutputDirectory + "/" + strFileName) as oisBlastFile:
-            intLineCount = 0
-            for strLine in oisBlastFile:
-                intLineCount += 1
-        dicLineCounts[strFileName] = intLineCount
+    for file_name in output_files_list:
+        with open(output_directory + "/" + file_name) as blast_file:
+            line_count = 0
+            for line in blast_file:
+                line_count += 1
+        line_counts_dictionary[file_name] = line_count
 
-    lstOutputZips = ["umi5_primer_single_PREVALIDATION.zip"]
+    output_zip_files = ["umi5_primer_single_PREVALIDATION.zip"]
 
-    for strZipFile in lstOutputZips:
+    for zip_file in output_zip_files:
         if (
-            os.path.exists(strOutputDirectory + "/" + strZipFile)
-            and os.path.getsize(strOutputDirectory + "/" + strZipFile) > 0
+            os.path.exists(output_directory + "/" + zip_file)
+            and os.path.getsize(output_directory + "/" + zip_file) > 0
         ):
-            blnArchiveCheck = 1
+            zip_archive_check = 1
         else:
-            blnArchiveCheck = 0
-        assert blnArchiveCheck == 1
+            zip_archive_check = 0
+        assert zip_archive_check == 1
 
-    assert dicLineCounts["umi5_primer_single_BLAST.fasta"] == 1560
-    assert dicLineCounts["umi5_primer_single_TABULAR.tbl"] == 781
+    assert line_counts_dictionary["umi5_primer_single_BLAST.fasta"] == 1560
+    assert line_counts_dictionary["umi5_primer_single_TABULAR.tbl"] == 781
 
 
-# The test_gzip_fasta function.
 def test_gzip_fasta():
-    strOutputDirectory = "/home/travis/build/JasperBoom/test-output/gzip-fasta"
-    strTestDirectory = "/home/travis/build/JasperBoom/caltha/tests"
-    os.makedirs(strOutputDirectory)
+    """
+    The test_gzip_fasta function:
+    """
+    output_directory = "/home/travis/build/JasperBoom/test-output/gzip-fasta"
+    test_directory = "/home/travis/build/JasperBoom/caltha/tests"
+    os.makedirs(output_directory)
     sp.call(
         [
             "/home/travis/build/JasperBoom/caltha/src/caltha",
             "-i",
-            strTestDirectory + "/data/umi5_primer_gzip.fasta.gz",
+            test_directory + "/data/umi5_primer_gzip.fasta.gz",
             "-t",
-            strOutputDirectory + "/tab.zip",
+            output_directory + "/tab.zip",
             "-z",
-            strOutputDirectory + "/zip.zip",
+            output_directory + "/zip.zip",
             "-b",
-            strOutputDirectory + "/blast.zip",
+            output_directory + "/blast.zip",
             "-f",
             "fasta",
             "-l",
@@ -128,64 +134,66 @@ def test_gzip_fasta():
             "-r",
             "GATCAWACAAATAAAGGTAWTCGATC",
             "-d",
-            strOutputDirectory,
+            output_directory,
             "-@",
             "1",
         ],
     )
 
-    with zipfile.ZipFile(strOutputDirectory + "/blast.zip", "r") as objZip:
-        objZip.extractall(strOutputDirectory)
-    with zipfile.ZipFile(strOutputDirectory + "/tab.zip", "r") as objZip:
-        objZip.extractall(strOutputDirectory)
-    with zipfile.ZipFile(strOutputDirectory + "/zip.zip", "r") as objZip:
-        objZip.extractall(strOutputDirectory)
+    with zipfile.ZipFile(output_directory + "/blast.zip", "r") as zip_object:
+        zip_object.extractall(output_directory)
+    with zipfile.ZipFile(output_directory + "/tab.zip", "r") as zip_object:
+        zip_object.extractall(output_directory)
+    with zipfile.ZipFile(output_directory + "/zip.zip", "r") as zip_object:
+        zip_object.extractall(output_directory)
 
-    lstOutputFiles = [
+    output_files_list = [
         "umi5_primer_gzip_BLAST.fasta",
         "umi5_primer_gzip_TABULAR.tbl",
     ]
-    dicLineCounts = {}
+    line_counts_dictionary = {}
 
-    for strFileName in lstOutputFiles:
-        with open(strOutputDirectory + "/" + strFileName) as oisBlastFile:
-            intLineCount = 0
-            for strLine in oisBlastFile:
-                intLineCount += 1
-        dicLineCounts[strFileName] = intLineCount
+    for file_name in output_files_list:
+        with open(output_directory + "/" + file_name) as blast_file:
+            line_count = 0
+            for line in blast_file:
+                line_count += 1
+        line_counts_dictionary[file_name] = line_count
 
-    lstOutputZips = ["umi5_primer_gzip_PREVALIDATION.zip"]
+    output_zip_files = ["umi5_primer_gzip_PREVALIDATION.zip"]
 
-    for strZipFile in lstOutputZips:
+    for zip_file in output_zip_files:
         if (
-            os.path.exists(strOutputDirectory + "/" + strZipFile)
-            and os.path.getsize(strOutputDirectory + "/" + strZipFile) > 0
+            os.path.exists(output_directory + "/" + zip_file)
+            and os.path.getsize(output_directory + "/" + zip_file) > 0
         ):
-            blnArchiveCheck = 1
+            zip_archive_check = 1
         else:
-            blnArchiveCheck = 0
-        assert blnArchiveCheck == 1
+            zip_archive_check = 0
+        assert zip_archive_check == 1
 
-    assert dicLineCounts["umi5_primer_gzip_BLAST.fasta"] == 1560
-    assert dicLineCounts["umi5_primer_gzip_TABULAR.tbl"] == 781
+    assert line_counts_dictionary["umi5_primer_gzip_BLAST.fasta"] == 1560
+    assert line_counts_dictionary["umi5_primer_gzip_TABULAR.tbl"] == 781
 
 
-# The test_fastq function.
 def test_fastq():
-    strOutputDirectory = "/home/travis/build/JasperBoom/test-output/fastq"
-    strTestDirectory = "/home/travis/build/JasperBoom/caltha/tests"
-    os.makedirs(strOutputDirectory)
+    """
+    The test_fastq function:
+    """
+    output_directory = "/home/travis/build/JasperBoom/test-output/fastq"
+    test_directory = "/home/travis/build/JasperBoom/caltha/tests"
+    os.makedirs(output_directory)
     sp.call(
         [
             "/home/travis/build/JasperBoom/caltha/src/caltha",
             "-i",
-            strTestDirectory + "/data/umi5_primer_single.fastq",
+            test_directory + "/data/umi5_primer_single.fastq",
             "-t",
-            strOutputDirectory + "/tab.zip",
+            output_directory + "/tab.zip",
             "-z",
-            strOutputDirectory + "/zip.zip",
+            output_directory + "/zip.zip",
             "-b",
-            strOutputDirectory + "/blast.zip",
+            output_directory + "/blast.zip",
             "-f",
             "fastq",
             "-l",
@@ -203,64 +211,66 @@ def test_fastq():
             "-r",
             "GATCAWACAAATAAAGGTAWTCGATC",
             "-d",
-            strOutputDirectory,
+            output_directory,
             "-@",
             "1",
         ],
     )
 
-    with zipfile.ZipFile(strOutputDirectory + "/blast.zip", "r") as objZip:
-        objZip.extractall(strOutputDirectory)
-    with zipfile.ZipFile(strOutputDirectory + "/tab.zip", "r") as objZip:
-        objZip.extractall(strOutputDirectory)
-    with zipfile.ZipFile(strOutputDirectory + "/zip.zip", "r") as objZip:
-        objZip.extractall(strOutputDirectory)
+    with zipfile.ZipFile(output_directory + "/blast.zip", "r") as zip_object:
+        zip_object.extractall(output_directory)
+    with zipfile.ZipFile(output_directory + "/tab.zip", "r") as zip_object:
+        zip_object.extractall(output_directory)
+    with zipfile.ZipFile(output_directory + "/zip.zip", "r") as zip_object:
+        zip_object.extractall(output_directory)
 
-    lstOutputFiles = [
+    output_files_list = [
         "umi5_primer_single_BLAST.fasta",
         "umi5_primer_single_TABULAR.tbl",
     ]
-    dicLineCounts = {}
+    line_counts_dictionary = {}
 
-    for strFileName in lstOutputFiles:
-        with open(strOutputDirectory + "/" + strFileName) as oisBlastFile:
-            intLineCount = 0
-            for strLine in oisBlastFile:
-                intLineCount += 1
-        dicLineCounts[strFileName] = intLineCount
+    for file_name in output_files_list:
+        with open(output_directory + "/" + file_name) as blast_file:
+            line_count = 0
+            for line in blast_file:
+                line_count += 1
+        line_counts_dictionary[file_name] = line_count
 
-    lstOutputZips = ["umi5_primer_single_PREVALIDATION.zip"]
+    output_zip_files = ["umi5_primer_single_PREVALIDATION.zip"]
 
-    for strZipFile in lstOutputZips:
+    for zip_file in output_zip_files:
         if (
-            os.path.exists(strOutputDirectory + "/" + strZipFile)
-            and os.path.getsize(strOutputDirectory + "/" + strZipFile) > 0
+            os.path.exists(output_directory + "/" + zip_file)
+            and os.path.getsize(output_directory + "/" + zip_file) > 0
         ):
-            blnArchiveCheck = 1
+            zip_archive_check = 1
         else:
-            blnArchiveCheck = 0
-        assert blnArchiveCheck == 1
+            zip_archive_check = 0
+        assert zip_archive_check == 1
 
-    assert dicLineCounts["umi5_primer_single_BLAST.fasta"] == 1560
-    assert dicLineCounts["umi5_primer_single_TABULAR.tbl"] == 781
+    assert line_counts_dictionary["umi5_primer_single_BLAST.fasta"] == 1560
+    assert line_counts_dictionary["umi5_primer_single_TABULAR.tbl"] == 781
 
 
-# The test_gzip_fastq function.
 def test_gzip_fastq():
-    strOutputDirectory = "/home/travis/build/JasperBoom/test-output/gzip-fastq"
-    strTestDirectory = "/home/travis/build/JasperBoom/caltha/tests"
-    os.makedirs(strOutputDirectory)
+    """
+    The test_gzip_fastq function:
+    """
+    output_directory = "/home/travis/build/JasperBoom/test-output/gzip-fastq"
+    test_directory = "/home/travis/build/JasperBoom/caltha/tests"
+    os.makedirs(output_directory)
     sp.call(
         [
             "/home/travis/build/JasperBoom/caltha/src/caltha",
             "-i",
-            strTestDirectory + "/data/umi5_primer_gzip.fastq.gz",
+            test_directory + "/data/umi5_primer_gzip.fastq.gz",
             "-t",
-            strOutputDirectory + "/tab.zip",
+            output_directory + "/tab.zip",
             "-z",
-            strOutputDirectory + "/zip.zip",
+            output_directory + "/zip.zip",
             "-b",
-            strOutputDirectory + "/blast.zip",
+            output_directory + "/blast.zip",
             "-f",
             "fastq",
             "-l",
@@ -278,66 +288,68 @@ def test_gzip_fastq():
             "-r",
             "GATCAWACAAATAAAGGTAWTCGATC",
             "-d",
-            strOutputDirectory,
+            output_directory,
             "-@",
             "1",
         ],
     )
 
-    with zipfile.ZipFile(strOutputDirectory + "/blast.zip", "r") as objZip:
-        objZip.extractall(strOutputDirectory)
-    with zipfile.ZipFile(strOutputDirectory + "/tab.zip", "r") as objZip:
-        objZip.extractall(strOutputDirectory)
-    with zipfile.ZipFile(strOutputDirectory + "/zip.zip", "r") as objZip:
-        objZip.extractall(strOutputDirectory)
+    with zipfile.ZipFile(output_directory + "/blast.zip", "r") as zip_object:
+        zip_object.extractall(output_directory)
+    with zipfile.ZipFile(output_directory + "/tab.zip", "r") as zip_object:
+        zip_object.extractall(output_directory)
+    with zipfile.ZipFile(output_directory + "/zip.zip", "r") as zip_object:
+        zip_object.extractall(output_directory)
 
-    lstOutputFiles = [
+    output_files_list = [
         "umi5_primer_gzip_BLAST.fasta",
         "umi5_primer_gzip_TABULAR.tbl",
     ]
-    dicLineCounts = {}
+    line_counts_dictionary = {}
 
-    for strFileName in lstOutputFiles:
-        with open(strOutputDirectory + "/" + strFileName) as oisBlastFile:
-            intLineCount = 0
-            for strLine in oisBlastFile:
-                intLineCount += 1
-        dicLineCounts[strFileName] = intLineCount
+    for file_name in output_files_list:
+        with open(output_directory + "/" + file_name) as blast_file:
+            line_count = 0
+            for line in blast_file:
+                line_count += 1
+        line_counts_dictionary[file_name] = line_count
 
-    lstOutputZips = ["umi5_primer_gzip_PREVALIDATION.zip"]
+    output_zip_files = ["umi5_primer_gzip_PREVALIDATION.zip"]
 
-    for strZipFile in lstOutputZips:
+    for zip_file in output_zip_files:
         if (
-            os.path.exists(strOutputDirectory + "/" + strZipFile)
-            and os.path.getsize(strOutputDirectory + "/" + strZipFile) > 0
+            os.path.exists(output_directory + "/" + zip_file)
+            and os.path.getsize(output_directory + "/" + zip_file) > 0
         ):
-            blnArchiveCheck = 1
+            zip_archive_check = 1
         else:
-            blnArchiveCheck = 0
-        assert blnArchiveCheck == 1
+            zip_archive_check = 0
+        assert zip_archive_check == 1
 
-    assert dicLineCounts["umi5_primer_gzip_BLAST.fasta"] == 1560
-    assert dicLineCounts["umi5_primer_gzip_TABULAR.tbl"] == 781
+    assert line_counts_dictionary["umi5_primer_gzip_BLAST.fasta"] == 1560
+    assert line_counts_dictionary["umi5_primer_gzip_TABULAR.tbl"] == 781
 
 
-# The test_multiple_fasta_zip function.
 def test_multiple_fasta_zip():
-    strOutputDirectory = (
+    """
+    The test_multiple_fasta_zip function:
+    """
+    output_directory = (
         "/home/travis/build/JasperBoom/test-output/multiple_fasta_zip"
     )
-    strTestDirectory = "/home/travis/build/JasperBoom/caltha/tests"
-    os.makedirs(strOutputDirectory)
+    test_directory = "/home/travis/build/JasperBoom/caltha/tests"
+    os.makedirs(output_directory)
     sp.call(
         [
             "/home/travis/build/JasperBoom/caltha/src/caltha",
             "-i",
-            strTestDirectory + "/data/umi5_primer_multiple.zip",
+            test_directory + "/data/umi5_primer_multiple.zip",
             "-t",
-            strOutputDirectory + "/tab.zip",
+            output_directory + "/tab.zip",
             "-z",
-            strOutputDirectory + "/zip.zip",
+            output_directory + "/zip.zip",
             "-b",
-            strOutputDirectory + "/blast.zip",
+            output_directory + "/blast.zip",
             "-f",
             "fasta",
             "-l",
@@ -355,20 +367,20 @@ def test_multiple_fasta_zip():
             "-r",
             "GATCAWACAAATAAAGGTAWTCGATC",
             "-d",
-            strOutputDirectory,
+            output_directory,
             "-@",
             "3",
         ],
     )
 
-    with zipfile.ZipFile(strOutputDirectory + "/blast.zip", "r") as objZip:
-        objZip.extractall(strOutputDirectory)
-    with zipfile.ZipFile(strOutputDirectory + "/tab.zip", "r") as objZip:
-        objZip.extractall(strOutputDirectory)
-    with zipfile.ZipFile(strOutputDirectory + "/zip.zip", "r") as objZip:
-        objZip.extractall(strOutputDirectory)
+    with zipfile.ZipFile(output_directory + "/blast.zip", "r") as zip_object:
+        zip_object.extractall(output_directory)
+    with zipfile.ZipFile(output_directory + "/tab.zip", "r") as zip_object:
+        zip_object.extractall(output_directory)
+    with zipfile.ZipFile(output_directory + "/zip.zip", "r") as zip_object:
+        zip_object.extractall(output_directory)
 
-    lstOutputFiles = [
+    output_files_list = [
         "zipTest1_BLAST.fasta",
         "zipTest1_TABULAR.tbl",
         "zipTest2_BLAST.fasta",
@@ -376,34 +388,38 @@ def test_multiple_fasta_zip():
         "zipTest3_BLAST.fasta",
         "zipTest3_TABULAR.tbl",
     ]
-    dicLineCounts = {}
+    line_counts_dictionary = {}
 
-    for strFileName in lstOutputFiles:
-        with open(strOutputDirectory + "/" + strFileName) as oisBlastFile:
-            intLineCount = 0
-            for strLine in oisBlastFile:
-                intLineCount += 1
-        dicLineCounts[strFileName] = intLineCount
+    for file_name in output_files_list:
+        with open(output_directory + "/" + file_name) as blast_file:
+            line_count = 0
+            for line in blast_file:
+                line_count += 1
+        line_counts_dictionary[file_name] = line_count
 
-    lstOutputZips = [
+    output_zip_files = [
         "zipTest1_PREVALIDATION.zip",
         "zipTest2_PREVALIDATION.zip",
         "zipTest3_PREVALIDATION.zip",
     ]
 
-    for strZipFile in lstOutputZips:
+    for zip_file in output_zip_files:
         if (
-            os.path.exists(strOutputDirectory + "/" + strZipFile)
-            and os.path.getsize(strOutputDirectory + "/" + strZipFile) > 0
+            os.path.exists(output_directory + "/" + zip_file)
+            and os.path.getsize(output_directory + "/" + zip_file) > 0
         ):
-            blnArchiveCheck = 1
+            zip_archive_check = 1
         else:
-            blnArchiveCheck = 0
-        assert blnArchiveCheck == 1
+            zip_archive_check = 0
+        assert zip_archive_check == 1
 
-    assert dicLineCounts["zipTest1_BLAST.fasta"] == 1560
-    assert dicLineCounts["zipTest1_TABULAR.tbl"] == 781
-    assert dicLineCounts["zipTest2_BLAST.fasta"] == 1560
-    assert dicLineCounts["zipTest2_TABULAR.tbl"] == 781
-    assert dicLineCounts["zipTest3_BLAST.fasta"] == 1560
-    assert dicLineCounts["zipTest3_TABULAR.tbl"] == 781
+    assert line_counts_dictionary["zipTest1_BLAST.fasta"] == 1560
+    assert line_counts_dictionary["zipTest1_TABULAR.tbl"] == 781
+    assert line_counts_dictionary["zipTest2_BLAST.fasta"] == 1560
+    assert line_counts_dictionary["zipTest2_TABULAR.tbl"] == 781
+    assert line_counts_dictionary["zipTest3_BLAST.fasta"] == 1560
+    assert line_counts_dictionary["zipTest3_TABULAR.tbl"] == 781
+
+"""
+Additional information:
+"""

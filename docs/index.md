@@ -7,7 +7,7 @@ A python package for processing UMI tagged mixed amplicon metabarcoding data.
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
 ## Installation
-The current version of __Caltha__ requires Python 3.8+.
+The current version of __Caltha__ requires Python 3.8.
 
 To install __Caltha__, simply run the pip install command:
 ```
@@ -17,9 +17,12 @@ pip install caltha
 NOTE: __Caltha__ does require one more dependency which can not be installed
 with the __Caltha__ pip package. This dependency is
 [vsearch](https://github.com/torognes/vsearch) (2.15.0).  
-Executing the following conda install command should install the dependency.
+[Conda](https://docs.conda.io/en/latest/miniconda.html) can be used to manage
+the installation of this tool.  
+After installing either anaconda or miniconda, executing the following conda
+install command should install the dependency.
 ```
-conda install -c bioconda vsearch
+conda install -c bioconda vsearch=2.15.2
 ```
 
 ## How to run
@@ -80,48 +83,37 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
 * [PyPI](https://pypi.org/project/caltha/)
 
 ## Source(s)
-* __Python Software Foundation__,  
-  Python 3.8+. 2019.  
-  [Python](https://www.python.org/)
-* __Python Packaging Authority, Python Software Foundation__,  
-  The Python Package index. 2003.  
-  [PyPI](https://pypi.org/)
-* __Rognes T, Flouri T, Nichols B, Quince C, Mahe F__,  
-  VSEARCH: a versatile open source tool for metagenomics.  
-  PeerJ. 2016; 4. __doi: 10.7717/peerj.2584__  
-  [vsearch](https://github.com/torognes/vsearch)
-* __Reback J, McKinney W, Mendel JB, van den Bossche J, Augspurger T, Cloud P__,  
-  Pandas: powerful Python data analysis toolkit.  
-  Zenodo. 2020. __doi: 10.5281/zenodo.4067057__  
-  [Pandas](https://pandas.pydata.org/)
-* __Du L__,  
-  Pyfastx: a robust Python module for fast random access to sequences from
-  plain and gzipped FASTA/Q files.  
-  [Pyfastx](https://pyfastx.readthedocs.io/en/latest/)
+* __Langa L, Willing C, Meyer C, Zijlstra J, Naylor M, Dollenstein Z, Lees C__,  
+  Black: The uncompromising Python code formatter.  
+  [Black](https://black.readthedocs.io/en/stable/)
 * __Cock P, Antao T, Chang J, Chapman B, Cox C, Dalke A__,  
   Biopython: freely available Python tools for computational molecular biology
   and bioinformatics.  
   Bioinformatics. 2009; 25(11): 1422-1423. __doi: 10.1093/bioinformatics/btp163__  
   [Biopython](https://biopython.org/)
-* __Hatch T, van den Berg J, Luo X, Oberländer J__,  
-  sre_yield: efficiently generate all values that can match a given regular
-  expression.  
-  Google.  
-  [sre_yield](https://github.com/google/sre_yield)
+* __Ziadé T, Cordasco I__,  
+  Flake8: Your tool for style guide enforcement.  
+  [Flake8](http://flake8.pycqa.org/en/latest/index.html)
 * __Turk J__,  
   Jellyfish: a python library for doing approximate and phonetic matching of
   strings.  
   [Jellyfish](https://github.com/jamesturk/jellyfish)
-* __Langa L, Willing C, Meyer C, Zijlstra J, Naylor M, Dollenstein Z, Lees C__,  
-  Black: The uncompromising Python code formatter.  
-  [Black](https://black.readthedocs.io/en/stable/)
-* __Ziadé T, Cordasco I__,  
-  Flake8: Your tool for style guide enforcement.  
-  [Flake8](http://flake8.pycqa.org/en/latest/index.html)
+* __Harris CR, Millman KJ, van der Walt SJ__,  
+  Array programming with NumPy.  
+  Nature. 2020; 585: 357-362. __doi: 0.1038/s41586-020-2649-2__  
+  [NumPy](https://numpy.org/)
+* __Reback J, McKinney W, Mendel JB, van den Bossche J, Augspurger T, Cloud P__,  
+  Pandas: powerful Python data analysis toolkit.  
+  Zenodo. 2020. __doi: 10.5281/zenodo.4067057__  
+  [Pandas](https://pandas.pydata.org/)
 * __Sottile A, Struys K, Kuehl C, Finkle M__,  
   Pre-commit: A framework for managing and maintaining multi-language
   pre-commit hooks.  
   [Pre-commit](https://pre-commit.com/)
+* __Du L__,  
+  Pyfastx: a robust Python module for fast random access to sequences from
+  plain and gzipped FASTA/Q files.  
+  [Pyfastx](https://pyfastx.readthedocs.io/en/latest/)
 * __Krekel H, Oliveira B, Hahler D, Pfannschmidt R, Benita R__,  
   Pytest: a framework making it easy to write small test, yet scales to
   support complex functional testing for applications and libraries.  
@@ -129,6 +121,21 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
 * __Coombs JR, Ziadé T, Eby PJ, Fulton J, Bicking I, Ippolito B__,  
   Setuptools: a library designed t facilitate packaging Python projects.  
   [Setuptools](https://setuptools.readthedocs.io/)
+* __Hatch T, van den Berg J, Luo X, Oberländer J__,  
+  sre_yield: efficiently generate all values that can match a given regular
+  expression.  
+  Google.  
+  [sre_yield](https://github.com/google/sre_yield)
+* __Rognes T, Flouri T, Nichols B, Quince C, Mahe F__,  
+  VSEARCH: a versatile open source tool for metagenomics.  
+  PeerJ. 2016; 4. __doi: 10.7717/peerj.2584__  
+  [vsearch](https://github.com/torognes/vsearch)
+* __Python Software Foundation__,  
+  Python 3.8+. 2019.  
+  [Python](https://www.python.org/)
+* __Python Packaging Authority, Python Software Foundation__,  
+  The Python Package index. 2003.  
+  [PyPI](https://pypi.org/)
 
 ## Author(s)
 * [Jasper Boom](https://github.com/JasperBoom)
@@ -150,5 +157,5 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
+along with this program. If not, see <https://www.gnu.org/licenses/=.
 ```

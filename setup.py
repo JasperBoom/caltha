@@ -14,19 +14,26 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-# Imports
+"""
+Imports:
+"""
 import setuptools
 
-with open("README.md", "r") as oisReadme:
-    strDescription = oisReadme.read()
+"""
+Readme:
+"""
+with open("README.md", "r") as readme:
+    description = readme.read()
 
-# Setup
+"""
+Setup:
+"""
 setuptools.setup(
     name="caltha",
     version="0.7",
     description="A python package to process UMI tagged mixed amplicon\
                  metabarcoding data.",
-    long_description=strDescription,
+    long_description=description,
     long_description_content_type="text/markdown",
     url="https://github.com/JasperBoom/caltha",
     author="Jasper Boom",
@@ -43,11 +50,11 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     python_requires=">=3.8",
     install_requires=[
+        "biopython>=1.78",
+        "jellyfish>=0.8.2",
         "numpy>=1.19.2",
         "pandas>=1.1.3",
         "pyfastx>=0.7.0",
-        "biopython>=1.78",
-        "jellyfish>=0.8.2",
         "sre-yield>=1.2"
     ],
     project_urls={
@@ -57,3 +64,7 @@ setuptools.setup(
     },
     scripts=["src/caltha"],
 )
+
+"""
+Additional information:
+"""
