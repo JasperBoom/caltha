@@ -15,7 +15,7 @@ pip install caltha
 ```
 
 NOTE: __Caltha__ does require one more dependency which can not be installed
-with the __Caltha__ pip package. This dependency is
+with the __Caltha__ PyPI package. This dependency is
 [vsearch](https://github.com/torognes/vsearch) (2.15.0).  
 [Conda](https://docs.conda.io/en/latest/miniconda.html) can be used to manage
 the installation of this tool.  
@@ -157,5 +157,5 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/=.
+along with this program. If not, see <https://www.gnu.org/licenses/>.
 ```

@@ -831,7 +831,6 @@ def parse_argvs():
     argvs = parser.parse_args()
     return argvs
 
-
 def main():
     """
     The main function:

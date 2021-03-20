@@ -17,3 +17,7 @@
 name = "Caltha"
 description = "A python package for processing UMI tagged mixed amplicon\
                metabarcoding data."
+
+"""
+Additional information:
+"""

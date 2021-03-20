@@ -67,4 +67,5 @@ setuptools.setup(
 
 """
 Additional information:
+    This file is used to update the Caltha PyPI package.
 """

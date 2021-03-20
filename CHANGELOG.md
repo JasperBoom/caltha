@@ -12,7 +12,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/=.
+along with this program. If not, see <https://www.gnu.org/licenses/>.
 ```
 
 ## Version 0.7
@@ -39,6 +39,7 @@ packages can be found in the README.
   `sre-yield: 1.2`,
   `vsearch: 2.15.2`
 + Remove `Bio.Alphabet` from imports, removed from `biopython`.
++ Implement a code naming style aligning better with PEP8.
 
 ## Version 0.6
 Current stable version. Previous versions should be ignored.

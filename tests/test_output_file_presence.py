@@ -21,7 +21,6 @@ import os
 import zipfile
 import subprocess as sp
 
-
 def test_fasta():
     """
     The test_fasta function:
