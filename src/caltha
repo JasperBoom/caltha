@@ -14,7 +14,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-# Imports
+"""
+Imports:
+"""
 import argparse
 import ntpath
 import os
@@ -32,91 +34,94 @@ import subprocess as sp
 from Bio.Seq import Seq
 
 
-# The setOutputFiles function.
-# This function creates the tabular and blast output files.
-def setOutputFiles(directory_path, output_file_name):
-    dfOutput = pd.DataFrame(columns=["UMI_ID", "Read_Count"])
-    intCount = 0
+def create_output_files(directory_path, output_file_name):
+    """
+    The create_output_files function:
+        This function creates the tabular and blast output files.
+    """
+    output_dataframe = pd.DataFrame(columns=["UMI_ID", "Read_Count"])
+    counter = 0
     output_blast_file = output_file_name + "_BLAST.fasta"
     output_table = output_file_name + "_TABULAR.tbl"
     for file_name in os.listdir(directory_path + "/post_vsearch_clustering"):
-        umi_sequenceNumber = file_name.split("_")[0]
-        intLineCount = 0
+        umi_sequence_number = file_name.split("_")[0]
+        line_counter = 0
         with open(
             directory_path + "/post_vsearch_clustering/" + file_name
-        ) as oisClusterFile:
-            for strLine in oisClusterFile:
-                intLineCount += 1
+        ) as clustering_file:
+            for line in clustering_file:
+                line_counter += 1
         with open(
             directory_path + "/post_vsearch_clustering/" + file_name
-        ) as oisUmiFile:
-            if intLineCount == 2:
-                for strLine in oisUmiFile:
-                    if strLine.startswith(">"):
-                        read_header = strLine.split("=")[1].strip("\n")
-                        read = next(oisUmiFile)
-                        dfOutput.loc[intCount] = [
-                            umi_sequenceNumber,
+        ) as umi_file:
+            if line_counter == 2:
+                for line in umi_file:
+                    if line.startswith(">"):
+                        read_header = line.split("=")[1].strip("\n")
+                        read = next(umi_file)
+                        output_dataframe.loc[counter] = [
+                            umi_sequence_number,
                             read_header.strip("\n"),
                         ]
                         with open(output_blast_file, "a") as write_to_file:
                             write_to_file.write(
-                                ">" + umi_sequenceNumber + "\n"
+                                ">" + umi_sequence_number + "\n"
                             )
                             write_to_file.write(
                                 read.strip("\n").upper() + "\n"
                             )
                     else:
                         pass
-            elif intLineCount > 2:
-                intVersionCount = 1
-                for strLine in oisUmiFile:
-                    if strLine.startswith(">"):
-                        read_header = strLine.split("=")[1].strip("\n")
-                        read = next(oisUmiFile)
-                        umi_sequenceVersion = (
-                            umi_sequenceNumber + "." + str(intVersionCount)
+            elif line_counter > 2:
+                version_counter = 1
+                for line in umi_file:
+                    if line.startswith(">"):
+                        read_header = line.split("=")[1].strip("\n")
+                        read = next(umi_file)
+                        umi_sequence_version = (
+                            umi_sequence_number + "." + str(version_counter)
                         )
-                        dfOutput.loc[intCount] = [
-                            umi_sequenceVersion,
+                        output_dataframe.loc[counter] = [
+                            umi_sequence_version,
                             read_header.strip("\n"),
                         ]
                         with open(output_blast_file, "a") as write_to_file:
                             write_to_file.write(
-                                ">" + umi_sequenceVersion + "\n"
+                                ">" + umi_sequence_version + "\n"
                             )
                             write_to_file.write(
                                 read.strip("\n").upper() + "\n"
                             )
-                        intVersionCount += 1
-                        intCount += 1
+                        version_counter += 1
+                        counter += 1
                     else:
                         pass
             else:
                 pass
-        intCount += 1
-    dfOutput = dfOutput.set_index("UMI_ID")
-    dfOutput.to_csv(output_table, sep="\t", encoding="utf-8")
+        counter += 1
+    output_dataframe = output_dataframe.set_index("UMI_ID")
+    output_dataframe.to_csv(output_table, sep="\t", encoding="utf-8")
 
 
-# The setClusterSize function.
-# This function controls the Vsearch clustering. Every fasta file created by
-# getSortBySize is clustered using Vsearch. The expected result is a single
-# centroid sequence. This is checked in the setOutputFiles function.
-def setClusterSize(directory_path, identity_percentage):
+def clustering(directory_path, identity_percentage):
+    """
+    The clustering function:
+        This function controls the vsearch clustering. Every fasta file created
+        by sort_by_size is clustered using Vsearch. The expected result is a
+        single centroid sequence. This is checked in the create_output_files
+        function.
+    """
     for file_name in os.listdir(directory_path + "/vsearch_clustering"):
         if file_name.startswith("sorted"):
-            strInputCommand = (
-                directory_path + "/vsearch_clustering/" + file_name
-            )
-            strOutputCommand = (
+            input_command = directory_path + "/vsearch_clustering/" + file_name
+            output_command = (
                 directory_path + "/post_vsearch_clustering/" + file_name[11:]
             )
-            rafClustering = sp.Popen(
+            clustering_command = sp.Popen(
                 [
                     "vsearch",
                     "--cluster_size",
-                    strInputCommand,
+                    input_command,
                     "--fasta_width",
                     "0",
                     "--id",
@@ -125,37 +130,37 @@ def setClusterSize(directory_path, identity_percentage):
                     "--minseqlength",
                     "1",
                     "--centroids",
-                    strOutputCommand,
+                    output_command,
                     "--sizeout",
                 ],
                 stdout=sp.PIPE,
                 stderr=sp.PIPE,
             )
-            strOut, strError = rafClustering.communicate()
+            standard_out, standard_error = clustering_command.communicate()
         else:
             pass
 
 
-# The getSortBySize function.
-# This function controls the Vsearch sorting. Every fasta file created by
-# getDereplication is sorted based on abundance. Any reads with a abundance
-# lower than minimum_abundance will be discarded.
-def getSortBySize(directory_path, minimum_abundance):
+def sort_by_size(directory_path, minimum_abundance):
+    """
+    The sort_by_size function:
+        This function controls the vsearch sorting. Every fasta file created by
+        dereplication is sorted based on abundance. Any reads with a abundance
+        lower than minimum_abundance will be discarded.
+    """
     for file_name in os.listdir(directory_path + "/vsearch_clustering"):
         if file_name.startswith("derep"):
-            strInputCommand = (
-                directory_path + "/vsearch_clustering/" + file_name
-            )
-            strOutputCommand = (
+            input_command = directory_path + "/vsearch_clustering/" + file_name
+            output_command = (
                 directory_path + "/vsearch_clustering/" + "sorted" + file_name
             )
-            rafSort = sp.Popen(
+            sorting_command = sp.Popen(
                 [
                     "vsearch",
                     "--sortbysize",
-                    strInputCommand,
+                    input_command,
                     "--output",
-                    strOutputCommand,
+                    output_command,
                     "--minseqlength",
                     "1",
                     "--minsize",
@@ -164,29 +169,31 @@ def getSortBySize(directory_path, minimum_abundance):
                 stdout=sp.PIPE,
                 stderr=sp.PIPE,
             )
-            strOut, strError = rafSort.communicate()
+            standard_out, standard_error = sorting_command.communicate()
         else:
             pass
 
 
-# The getDereplication function.
-# This function controls the Vsearch dereplication. Every fasta file created by
-# generate_fasta_file is dereplicated. This step is necessary for the sorting
-# step to work.
-def getDereplication(directory_path):
+def dereplication(directory_path):
+    """
+    The dereplication function:
+        This function controls the vsearch dereplication. Every fasta file
+        created by generate_fasta_file is dereplicated. This step is necessary
+        for the sorting step to work.
+    """
     for file_name in os.listdir(directory_path + "/pre_validation"):
         if file_name.endswith(".fasta"):
-            strInputCommand = directory_path + "/pre_validation/" + file_name
-            strOutputCommand = (
+            input_command = directory_path + "/pre_validation/" + file_name
+            output_command = (
                 directory_path + "/vsearch_clustering/" + "derep" + file_name
             )
-            rafDerep = sp.Popen(
+            dereplication_command = sp.Popen(
                 [
                     "vsearch",
                     "--derep_fulllength",
-                    strInputCommand,
+                    input_command,
                     "--output",
-                    strOutputCommand,
+                    output_command,
                     "--minseqlength",
                     "1",
                     "--sizeout",
@@ -194,7 +201,7 @@ def getDereplication(directory_path):
                 stdout=sp.PIPE,
                 stderr=sp.PIPE,
             )
-            strOut, strError = rafDerep.communicate()
+            standard_out, standard_error = dereplication_command.communicate()
         else:
             pass
 
@@ -334,7 +341,14 @@ def retrieve_umi_code(
     """
     The retrieve_umi_code function:
         This function guides the hamming distance calculations and generates a
-        umi sequence if possible.
+        umi sequence if possible. A regex compatible string is generated for
+        both the forward and reverse (which is make complement first) anchors.
+        These regex strings are separated into all possible combinations.
+        These combinations are used to calculate the hamming distance within
+        every read. Depending on which umi_location was used, the umi sequence
+        is extracted based on the positions returned by the
+        find_lowest_hamming_distance function. In the case of a "zero" anchor
+        type, the start or end of a read is used.
     """
     regex_forward_anchor = generate_regex(forward_anchor)
     reverse_anchor_seq_object = Seq(reverse_anchor)
@@ -367,11 +381,12 @@ def retrieve_umi_code(
                 umi_end = int(anchor_positions_list[1]) + umi_length
                 umi_sequence = read[anchor_positions_list[1] : umi_end]
             elif anchor_type == "zero":
-                pass
+                umi_sequence = read[0:umi_length]
     elif umi_location == "umi3":
+        read_reverse = read[::-1]
         anchor_positions_list = find_lowest_hamming_distance(
             regex_reverse_anchor_complement,
-            read[::-1],
+            read_reverse,
             all_regex_variants_reverse_anchor,
             anchor_error,
         )
@@ -384,12 +399,14 @@ def retrieve_umi_code(
         else:
             if anchor_type == "primer":
                 umi_start = int(anchor_positions_list[0]) - umi_length
-                umi_sequence = read[umi_start : anchor_positions_list[0]]
+                umi_sequence = read_reverse[
+                    umi_start : anchor_positions_list[0]
+                ]
             elif anchor_type == "adapter":
                 umi_end = int(anchor_positions_list[1]) + umi_length
-                umi_sequence = read[anchor_positions_list[1] : umi_end]
+                umi_sequence = read_reverse[anchor_positions_list[1] : umi_end]
             elif anchor_type == "zero":
-                pass
+                umi_sequence = read_header[0:umi_length]
     elif umi_location == "umidouble":
         pass
     return umi_sequence
@@ -429,24 +446,17 @@ def process_data_input(
         )
     except UnboundLocalError:
         pass
-    print(umi_sequence)
-
-
-"""
     try:
         if umi_sequence is not None:
             if umi_location == "umi5" or umi_location == "umi3":
-                intLengthPotentialUmi = len(umi_sequence)
-                if int(intLengthPotentialUmi) == int(umi_length):
+                if len(umi_sequence) == int(umi_length):
                     umi_nucleotides = umi_sequence
                 else:
                     umi_nucleotides = None
             elif umi_location == "umidouble":
-                strCombined = umi_sequence[0] + umi_sequence[1]
-                intLengthPotentialUmi = len(strCombined)
-                intDoubleUmi = umi_length * 2
-                if int(intLengthPotentialUmi) == int(intDoubleUmi):
-                    umi_nucleotides = strCombined
+                combined_umi = umi_sequence[0] + umi_sequence[1]
+                if len(combined_umi) == int(umi_length * 2):
+                    umi_nucleotides = combined_umi
                 else:
                     umi_nucleotides = None
             else:
@@ -469,7 +479,10 @@ def process_data_input(
     try:
         if umi_nucleotides is not None:
             generate_fasta_file(
-                temporary_directory, unique_umi_dictionary, read_header, read,
+                temporary_directory,
+                unique_umi_dictionary,
+                read_header,
+                read,
                 umi_nucleotides,
             )
         else:
@@ -479,7 +492,6 @@ def process_data_input(
     umi_sequence = None
     umi_nucleotides = None
     return unique_umi_dictionary, unique_umi_count
-"""
 
 
 def run_caltha(
@@ -524,9 +536,8 @@ def run_caltha(
                 unique_umi_count,
                 anchor_error,
             )
-            print(umi_output_objects)
-            # unique_umi_dictionary = umi_output_objects[0]
-            # unique_umi_count = umi_output_objects[1]
+            unique_umi_dictionary = umi_output_objects[0]
+            unique_umi_count = umi_output_objects[1]
     elif input_format == "fastq":
         for pyfastx_record in pyfastx.Fastq(input_file):
             umi_output_objects = process_data_input(
@@ -542,9 +553,8 @@ def run_caltha(
                 unique_umi_count,
                 anchor_error,
             )
-            print(umi_output_objects)
-            # unique_umi_dictionary = umi_output_objects[0]
-            # unique_umi_count = umi_output_objects[1]
+            unique_umi_dictionary = umi_output_objects[0]
+            unique_umi_count = umi_output_objects[1]
     else:
         pass
     # generate_zip_archive(
@@ -552,10 +562,10 @@ def run_caltha(
     #    (output_file_name + "_PREVALIDATION.zip"),
     #    ".fasta",
     # )
-    # getDereplication(temporary_directory)
-    # getSortBySize(temporary_directory, minimum_abundance)
-    # setClusterSize(temporary_directory, identity_percentage)
-    # setOutputFiles(temporary_directory, output_file_name)
+    # dereplication(temporary_directory)
+    # sort_by_size(temporary_directory, minimum_abundance)
+    # clustering(temporary_directory, identity_percentage)
+    # create_output_files(temporary_directory, output_file_name)
     end_time = time.time() - starting_time
     end_message = ntpath.basename(input_file) + ": " + "%.2f" % end_time + "s"
     return end_message
@@ -812,11 +822,11 @@ def parse_argvs():
         default=mp.cpu_count(),
         help="The number of threads to run Caltha with.",
     )
-    argvs = parser.parse_args()
-    return argvs
     parser.add_argument(
         "-v", "--version", action="version", version="%(prog)s [0.7]"
     )
+    argvs = parser.parse_args()
+    return argvs
 
 
 def main():
@@ -855,7 +865,6 @@ def main():
     multi_processing_output = [
         mpProcess.get() for mpProcess in multi_processing_temporary
     ]
-    print(multi_processing_output)
     # generate_zip_archive(main_working_directory, user_arguments.output_table,
     #                      ".tbl")
     # generate_zip_archive(main_working_directory,
@@ -863,6 +872,7 @@ def main():
     # generate_zip_archive(main_working_directory,
     #                      user_arguments.output_blast_file, ".fasta")
     # remove_working_directory(main_working_directory)
+    print(multi_processing_output)
 
 
 if __name__ == "__main__":
