@@ -14,4 +14,5 @@
     -w "AYACTCTCAGGWTAWAGAGC" \
     -r "GBTACCTGAAMTTTGCGGCG" \
     -d "/home/jboom/caltha/caltha_test/test-output" \
-    -@ "2"
+    -@ "2" \
+    -e "9"

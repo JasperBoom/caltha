@@ -21,6 +21,7 @@ import os
 import zipfile
 import subprocess as sp
 
+
 def test_fasta():
     """
     The test_fasta function:
@@ -418,6 +419,7 @@ def test_multiple_fasta_zip():
     assert line_counts_dictionary["zipTest2_TABULAR.tbl"] == 781
     assert line_counts_dictionary["zipTest3_BLAST.fasta"] == 1560
     assert line_counts_dictionary["zipTest3_TABULAR.tbl"] == 781
+
 
 """
 Additional information:

@@ -20,4 +20,5 @@ description = "A python package for processing UMI tagged mixed amplicon\
 
 """
 Additional information:
+    Regular packages file.
 """

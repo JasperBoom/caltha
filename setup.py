@@ -55,7 +55,7 @@ setuptools.setup(
         "numpy>=1.19.2",
         "pandas>=1.1.3",
         "pyfastx>=0.7.0",
-        "sre-yield>=1.2"
+        "sre-yield>=1.2",
     ],
     project_urls={
         "Source": "https://github.com/JasperBoom/caltha/tree/master/src",
@@ -67,5 +67,5 @@ setuptools.setup(
 
 """
 Additional information:
-    This file is used to update the Caltha PyPI package.
+    This file can be used to update the Caltha PyPI package.
 """

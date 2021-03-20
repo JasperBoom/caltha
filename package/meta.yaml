@@ -53,7 +53,7 @@ about:
   license_file: "../LICENSE.md"
   summary: "A python package for processing UMI tagged mixed amplicon metabarcoding data."
   description: "Caltha requires one more dependency which can not be installed
-with this conda package. This dependency is VSEARCH, which can be installed using: `conda install -c bioconda vsearch=2.15.2`."
+with this conda package. This dependency is VSEARCH, which can be installed using: `conda install -c bioconda vsearch=2.15.2`"
   dev_url: "https://github.com/JasperBoom/caltha/tree/master/src"
   doc_url: "https://jasperboom.github.io/caltha"
   doc_source_url: "https://github.com/JasperBoom/caltha/tree/gh-pages"

@@ -19,8 +19,8 @@ with the __Caltha__ PyPI package. This dependency is
 [vsearch](https://github.com/torognes/vsearch) (2.15.0).  
 [Conda](https://docs.conda.io/en/latest/miniconda.html) can be used to manage
 the installation of this tool.  
-After installing either anaconda or miniconda, executing the following conda
-install command should install the dependency.
+After installation of either anaconda or miniconda, executing the following
+conda install command should install the dependency.
 ```
 conda install -c bioconda vsearch=2.15.2
 ```

@@ -28,5 +28,5 @@ vsearch==2.15.2
 #########################
 # Additional information:
 #     This file contains all requirements for Caltha.
-#     It also contains all requirements for testing.
+#     It also contains all requirements for testing Caltha.
 #########################
