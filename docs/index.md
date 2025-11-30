@@ -145,17 +145,12 @@ Further documentation can be found [here](https://jasperboom.github.io/caltha/).
   GitHub repository: https://github.com/JasperBoom/caltha
 
 ```
-Copyright (C) 2018 Jasper Boom
+Copyright (C) 2025 Jasper Boom
+All Rights Reserved.
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3 as
-published by the Free Software Foundation.
+Unauthorized copying, distribution, modification, or use of this file,
+in whole or in part, is strictly prohibited without prior written consent
+from the copyright owner.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
+For licensing inquiries, contact: info@jboom.org
 ```
