@@ -12,7 +12,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-black==20.8b1
+black==24.3.0
 biopython==1.78
 flake8==3.9.0
 jellyfish==0.8.2
