@@ -16,7 +16,7 @@ black==20.8b1
 biopython==1.78
 flake8==3.9.0
 jellyfish==0.8.2
-numpy==1.20.1
+numpy==1.22.0
 pandas==1.2.3
 pre-commit==2.11.1
 pyfastx==0.8.2
