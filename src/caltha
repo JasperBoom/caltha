@@ -14,157 +14,186 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-# Imports
+"""
+Imports:
+"""
 import argparse
-import shutil
-import string
-import random
-import re
-import os
-import zipfile
-import pyfastx
 import ntpath
+import os
+import pyfastx
+import random
+import shutil
+import sre_yield
+import string
 import time
+import zipfile
+import jellyfish.cjellyfish as cjellyfish
 import multiprocessing as mp
 import pandas as pd
 import subprocess as sp
 from Bio.Seq import Seq
-from Bio.Alphabet import generic_dna
 
 
-# The setOutputFiles function.
-# This function creates the tabular and blast output files.
-def setOutputFiles(strDir, strOutputFileName):
-    dfOutput = pd.DataFrame(columns=["UMI_ID", "Read_Count"])
-    intCount = 0
-    flBlast = strOutputFileName + "_BLAST.fasta"
-    flTabular = strOutputFileName + "_TABULAR.tbl"
-    for strFileName in os.listdir(strDir + "/PostClustering"):
-        strUmiNumber = strFileName.split("_")[0]
-        intLineCount = 0
-        with open(strDir + "/PostClustering/" + strFileName) as oisClusterFile:
-            for strLine in oisClusterFile:
-                intLineCount += 1
-        with open(strDir + "/PostClustering/" + strFileName) as oisUmiFile:
-            if intLineCount == 2:
-                for strLine in oisUmiFile:
-                    if strLine.startswith(">"):
-                        strHeader = strLine.split("=")[1].strip("\n")
-                        strRead = next(oisUmiFile)
-                        dfOutput.loc[intCount] = [
-                            strUmiNumber,
-                            strHeader.strip("\n"),
+def create_output_files(directory_path, output_file_name):
+    """
+    The create_output_files function:
+        This function creates the tabular and blast output files.
+    """
+    output_dataframe = pd.DataFrame(columns=["UMI_ID", "Read_Count"])
+    counter = 0
+    output_blast_file = output_file_name + "_BLAST.fasta"
+    output_table = output_file_name + "_TABULAR.tbl"
+    for file_name in os.listdir(directory_path + "/post_vsearch_clustering"):
+        umi_sequence_number = file_name.split("_")[0]
+        line_counter = 0
+        with open(
+            directory_path + "/post_vsearch_clustering/" + file_name
+        ) as clustering_file:
+            for line in clustering_file:
+                line_counter += 1
+        with open(
+            directory_path + "/post_vsearch_clustering/" + file_name
+        ) as umi_file:
+            if line_counter == 2:
+                for line in umi_file:
+                    if line.startswith(">"):
+                        read_header = line.split("=")[1].strip("\n")
+                        read = next(umi_file)
+                        output_dataframe.loc[counter] = [
+                            umi_sequence_number,
+                            read_header.strip("\n"),
                         ]
-                        with open(flBlast, "a") as flOutput:
-                            flOutput.write(">" + strUmiNumber + "\n")
-                            flOutput.write(strRead.strip("\n").upper() + "\n")
+                        with open(output_blast_file, "a") as write_to_file:
+                            write_to_file.write(
+                                ">" + umi_sequence_number + "\n"
+                            )
+                            write_to_file.write(
+                                read.strip("\n").upper() + "\n"
+                            )
                     else:
                         pass
-            elif intLineCount > 2:
-                intVersionCount = 1
-                for strLine in oisUmiFile:
-                    if strLine.startswith(">"):
-                        strHeader = strLine.split("=")[1].strip("\n")
-                        strRead = next(oisUmiFile)
-                        strUmiVersion = (
-                            strUmiNumber + "." + str(intVersionCount)
+            elif line_counter > 2:
+                version_counter = 1
+                for line in umi_file:
+                    if line.startswith(">"):
+                        read_header = line.split("=")[1].strip("\n")
+                        read = next(umi_file)
+                        umi_sequence_version = (
+                            umi_sequence_number + "." + str(version_counter)
                         )
-                        dfOutput.loc[intCount] = [
-                            strUmiVersion,
-                            strHeader.strip("\n"),
+                        output_dataframe.loc[counter] = [
+                            umi_sequence_version,
+                            read_header.strip("\n"),
                         ]
-                        with open(flBlast, "a") as flOutput:
-                            flOutput.write(">" + strUmiVersion + "\n")
-                            flOutput.write(strRead.strip("\n").upper() + "\n")
-                        intVersionCount += 1
-                        intCount += 1
+                        with open(output_blast_file, "a") as write_to_file:
+                            write_to_file.write(
+                                ">" + umi_sequence_version + "\n"
+                            )
+                            write_to_file.write(
+                                read.strip("\n").upper() + "\n"
+                            )
+                        version_counter += 1
+                        counter += 1
                     else:
                         pass
             else:
                 pass
-        intCount += 1
-    dfOutput = dfOutput.set_index("UMI_ID")
-    dfOutput.to_csv(flTabular, sep="\t", encoding="utf-8")
+        counter += 1
+    output_dataframe = output_dataframe.set_index("UMI_ID")
+    output_dataframe.to_csv(output_table, sep="\t", encoding="utf-8")
 
 
-# The setClusterSize function.
-# This function controls the Vsearch clustering. Every fasta file created by
-# getSortBySize is clustered using Vsearch. The expected result is a single
-# centroid sequence. This is checked in the setOutputFiles function.
-def setClusterSize(strDir, fltIdentity):
-    for strFileName in os.listdir(strDir + "/Clustering"):
-        if strFileName.startswith("sorted"):
-            strInputCommand = strDir + "/Clustering/" + strFileName
-            strOutputCommand = strDir + "/PostClustering/" + strFileName[11:]
-            rafClustering = sp.Popen(
+def clustering(directory_path, identity_percentage):
+    """
+    The clustering function:
+        This function controls the vsearch clustering. Every fasta file created
+        by sort_by_size is clustered using Vsearch. The expected result is a
+        single centroid sequence. This is checked in the create_output_files
+        function.
+    """
+    for file_name in os.listdir(directory_path + "/vsearch_clustering"):
+        if file_name.startswith("sorted"):
+            input_command = directory_path + "/vsearch_clustering/" + file_name
+            output_command = (
+                directory_path + "/post_vsearch_clustering/" + file_name[11:]
+            )
+            clustering_command = sp.Popen(
                 [
                     "vsearch",
                     "--cluster_size",
-                    strInputCommand,
+                    input_command,
                     "--fasta_width",
                     "0",
                     "--id",
-                    fltIdentity,
+                    identity_percentage,
                     "--sizein",
                     "--minseqlength",
                     "1",
                     "--centroids",
-                    strOutputCommand,
+                    output_command,
                     "--sizeout",
                 ],
                 stdout=sp.PIPE,
                 stderr=sp.PIPE,
             )
-            strOut, strError = rafClustering.communicate()
+            standard_out, standard_error = clustering_command.communicate()
         else:
             pass
 
 
-# The getSortBySize function.
-# This function controls the Vsearch sorting. Every fasta file created by
-# getDereplication is sorted based on abundance. Any reads with a abundance
-# lower than intAbundance will be discarded.
-def getSortBySize(strDir, intAbundance):
-    for strFileName in os.listdir(strDir + "/Clustering"):
-        if strFileName.startswith("derep"):
-            strInputCommand = strDir + "/Clustering/" + strFileName
-            strOutputCommand = strDir + "/Clustering/" + "sorted" + strFileName
-            rafSort = sp.Popen(
+def sort_by_size(directory_path, minimum_abundance):
+    """
+    The sort_by_size function:
+        This function controls the vsearch sorting. Every fasta file created by
+        dereplication is sorted based on abundance. Any reads with a abundance
+        lower than minimum_abundance will be discarded.
+    """
+    for file_name in os.listdir(directory_path + "/vsearch_clustering"):
+        if file_name.startswith("derep"):
+            input_command = directory_path + "/vsearch_clustering/" + file_name
+            output_command = (
+                directory_path + "/vsearch_clustering/" + "sorted" + file_name
+            )
+            sorting_command = sp.Popen(
                 [
                     "vsearch",
                     "--sortbysize",
-                    strInputCommand,
+                    input_command,
                     "--output",
-                    strOutputCommand,
+                    output_command,
                     "--minseqlength",
                     "1",
                     "--minsize",
-                    intAbundance,
+                    minimum_abundance,
                 ],
                 stdout=sp.PIPE,
                 stderr=sp.PIPE,
             )
-            strOut, strError = rafSort.communicate()
+            standard_out, standard_error = sorting_command.communicate()
         else:
             pass
 
 
-# The getDereplication function.
-# This function controls the Vsearch dereplication. Every fasta file created by
-# getFastaFile is dereplicated. This step is necessary for the sorting step to
-# work.
-def getDereplication(strDir):
-    for strFileName in os.listdir(strDir + "/PreValidation"):
-        if strFileName.endswith(".fasta"):
-            strInputCommand = strDir + "/PreValidation/" + strFileName
-            strOutputCommand = strDir + "/Clustering/" + "derep" + strFileName
-            rafDerep = sp.Popen(
+def dereplication(directory_path):
+    """
+    The dereplication function:
+        This function controls the vsearch dereplication. Every fasta file
+        created by generate_fasta_file is dereplicated. This step is necessary
+        for the sorting step to work.
+    """
+    for file_name in os.listdir(directory_path + "/pre_validation"):
+        if file_name.endswith(".fasta"):
+            input_command = directory_path + "/pre_validation/" + file_name
+            output_command = (
+                directory_path + "/vsearch_clustering/" + "derep" + file_name
+            )
+            dereplication_command = sp.Popen(
                 [
                     "vsearch",
                     "--derep_fulllength",
-                    strInputCommand,
+                    input_command,
                     "--output",
-                    strOutputCommand,
+                    output_command,
                     "--minseqlength",
                     "1",
                     "--sizeout",
@@ -172,270 +201,264 @@ def getDereplication(strDir):
                 stdout=sp.PIPE,
                 stderr=sp.PIPE,
             )
-            strOut, strError = rafDerep.communicate()
+            standard_out, standard_error = dereplication_command.communicate()
         else:
             pass
 
 
-# The getFastaFile function.
-# This function creates separate fasta files for every unique UMI. The function
-# creates a unique name for every UMI file and combines that with the desired
-# output path. A file is opened or created based on this combination. The
-# read header and the read itself are appended to it.
-def getFastaFile(strDir, dicUniqueUmi, strHeader, strRead, strCode):
-    strFileIdentifier = (
-        "UMI#" + str(dicUniqueUmi[strCode]) + "_" + strCode + ".fasta"
+def generate_fasta_file(
+    directory_path, unique_umi_dictionary, read_header, read, umi_nucleotides
+):
+    """
+    The generate_fasta_file function:
+        This function creates separate fasta files for every unique umi. The
+        function creates a unique name for every umi file and combines that
+        with the desired output path. A file is opened or created based on this
+        combination. The read header and the read itself are appended to it.
+    """
+    fasta_file_name = (
+        "UMI#"
+        + str(unique_umi_dictionary[umi_nucleotides])
+        + "_"
+        + umi_nucleotides
+        + ".fasta"
     )
-    strFileName = strDir + "/PreValidation/" + strFileIdentifier
-    with open(strFileName, "a") as flOutput:
-        flOutput.write(">" + strHeader + "\n")
-        flOutput.write(strRead + "\n")
+    file_name = directory_path + "/pre_validation/" + fasta_file_name
+    with open(file_name, "a") as write_to_file:
+        write_to_file.write(">" + read_header + "\n")
+        write_to_file.write(read + "\n")
 
 
-# The useZeroPosition function.
-# This function will isolate either a 5'-end, 3'-end or double UMI based on
-# the start or end position of a sequence.
-# It will check if both the forward and reverse primer can be found. If this
-# check is passed, the 5'-end, 3'-end UMI or double UMI will be isolated by
-# adding or subtracting the UMI length from the first or last position of the
-# sequence. The function will return (if possible) the UMI nucleotides.
-def useZeroPosition(
-    strLocation, intUmiLength, strRead, strForward, strReverse
-):
-    tplCheckForward = re.search(strForward, strRead)
-    if tplCheckForward is not None:
-        tplCheckReverse = re.search(strReverse, strRead)
-        if tplCheckReverse is not None:
-            if strLocation == "umi5":
-                return strRead[0 : int(intUmiLength)]
-            elif strLocation == "umidouble":
-                return (
-                    strRead[0 : int(intUmiLength)],
-                    strRead[-int(intUmiLength) :],
-                )
-            elif strLocation == "umi3":
-                return strRead[-int(intUmiLength) :]
-            else:
-                pass
-        else:
-            pass
-    else:
-        pass
-
-
-# The useAdapter function.
-# This function searches for a regex string in the provided sequence. It will
-# isolate either a 5'-end, 3'-end or double UMI. The isolation is based on
-# this sequence structure:
-#     ADAPTER(F)-UMI(5')-PRIMER(F)-INSERT-PRIMER(R)-UMI(3')-ADAPTER(R).
-# When looking for the 5'-end UMI, the last position of ADAPTER(F) is used,
-# when looking for the 3'-end UMI, the first position of ADAPTER(R) is used,
-# when looking for the double UMI, both mentioned positions are used.
-# These positons plus or minus the UMI length result in the UMI nucleotides.
-# In the case of umi5 or umi3, a check needs to be passed. This check makes
-# sure the opposite adapters are also present, otherwise no UMI is returned.
-# The function will return (if possible) the UMI nucleotides.
-def useAdapter(strLocation, intUmiLength, strRead, strForward, strReverse):
-    if strLocation == "umi5" or strLocation == "umidouble":
-        intPositionForward = re.search(strForward, strRead).end()
-        intPositionUmiForward = intPositionForward + int(intUmiLength)
-        strUmiForward = strRead[intPositionForward:intPositionUmiForward]
-        if strLocation == "umi5":
-            tplCheckReverse = re.search(strReverse, strRead)
-            if tplCheckReverse is not None:
-                return strUmiForward
-            else:
-                pass
-        elif strLocation == "umidouble":
-            intPositionReverse = re.search(strReverse, strRead).start()
-            intPositionUmiReverse = intPositionReverse - int(intUmiLength)
-            strUmiReverse = strRead[intPositionUmiReverse:intPositionReverse]
-            return strUmiForward, strUmiReverse
-        else:
-            pass
-    elif strLocation == "umi3":
-        tplCheckForward = re.search(strForward, strRead)
-        if tplCheckForward is not None:
-            intPositionReverse = re.search(strReverse, strRead).start()
-            intPositionUmiReverse = intPositionReverse - int(intUmiLength)
-            strUmiReverse = strRead[intPositionUmiReverse:intPositionReverse]
-            return strUmiReverse
-        else:
-            pass
-    else:
-        pass
-
-
-# The usePrimer function.
-# This function searches for a regex string in the provided sequence. It will
-# isolate either a 5'-end, 3'-end or double UMI. The isolation is based on
-# this sequence structure:
-#     UMI(5')-PRIMER(F)-INSERT-PRIMER(R)-UMI(3').
-# When looking for the 5'-end UMI, the first position of PRIMER(F) is used,
-# when looking for the 3'-end UMI, the last position of PRIMER(R) is used,
-# when looking for the double UMI, both mentioned positions are used.
-# These positons plus or minus the UMI length result in the UMI nucleotides.
-# In the case of umi5 or umi3, a check needs to be passed. This check makes
-# sure the opposite primer is also present, otherwise no UMI is returned.
-# The function returns (if possible) the UMI nucleotides.
-def usePrimer(strLocation, intUmiLength, strRead, strForward, strReverse):
-    if strLocation == "umi5" or strLocation == "umidouble":
-        intPositionForward = re.search(strForward, strRead).start()
-        intPositionUmiForward = intPositionForward - int(intUmiLength)
-        strUmiForward = strRead[intPositionUmiForward:intPositionForward]
-        if strLocation == "umi5":
-            tplCheckReverse = re.search(strReverse, strRead)
-            if tplCheckReverse is not None:
-                return strUmiForward
-            else:
-                pass
-        elif strLocation == "umidouble":
-            intPositionReverse = re.search(strReverse, strRead).end()
-            intPositionUmiReverse = intPositionReverse + int(intUmiLength)
-            strUmiReverse = strRead[intPositionReverse:intPositionUmiReverse]
-            return strUmiForward, strUmiReverse
-        else:
-            pass
-    elif strLocation == "umi3":
-        tplCheckForward = re.search(strForward, strRead)
-        if tplCheckForward is not None:
-            intPositionReverse = re.search(strReverse, strRead).end()
-            intPositionUmiReverse = intPositionReverse + int(intUmiLength)
-            strUmiReverse = strRead[intPositionReverse:intPositionUmiReverse]
-            return strUmiReverse
-        else:
-            pass
-    else:
-        pass
-
-
-# The getRegex function.
-# This function creates a regex string using a nucleotide string as input. This
-# regex string is based on the IUPAC ambiguity codes. The function loops
-# through a list version of the nucleotide string and checks per character if
-# it is a ambiguous character. If a ambiguous character is found, it is
-# replaced by a regex version. The function returns the new regex string.
-def getRegex(strLine):
-    dicAmbiguityCodes = {
-        "M": "[AC]",
+def generate_regex(nucleotides):
+    """
+    The generate_regex function:
+        This function creates a regex string using a nucleotide string as
+        input. This regex string is based on the IUPAC ambiguity codes. The
+        function loops through a list version of the nucleotide string and
+        checks per character if it is a ambiguous character. If a ambiguous
+        character is found, it is replaced by a regex version. The function
+        returns the new regex string.
+        https://www.bioinformatics.org/sms/iupac.html
+    """
+    ambiguity_codes = {
         "R": "[AG]",
-        "W": "[AT]",
-        "S": "[CG]",
         "Y": "[CT]",
+        "S": "[GC]",
+        "W": "[AT]",
         "K": "[GT]",
-        "V": "[ACG]",
-        "H": "[ACT]",
-        "D": "[AGT]",
+        "M": "[AC]",
         "B": "[CGT]",
-        "N": "[GATC]",
+        "D": "[AGT]",
+        "H": "[ACT]",
+        "V": "[ACG]",
+        "N": "[ATGC]",
     }
-    lstLine = list(strLine)
-    for intPosition in range(len(lstLine)):
+    nucleotide_list = list(nucleotides)
+    for position in range(len(nucleotide_list)):
         if (
-            lstLine[intPosition] != "A"
-            and lstLine[intPosition] != "T"
-            and lstLine[intPosition] != "G"
-            and lstLine[intPosition] != "C"
+            nucleotide_list[position] != "A"
+            and nucleotide_list[position] != "T"
+            and nucleotide_list[position] != "G"
+            and nucleotide_list[position] != "C"
         ):
-            lstLine[intPosition] = dicAmbiguityCodes[lstLine[intPosition]]
+            nucleotide_list[position] = ambiguity_codes[
+                nucleotide_list[position]
+            ]
         else:
             pass
-    return "".join(lstLine)
+    return "".join(nucleotide_list)
 
 
-# The getUmi function.
-# This function controls the UMI searching approach. It first uses the
-# functions getRegex to create regex strings of both the forward and reverse
-# primers/adapters. The regex strings are then directed to the associated
-# anchor functions [primer/adapter/zero].
-def getUmi(
-    strLocation, strAnchor, intUmiLength, strForward, strReverse, strRead
+def find_lowest_hamming_distance(
+    original_anchor, read, all_regex_anchor_variants, anchor_error
 ):
-    strRegexForward = getRegex(strForward)
-    strReverseComplement = Seq(strReverse, generic_dna)
-    strReverseComplement = strReverseComplement.reverse_complement()
-    strRegexReverseComplement = getRegex(strReverseComplement)
-    if strAnchor == "primer":
-        try:
-            return usePrimer(
-                strLocation,
-                intUmiLength,
-                strRead,
-                strRegexForward,
-                strRegexReverseComplement,
-            )
-        except AttributeError:
-            pass
-    elif strAnchor == "adapter":
-        try:
-            return useAdapter(
-                strLocation,
-                intUmiLength,
-                strRead,
-                strRegexForward,
-                strRegexReverseComplement,
-            )
-        except AttributeError:
-            pass
-    elif strAnchor == "zero":
-        try:
-            return useZeroPosition(
-                strLocation,
-                intUmiLength,
-                strRead,
-                strRegexForward,
-                strRegexReverseComplement,
-            )
-        except AttributeError:
-            pass
+    """
+    The find_lowest_hamming_distance function:
+        This function calculates a hamming distance for all regex variations of
+        the input anchor. It moves through the read using a window equal to the
+        length of the input anchor. The hamming distance is calculated for each
+        window vs the anchor variations. The hamming distance only gets
+        calculated if the first and last nucleotide of the anchor match the
+        window. The lowest hamming distance is kept per anchor variation, the
+        position of the window matching this lowest hamming distance is also
+        kept.
+        After the whole read has been processed, the anchor with the smallest
+        hamming distance is selected and compared to the threshold set byh the
+        user. If this passed, the start and end position of the anchor is
+        returned.
+    """
+    lowest_hamming_distance_variants = {}
+    lowest_hamming_distance_variants_positions = {}
+    length_original_anchor = len(original_anchor)
+    for position in range(len(read)):
+        sub_sequence = read[position:length_original_anchor]
+        if len(sub_sequence) == len(original_anchor):
+            if sub_sequence.startswith(
+                original_anchor[:1]
+            ) and sub_sequence.endswith(original_anchor[-1:]):
+                variant_check = {}
+                for variant in all_regex_anchor_variants:
+                    variant_check[variant] = cjellyfish.hamming_distance(
+                        variant, sub_sequence
+                    )
+                lowest_key = min(variant_check, key=variant_check.get)
+                lowest_hamming_distance_variants[lowest_key] = variant_check[
+                    lowest_key
+                ]
+                lowest_hamming_distance_variants_positions[lowest_key] = [
+                    position,
+                    length_original_anchor,
+                ]
+        length_original_anchor += 1
+    lowest_hamming_distance_anchor = min(
+        lowest_hamming_distance_variants,
+        key=lowest_hamming_distance_variants.get,
+    )
+    if (
+        lowest_hamming_distance_variants[lowest_hamming_distance_anchor]
+        <= anchor_error
+    ):
+        lowest_hamming_distance_anchor_positions = (
+            lowest_hamming_distance_variants_positions[
+                lowest_hamming_distance_anchor
+            ]
+        )
     else:
-        pass
+        lowest_hamming_distance_anchor_positions = None
+    return lowest_hamming_distance_anchor_positions
 
 
-# The processInputFile function.
-# This function calls the getUmi function for the supplied read, this outputs
-# one or two UMI codes. In the case of a double UMI [umidouble], the two UMIs
-# are combined. The length of the UMI is checked before continuing. The
-# getFastaFile function is called if the read contains a UMI.
-def processInputFile(
-    strHeader,
-    strRead,
-    strLocation,
-    strAnchor,
-    intUmiLength,
-    strForward,
-    strReverse,
-    strTempDir,
-    dicUniqueUmi,
-    intUniqueUmi,
+def retrieve_umi_code(
+    umi_location,
+    anchor_type,
+    umi_length,
+    forward_anchor,
+    reverse_anchor,
+    read,
+    anchor_error,
+    read_header,
 ):
+    """
+    The retrieve_umi_code function:
+        This function guides the hamming distance calculations and generates a
+        umi sequence if possible. A regex compatible string is generated for
+        both the forward and reverse (which is make complement first) anchors.
+        These regex strings are separated into all possible combinations.
+        These combinations are used to calculate the hamming distance within
+        every read. Depending on which umi_location was used, the umi sequence
+        is extracted based on the positions returned by the
+        find_lowest_hamming_distance function. In the case of a "zero" anchor
+        type, the start or end of a read is used.
+    """
+    regex_forward_anchor = generate_regex(forward_anchor)
+    reverse_anchor_seq_object = Seq(reverse_anchor)
+    reverse_anchor_complement = reverse_anchor_seq_object.complement()
+    regex_reverse_anchor_complement = generate_regex(reverse_anchor_complement)
+    all_regex_variants_forward_anchor = list(
+        sre_yield.AllStrings(regex_forward_anchor)
+    )
+    all_regex_variants_reverse_anchor = list(
+        sre_yield.AllStrings(regex_reverse_anchor_complement)
+    )
+    if umi_location == "umi5":
+        anchor_positions_list = find_lowest_hamming_distance(
+            forward_anchor,
+            read,
+            all_regex_variants_forward_anchor,
+            anchor_error,
+        )
+        if anchor_positions_list is None:
+            print(
+                "No anchor below hamming distance threshold found in: "
+                + read_header
+            )
+            umi_sequence = None
+        else:
+            if anchor_type == "primer":
+                umi_start = int(anchor_positions_list[0]) - umi_length
+                umi_sequence = read[umi_start : anchor_positions_list[0]]
+            elif anchor_type == "adapter":
+                umi_end = int(anchor_positions_list[1]) + umi_length
+                umi_sequence = read[anchor_positions_list[1] : umi_end]
+            elif anchor_type == "zero":
+                umi_sequence = read[0:umi_length]
+    elif umi_location == "umi3":
+        read_reverse = read[::-1]
+        anchor_positions_list = find_lowest_hamming_distance(
+            regex_reverse_anchor_complement,
+            read_reverse,
+            all_regex_variants_reverse_anchor,
+            anchor_error,
+        )
+        if anchor_positions_list is None:
+            print(
+                "No anchor below hamming distance threshold found in: "
+                + read_header
+            )
+            umi_sequence = None
+        else:
+            if anchor_type == "primer":
+                umi_start = int(anchor_positions_list[0]) - umi_length
+                umi_sequence = read_reverse[
+                    umi_start : anchor_positions_list[0]
+                ]
+            elif anchor_type == "adapter":
+                umi_end = int(anchor_positions_list[1]) + umi_length
+                umi_sequence = read_reverse[anchor_positions_list[1] : umi_end]
+            elif anchor_type == "zero":
+                umi_sequence = read_header[0:umi_length]
+    elif umi_location == "umidouble":
+        pass
+    return umi_sequence
+
+
+def process_data_input(
+    read_header,
+    read,
+    umi_location,
+    anchor_type,
+    umi_length,
+    forward_anchor,
+    reverse_anchor,
+    temporary_directory,
+    unique_umi_dictionary,
+    unique_umi_count,
+    anchor_error,
+):
+    """
+    The process_data_input function:
+        This function calls the retrieve_umi_code function for the supplied
+        read, this outputs one or two umi codes. In the case of a double umi
+        [umidouble], the two umi's are combined. The length of the umi is
+        checked before continuing. The generate_fasta_file function is called
+        if the read contains a umi.
+    """
     try:
-        strUmi = getUmi(
-            strLocation,
-            strAnchor,
-            intUmiLength,
-            strForward.upper(),
-            strReverse.upper(),
-            strRead,
+        umi_sequence = retrieve_umi_code(
+            umi_location,
+            anchor_type,
+            umi_length,
+            forward_anchor.upper(),
+            reverse_anchor.upper(),
+            read,
+            anchor_error,
+            read_header,
         )
     except UnboundLocalError:
         pass
     try:
-        if strUmi is not None:
-            if strLocation == "umi5" or strLocation == "umi3":
-                intLengthPotentialUmi = len(strUmi)
-                if int(intLengthPotentialUmi) == int(intUmiLength):
-                    strCode = strUmi
+        if umi_sequence is not None:
+            if umi_location == "umi5" or umi_location == "umi3":
+                if len(umi_sequence) == int(umi_length):
+                    umi_nucleotides = umi_sequence
                 else:
-                    strCode = None
-            elif strLocation == "umidouble":
-                strCombined = strUmi[0] + strUmi[1]
-                intLengthPotentialUmi = len(strCombined)
-                intDoubleUmi = intUmiLength * 2
-                if int(intLengthPotentialUmi) == int(intDoubleUmi):
-                    strCode = strCombined
+                    umi_nucleotides = None
+            elif umi_location == "umidouble":
+                combined_umi = umi_sequence[0] + umi_sequence[1]
+                if len(combined_umi) == int(umi_length * 2):
+                    umi_nucleotides = combined_umi
                 else:
-                    strCode = None
+                    umi_nucleotides = None
             else:
                 pass
         else:
@@ -443,10 +466,10 @@ def processInputFile(
     except UnboundLocalError:
         pass
     try:
-        if strCode is not None:
-            if strCode not in dicUniqueUmi:
-                dicUniqueUmi[strCode] = intUniqueUmi
-                intUniqueUmi += 1
+        if umi_nucleotides is not None:
+            if umi_nucleotides not in unique_umi_dictionary:
+                unique_umi_dictionary[umi_nucleotides] = unique_umi_count
+                unique_umi_count += 1
             else:
                 pass
         else:
@@ -454,180 +477,229 @@ def processInputFile(
     except UnboundLocalError:
         pass
     try:
-        if strCode is not None:
-            getFastaFile(
-                strTempDir, dicUniqueUmi, strHeader, strRead, strCode,
+        if umi_nucleotides is not None:
+            generate_fasta_file(
+                temporary_directory,
+                unique_umi_dictionary,
+                read_header,
+                read,
+                umi_nucleotides,
             )
         else:
             pass
     except UnboundLocalError:
         pass
-    strUmi = None
-    strCode = None
-    return dicUniqueUmi, intUniqueUmi
+    umi_sequence = None
+    umi_nucleotides = None
+    return unique_umi_dictionary, unique_umi_count
 
 
-# The runCaltha function.
-# This function controls and calls the main functionality of Caltha. It loops
-# through the input file(s) using pyfastx.
-def runCaltha(
-    flInput,
-    strMainDir,
-    strLocation,
-    strAnchor,
-    intUmiLength,
-    strForward,
-    strReverse,
-    intAbundance,
-    fltIdentity,
-    strFormat,
+def run_caltha(
+    input_file,
+    main_working_directory,
+    forward_anchor,
+    reverse_anchor,
+    anchor_type,
+    minimum_abundance,
+    anchor_error,
+    input_format,
+    umi_location,
+    umi_length,
+    identity_percentage,
 ):
-    fltStart = time.time()
-    strInputFileName = flInput.split("/")[-1].split(".")[0]
-    strOutputFileName = strMainDir + "/" + strInputFileName
-    strTempDir = setWorkDirs(strMainDir, True)
-    dicUniqueUmi = {}
-    intUniqueUmi = 1
-    if strFormat == "fasta":
-        for oisRecord in pyfastx.Fasta(flInput):
-            lstProcessOutput = processInputFile(
-                oisRecord.name,
-                oisRecord.seq.upper(),
-                strLocation,
-                strAnchor,
-                intUmiLength,
-                strForward,
-                strReverse,
-                strTempDir,
-                dicUniqueUmi,
-                intUniqueUmi,
+    """
+    The run_caltha function:
+        This function controls and calls the main functionality of Caltha. It
+        loops through the input file(s) using pyfastx and calls the
+        process_data_input function for every read.
+    """
+    starting_time = time.time()
+    # input_file_name = input_file.split("/")[-1].split(".")[0]
+    # output_file_name = main_working_directory + "/" + input_file_name
+    temporary_directory = generate_working_directories(
+        main_working_directory, True
+    )
+    unique_umi_dictionary = {}
+    unique_umi_count = 1
+    if input_format == "fasta":
+        for pyfastx_record in pyfastx.Fasta(input_file):
+            umi_output_objects = process_data_input(
+                pyfastx_record.name,
+                pyfastx_record.seq.upper(),
+                umi_location,
+                anchor_type,
+                umi_length,
+                forward_anchor,
+                reverse_anchor,
+                temporary_directory,
+                unique_umi_dictionary,
+                unique_umi_count,
+                anchor_error,
             )
-            dicUniqueUmi = lstProcessOutput[0]
-            intUniqueUmi = lstProcessOutput[1]
-    elif strFormat == "fastq":
-        for oisRecord in pyfastx.Fastq(flInput):
-            lstProcessOutput = processInputFile(
-                oisRecord.name,
-                oisRecord.seq.upper(),
-                strLocation,
-                strAnchor,
-                intUmiLength,
-                strForward,
-                strReverse,
-                strTempDir,
-                dicUniqueUmi,
-                intUniqueUmi,
+            unique_umi_dictionary = umi_output_objects[0]
+            unique_umi_count = umi_output_objects[1]
+    elif input_format == "fastq":
+        for pyfastx_record in pyfastx.Fastq(input_file):
+            umi_output_objects = process_data_input(
+                pyfastx_record.name,
+                pyfastx_record.seq.upper(),
+                umi_location,
+                anchor_type,
+                umi_length,
+                forward_anchor,
+                reverse_anchor,
+                temporary_directory,
+                unique_umi_dictionary,
+                unique_umi_count,
+                anchor_error,
             )
-            dicUniqueUmi = lstProcessOutput[0]
-            intUniqueUmi = lstProcessOutput[1]
+            unique_umi_dictionary = umi_output_objects[0]
+            unique_umi_count = umi_output_objects[1]
     else:
         pass
-    getZipArchive(
-        (strTempDir + "/PreValidation"),
-        (strOutputFileName + "_PREVALIDATION.zip"),
-        ".fasta",
-    )
-    getDereplication(strTempDir)
-    getSortBySize(strTempDir, intAbundance)
-    setClusterSize(strTempDir, fltIdentity)
-    setOutputFiles(strTempDir, strOutputFileName)
-    fltEnd = time.time() - fltStart
-    strEnd = ntpath.basename(flInput) + ": " + "%.2f" % fltEnd + "s"
-    return strEnd
+    # generate_zip_archive(
+    #    (temporary_directory + "/pre_validation"),
+    #    (output_file_name + "_PREVALIDATION.zip"),
+    #    ".fasta",
+    # )
+    # dereplication(temporary_directory)
+    # sort_by_size(temporary_directory, minimum_abundance)
+    # clustering(temporary_directory, identity_percentage)
+    # create_output_files(temporary_directory, output_file_name)
+    end_time = time.time() - starting_time
+    end_message = ntpath.basename(input_file) + ": " + "%.2f" % end_time + "s"
+    return end_message
 
 
-# The removeWorkDirs function.
-# This function removes all temporary working directories.
-def removeWorkDirs(strDir):
-    shutil.rmtree(strDir)
+def remove_working_directory(directory_path):
+    """
+    The remove_working_directory function:
+        This function removes all temporary working directories.
+    """
+    shutil.rmtree(directory_path)
 
 
-# The getZipArchive function.
-# This function creates a zip archive from all files in the specified
-# directory.
-def getZipArchive(strDir, flZip, strExtension):
-    with zipfile.ZipFile(flZip, "w") as objZip:
-        for strFileName in os.listdir(strDir):
-            if strFileName.endswith(strExtension):
-                strFullPath = strDir + "/" + strFileName
-                objZip.write(strFullPath, os.path.basename(strFullPath))
+def generate_zip_archive(directory_path, zip_archive, file_extension):
+    """
+    The generate_zip_archive function:
+        This function creates a zip archive from all files in the specified
+        directory.
+    """
+    with zipfile.ZipFile(zip_archive, "w") as zip_object:
+        for file_name in os.listdir(directory_path):
+            if file_name.endswith(file_extension):
+                full_path = directory_path + "/" + file_name
+                zip_object.write(full_path, os.path.basename(full_path))
 
 
-# The createInputList function.
-# This function copies the input file(s) to a new temporary folder. It then
-# creates a list of all input file names.
-def createInputList(flInput, strMainDir):
-    strCreate = strMainDir + "/" + "inputFiles"
-    os.makedirs(strCreate)
+def generate_input_file_list(input_file, main_working_directory):
+    """
+    The generate_input_file_list function:
+        This function copies the input file(s) to a new temporary folder. It
+        then creates a list of all input file names.
+    """
+    input_file_directory = main_working_directory + "/" + "input_files"
+    os.makedirs(input_file_directory)
     if (
-        os.path.splitext(flInput)[1] == ".zip"
-        or os.path.splitext(flInput)[1] == ".ZIP"
+        os.path.splitext(input_file)[1] == ".zip"
+        or os.path.splitext(input_file)[1] == ".ZIP"
     ):
-        with zipfile.ZipFile(flInput, "r") as objZip:
-            objZip.extractall(strCreate)
-            lstInput = [
-                strCreate + "/" + strFile
-                for strFile in zipfile.ZipFile.namelist(objZip)
+        with zipfile.ZipFile(input_file, "r") as zip_object:
+            zip_object.extractall(input_file_directory)
+            input_file_list = [
+                input_file_directory + "/" + file
+                for file in zipfile.ZipFile.namelist(zip_object)
             ]
     else:
-        shutil.copyfile(flInput, strCreate + "/" + ntpath.basename(flInput))
-        lstInput = [strCreate + "/" + ntpath.basename(flInput)]
-    return lstInput
+        shutil.copyfile(
+            input_file,
+            input_file_directory + "/" + ntpath.basename(input_file),
+        )
+        input_file_list = [
+            input_file_directory + "/" + ntpath.basename(input_file)
+        ]
+    return input_file_list
 
 
-# The setWorkDirs function.
-# This function creates the main temporary working directory and all subprocess
-# directories. It checks if the directories already exist and creates them
-# if they don't.
-def setWorkDirs(strDirectory, blnExtra):
-    strRandom = "".join(
+def generate_working_directories(temporary_directory, subdirectories):
+    """
+    The generate_working_directories function:
+        This function creates the main temporary working directory and all
+        subprocess directories. It checks if the directories already exist and
+        creates them if they don't.
+    """
+    random_characters = "".join(
         random.choice(string.ascii_lowercase) for i in range(10)
     )
-    lstWorkDirs = []
-    lstWorkDirs.append(strDirectory + "/" + strRandom)
-    if blnExtra is True:
-        lstWorkDirs.append(strDirectory + "/" + strRandom + "/PreValidation")
-        lstWorkDirs.append(strDirectory + "/" + strRandom + "/Clustering")
-        lstWorkDirs.append(strDirectory + "/" + strRandom + "/PostClustering")
+    working_directory_list = []
+    working_directory_list.append(
+        temporary_directory + "/" + random_characters
+    )
+    if subdirectories is True:
+        working_directory_list.append(
+            temporary_directory + "/" + random_characters + "/pre_validation"
+        )
+        working_directory_list.append(
+            temporary_directory
+            + "/"
+            + random_characters
+            + "/vsearch_clustering"
+        )
+        working_directory_list.append(
+            temporary_directory
+            + "/"
+            + random_characters
+            + "/post_vsearch_clustering"
+        )
     else:
         pass
-    for strDirectory in lstWorkDirs:
-        if not os.path.exists(strDirectory):
-            os.makedirs(strDirectory)
+    for temporary_directory in working_directory_list:
+        if not os.path.exists(temporary_directory):
+            os.makedirs(temporary_directory)
         else:
             pass
-    return lstWorkDirs[0]
+    return working_directory_list[0]
 
 
-# The argvs function.
-def parseArgvs():
-    strDescription = "A python package for processing UMI tagged mixed amplicon\
-                      metabarcoding data."
-    strEpilog = "This python package requires one extra dependency which can\
-                 be easily installed with conda (conda install -c bioconda\
-                 vsearch=2.14.2)."
+def parse_argvs():
+    """
+    The parse_argvs function:
+    """
+    description = "A python package for processing umi tagged mixed amplicon\
+                   metabarcoding data."
+    epilog = "This python package requires one extra dependency which can be\
+              easily installed with conda (conda install -c bioconda\
+              vsearch=2.15.2)."
     parser = argparse.ArgumentParser(
-        description=strDescription,
-        epilog=strEpilog,
+        description=description,
+        epilog=epilog,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-    )
-    parser.add_argument(
-        "-v", "--version", action="version", version="%(prog)s [0.6]"
     )
     parser.add_argument(
         "-i",
         "--input",
         action="store",
-        dest="flInput",
+        dest="input_file",
+        type=str,
         default=argparse.SUPPRESS,
         help="The input fasta/fastq file(s). This can either be a zip archive\
-              or a single fasta/fastq file.",
+              or a single fasta/fastq file, both uncompressed and gzip.",
+    )
+    parser.add_argument(
+        "-b",
+        "--blast",
+        action="store",
+        dest="output_blast_file",
+        type=str,
+        default=argparse.SUPPRESS,
+        help="The output blast zip file.",
     )
     parser.add_argument(
         "-t",
         "--tabular",
         action="store",
-        dest="flTabular",
+        dest="output_table",
+        type=str,
         default=argparse.SUPPRESS,
         help="The output tabular zip file.",
     )
@@ -635,73 +707,17 @@ def parseArgvs():
         "-z",
         "--zip",
         action="store",
-        dest="flPreValidation",
+        dest="output_pre_validation",
+        type=str,
         default=argparse.SUPPRESS,
         help="The pre validation zip file.",
-    )
-    parser.add_argument(
-        "-b",
-        "--blast",
-        action="store",
-        dest="flBlast",
-        default=argparse.SUPPRESS,
-        help="The output blast zip file.",
-    )
-    parser.add_argument(
-        "-f",
-        "--format",
-        action="store",
-        dest="strFormat",
-        default="fasta",
-        help="The format of the input file [fasta/fastq].",
-    )
-    parser.add_argument(
-        "-l",
-        "--location",
-        action="store",
-        dest="strLocation",
-        default="umi5",
-        help="Search for UMIs at the 5'-end\
-              [umi5], 3'-end [umi3] or at the 5'-end and 3'-end [umidouble].",
-    )
-    parser.add_argument(
-        "-a",
-        "--anchor",
-        action="store",
-        dest="strAnchor",
-        default="primer",
-        help="Which anchor type to use [primer/adapter/zero].",
-    )
-    parser.add_argument(
-        "-u",
-        "--length",
-        action="store",
-        dest="intUmiLength",
-        default="5",
-        help="The length of the UMI sequence.",
-    )
-    parser.add_argument(
-        "-y",
-        "--identity",
-        action="store",
-        dest="fltIdentity",
-        default="0.97",
-        help="The identity percentage with which to perform the validation.",
-    )
-    parser.add_argument(
-        "-c",
-        "--abundance",
-        action="store",
-        dest="intAbundance",
-        default="1",
-        help="The minimum abundance of a sequence\
-              in order for it to be included during validation.",
     )
     parser.add_argument(
         "-w",
         "--forward",
         action="store",
-        dest="strForward",
+        dest="forward_anchor",
+        type=str,
         default=argparse.SUPPRESS,
         help="The 5'-end anchor nucleotides.",
     )
@@ -709,64 +725,159 @@ def parseArgvs():
         "-r",
         "--reverse",
         action="store",
-        dest="strReverse",
+        dest="reverse_anchor",
+        type=str,
         default=argparse.SUPPRESS,
         help="The 3'-end anchor nucleotides.",
+    )
+    parser.add_argument(
+        "-a",
+        "--anchor",
+        action="store",
+        dest="anchor_type",
+        type=str,
+        choices=["primer", "adapter", "zero"],
+        nargs="?",
+        default="primer",
+        help="Which anchor type to use.",
+    )
+    parser.add_argument(
+        "-c",
+        "--abundance",
+        action="store",
+        dest="minimum_abundance",
+        type=int,
+        default="1",
+        help="The minimum abundance of a sequence in order for it to be\
+              included during validation.",
     )
     parser.add_argument(
         "-d",
         "--directory",
         action="store",
-        dest="strDirectory",
+        dest="temporary_directory",
+        type=str,
         default=".",
         help="The location of the temporary working directory (not created\
-              by program).",
+              by Caltha).",
+    )
+    parser.add_argument(
+        "-e",
+        "--error",
+        action="store",
+        dest="anchor_error",
+        type=int,
+        default="0",
+        help="The number of errors allowed in the matching of the anchors.\
+              This sets the maximum hamming distance allowed by Caltha.\
+              The higher this number is set, the more errors are allowed.",
+    )
+    parser.add_argument(
+        "-f",
+        "--format",
+        action="store",
+        dest="input_format",
+        type=str,
+        choices=["fasta", "fastq"],
+        nargs="?",
+        default="fasta",
+        help="The format of the input file.",
+    )
+    parser.add_argument(
+        "-l",
+        "--location",
+        action="store",
+        dest="umi_location",
+        type=str,
+        choices=["umi5", "umi3", "umidouble"],
+        nargs="?",
+        default="umi5",
+        help="Search for umi's at the 5'-end, 3'-end or at the 5'-end and\
+              3'-end.",
+    )
+    parser.add_argument(
+        "-u",
+        "--length",
+        action="store",
+        dest="umi_length",
+        type=int,
+        default="5",
+        help="The length of the umi sequence.",
+    )
+    parser.add_argument(
+        "-y",
+        "--identity",
+        action="store",
+        dest="identity_percentage",
+        type=float,
+        default="0.97",
+        help="The identity percentage with which to perform the validation.",
     )
     parser.add_argument(
         "-@",
         "--threads",
         action="store",
-        dest="intThreads",
+        dest="threads",
+        type=int,
         default=mp.cpu_count(),
         help="The number of threads to run Caltha with.",
+    )
+    parser.add_argument(
+        "-v", "--version", action="version", version="%(prog)s [0.7]"
     )
     argvs = parser.parse_args()
     return argvs
 
 
-# The main function.
 def main():
-    disArgvs = parseArgvs()
-    strMainDir = setWorkDirs(disArgvs.strDirectory, False)
-    lstInput = createInputList(disArgvs.flInput, strMainDir)
-    mpPool = mp.Pool(int(disArgvs.intThreads))
-    mpTemporary = [
-        mpPool.apply_async(
-            runCaltha,
+    """
+    The main function:
+    """
+    user_arguments = parse_argvs()
+    main_working_directory = generate_working_directories(
+        user_arguments.temporary_directory, False
+    )
+    input_file_list = generate_input_file_list(
+        user_arguments.input_file, main_working_directory
+    )
+    multi_processing_pool = mp.Pool(int(user_arguments.threads))
+    multi_processing_temporary = [
+        multi_processing_pool.apply_async(
+            run_caltha,
             args=(
-                flInput,
-                strMainDir,
-                disArgvs.strLocation,
-                disArgvs.strAnchor,
-                disArgvs.intUmiLength,
-                disArgvs.strForward,
-                disArgvs.strReverse,
-                disArgvs.intAbundance,
-                disArgvs.fltIdentity,
-                disArgvs.strFormat,
+                input_file,
+                main_working_directory,
+                user_arguments.forward_anchor,
+                user_arguments.reverse_anchor,
+                user_arguments.anchor_type,
+                user_arguments.minimum_abundance,
+                user_arguments.anchor_error,
+                user_arguments.input_format,
+                user_arguments.umi_location,
+                user_arguments.umi_length,
+                user_arguments.identity_percentage,
             ),
         )
-        for flInput in lstInput
+        for input_file in input_file_list
     ]
-    mpPool.close()
-    mpPool.join()
-    mpOutput = [mpProcess.get() for mpProcess in mpTemporary]
-    getZipArchive(strMainDir, disArgvs.flTabular, ".tbl")
-    getZipArchive(strMainDir, disArgvs.flPreValidation, ".zip")
-    getZipArchive(strMainDir, disArgvs.flBlast, ".fasta")
-    removeWorkDirs(strMainDir)
-    print(mpOutput)
+    multi_processing_pool.close()
+    multi_processing_pool.join()
+    multi_processing_output = [
+        mpProcess.get() for mpProcess in multi_processing_temporary
+    ]
+    # generate_zip_archive(main_working_directory, user_arguments.output_table,
+    #                      ".tbl")
+    # generate_zip_archive(main_working_directory,
+    #                      user_arguments.output_pre_validation, ".zip")
+    # generate_zip_archive(main_working_directory,
+    #                      user_arguments.output_blast_file, ".fasta")
+    # remove_working_directory(main_working_directory)
+    print(multi_processing_output)
 
 
 if __name__ == "__main__":
     main()
+
+"""
+Additional information:
+"""

@@ -13,7 +13,7 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 {% set name = "caltha" %}
-{% set version = "0.6" %}
+{% set version = "0.7" %}
 
 package:
   name: "{{ name|lower }}"
@@ -31,16 +31,20 @@ requirements:
   host:
     - python
     - pip
-    - pandas >=1.0.5
-    - numpy >=1.19.0
-    - pyfastx >= 0.6.13
-    - biopython >= 1.77
+    - biopython == 1.78
+    - jellyfish == 0.8.2
+    - numpy == 1.20.1
+    - pandas == 1.2.3
+    - pyfastx == 0.8.2
+    - sre-yield == 1.2
   run:
     - python
-    - pandas >=1.0.5
-    - numpy >=1.19.0
-    - pyfastx >= 0.6.13
-    - biopython >= 1.77
+    - biopython == 1.78
+    - jellyfish == 0.8.2
+    - numpy == 1.20.1
+    - pandas == 1.2.3
+    - pyfastx == 0.8.2
+    - sre-yield == 1.2
 
 about:
   home: "https://github.com/JasperBoom/caltha"
@@ -49,7 +53,7 @@ about:
   license_file: "../LICENSE.md"
   summary: "A python package for processing UMI tagged mixed amplicon metabarcoding data."
   description: "Caltha requires one more dependency which can not be installed
-with this conda package. This dependency is VSEARCH, which can be installed using: conda install -c bioconda vsearch=2.14.2"
+with this conda package. This dependency is VSEARCH, which can be installed using: `conda install -c bioconda vsearch=2.15.2`"
   dev_url: "https://github.com/JasperBoom/caltha/tree/master/src"
   doc_url: "https://jasperboom.github.io/caltha"
   doc_source_url: "https://github.com/JasperBoom/caltha/tree/gh-pages"

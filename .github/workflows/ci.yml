@@ -1,0 +1,13 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+    "src/**"
+    "tests/**"
+    "!docs/**"
+
+defaults:
+  run:
+    # This is needed for miniconda, see:
+    # https://github.com/marketplace/actions/setup-miniconda#important.
+    shell: bash -l {0}

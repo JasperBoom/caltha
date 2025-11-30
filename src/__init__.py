@@ -14,6 +14,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-name = "caltha"
+name = "Caltha"
 description = "A python package for processing UMI tagged mixed amplicon\
                metabarcoding data."
+
+"""
+Additional information:
+    Regular packages file.
+"""
