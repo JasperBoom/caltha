@@ -21,7 +21,7 @@ pandas==1.2.3
 pre-commit==2.11.1
 pyfastx==0.8.2
 pytest==6.2.2
-setuptools==54.1.2
+setuptools==78.1.1
 sre-yield==1.2
 vsearch==2.15.2
 
